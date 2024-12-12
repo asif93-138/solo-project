@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from "express";
+import cors from 'cors';
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import sequelize from "./sequelize";
@@ -11,6 +12,7 @@ import MG from "./../models/MovieGenre";
 const app: Express = express();
 const port = 3000;
 
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (req: Request, res: Response) => {
@@ -78,6 +80,8 @@ app.post("/movies", async (req: Request, res: Response) => {
 app.get("/movies/:id", async (req: Request, res: Response) => {
   try {
     const movie = await Movie.findByPk(req.params.id);
+    // const movieNew = await Movie.findOne({ where: { title: 'Inception Updated' } });
+    // console.log('movieNew :', movieNew);
     if (movie) {
       res.status(200).json(movie);
     } else {
