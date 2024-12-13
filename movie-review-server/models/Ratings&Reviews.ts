@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./../src/sequelize";
+import Movie from "./Movies";
 
 class RR extends Model {}
 
@@ -32,5 +33,6 @@ RR.init(
     timestamps: false,
   }
 );
+
 
 export default RR;

@@ -1,6 +1,7 @@
 // models/Movies.ts
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./../src/sequelize";
+import RR from "./Ratings&Reviews";
 
 class Movie extends Model {}
 
@@ -46,5 +47,6 @@ Movie.init(
     timestamps: false,
   }
 );
+
 
 export default Movie;
