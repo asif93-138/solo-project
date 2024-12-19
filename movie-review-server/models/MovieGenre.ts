@@ -1,7 +1,11 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./../src/sequelize";
+import Genre from "./Genre";
 
-class MG extends Model {}
+class MG extends Model {
+  public movie_id!: number;
+  public genre_id!: number;
+}
 
 MG.init(
   {

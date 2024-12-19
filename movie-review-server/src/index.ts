@@ -2,13 +2,14 @@ import express, { Express, Request, Response } from "express";
 import cors from 'cors';
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
-import { Sequelize, fn, col } from "sequelize";
+import { Sequelize, Op } from "sequelize";
 import sequelize from "./sequelize";
 import User from "./../models/Users";
 import Movie from "./../models/Movies";
 import RR from "./../models/Ratings&Reviews";
 import Genre from "./../models/Genre";
 import MG from "./../models/MovieGenre";
+import routes from './routes/router'
 
 // Initialize associations
 Movie.hasMany(RR, { foreignKey: "movie_id", as: "ratingsReviews" });
@@ -31,6 +32,9 @@ const port = 3000;
 
 app.use(cors());
 app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+
+app.use('/api', routes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('DB testing!');
@@ -69,6 +73,22 @@ app.get("/users/:id", async (req: Request, res: Response) => {
   }
 });
 
+// Route: Read a single user by email
+app.get("/user/:id", async (req: Request, res: Response) => {
+  try {
+    const user = await User.findOne({ where: { email: req.params.id } });
+    // console.log('user :', user);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch user" });
+  }
+});
+
 // Route: Read all users
 app.get("/users", async (req: Request, res: Response) => {
   try {
@@ -82,39 +102,151 @@ app.get("/users", async (req: Request, res: Response) => {
 
 // Route: Insert a single movie
 app.post("/movies", async (req: Request, res: Response) => {
+  const { user_id, title, img, desc, release_yr, director, length, producer, genre } = req.body;
+
   try {
-    const movies = await Movie.findAll();
-    const dataObj = {movie_id: movies.length + 1, ...req.body};
-    const movie = await Movie.create(dataObj);
-    res.status(201).json(movie);
+    const transaction = await sequelize.transaction();
+  
+    try {
+      const movie = await Movie.create(
+        { user_id, title, img, desc, release_yr, director, length, producer },
+        { transaction }
+      );
+
+      console.log("Created movie:", movie);
+      console.log("Movie ID:", movie.dataValues.movie_id);
+
+if (!movie.dataValues.movie_id) {
+  throw new Error("Movie ID is null after creation");
+}
+
+const genreInstances = await Promise.all(
+  genre.map(async (g: string) =>
+    Genre.findOrCreate({ where: { genre: g }, transaction })
+  )
+);
+
+// Mapping through the genreInstances and using genreInstance correctly
+await Promise.all(
+  genreInstances.map(async ([genreInstance]) =>
+    MG.create(
+      { movie_id: movie.dataValues.movie_id, genre_id: genreInstance.genre_id },
+      { transaction }
+    )
+  )
+);
+
+
+  
+      await transaction.commit();
+      res.status(201).json({ message: "Movie created successfully", movie });
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   } catch (error) {
-    console.error(error);
+    console.error("Error during movie creation:", error);
     res.status(500).json({ error: "Failed to create movie" });
   }
 });
+
+
+
+// app.get("/movies/:id", async (req: Request, res: Response) => {
+//   try {
+//     const movie = await Movie.findByPk(req.params.id);
+//     const rating = await RR.findAll({ where: { movie_id: movie?.dataValues.movie_id } });
+//     const user = await User.findOne({ where: { user_id: movie?.dataValues.user_id } });
+//     const averageRating = rating.reduce(
+//       (sum, item) => sum + item.dataValues.rating,
+//       0 // Initial value for sum
+//     ) / rating.length;
+//         // Fetch all genres associated with the movie
+//         const genres = await MG.findAll({
+//           where: { movie_id: movie?.dataValues.movie_id },
+//           include: [
+//             {
+//               model: Genre,
+//               attributes: ["genre"], // Fetch only the 'genre' field
+//             },
+//           ],
+//         });
+//     if (movie) {
+//       res.status(200).json({
+//         ...movie.dataValues, 
+//         rating: averageRating, 
+//         genres: genres.map(x => x.dataValues.Genre.dataValues.genre),
+//         user: user?.dataValues.name,
+//         rr : rating.map(async (x) => {
+//           // console.log(x.dataValues.r);
+//           const user = await User.findOne({ where: { user_id: x?.dataValues.user_id } });
+//           // console.log(user?.dataValues.name);
+//           return { user: user?.dataValues.name, review: x.dataValues.review, rating: x.dataValues.rating };
+//         })
+//       });
+//     } else {
+//       res.status(404).json({ error: "Movie not found" });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Failed to fetch movie" });
+//   }
+// });
 
 // Route: Read a single movie by ID
 app.get("/movies/:id", async (req: Request, res: Response) => {
   try {
     const movie = await Movie.findByPk(req.params.id);
-    const rating = await RR.findAll({ where: { movie_id: movie?.dataValues.movie_id } });
-    const averageRating = rating.reduce(
-      (sum, item) => sum + item.dataValues.rating, 
-      0 // Initial value for sum
-    ) / rating.length;
-    // console.log(rating);
-    // const movieNew = await Movie.findOne({ where: { title: 'Inception Updated' } });
-    // console.log('movieNew :', movieNew);
-    if (movie) {
-      res.status(200).json({...movie.dataValues, rating: averageRating});
-    } else {
+    if (!movie) {
       res.status(404).json({ error: "Movie not found" });
+      return;
     }
+
+    // Fetch all ratings for the movie
+    const ratings = await RR.findAll({ where: { movie_id: movie.dataValues.movie_id } });
+
+    // Fetch the user who created the movie
+    const user = await User.findOne({ where: { user_id: movie.dataValues.user_id } });
+
+    // Calculate the average rating
+    const averageRating =
+      ratings.reduce((sum, item) => sum + item.dataValues.rating, 0) /
+      (ratings.length || 1); // Avoid division by zero
+
+    // Fetch all genres associated with the movie
+    const genres = await MG.findAll({
+      where: { movie_id: movie.dataValues.movie_id },
+      include: [{ model: Genre, attributes: ["genre"] }],
+    });
+
+    // Resolve reviews (rr array) with user data
+    const rr = await Promise.all(
+      ratings.map(async (rating) => {
+        const user = await User.findOne({ where: { user_id: rating.dataValues.user_id } });
+        return {
+          rr_id: rating?.dataValues.rr_id,
+          user_id: user?.dataValues.user_id,
+          user: user?.dataValues.name,
+          review: rating.dataValues.review,
+          rating: rating.dataValues.rating,
+        };
+      })
+    );
+
+    // Respond with the movie data
+    res.status(200).json({
+      ...movie.dataValues,
+      rating: averageRating || null, // Handle no ratings gracefully
+      genres: genres.map((x) => x.dataValues.Genre?.genre || "Unknown Genre"),
+      user: user?.dataValues.name || "Unknown User", // Handle missing user gracefully
+      rr,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch movie" });
   }
 });
+
 
 // Route: Update a single movie by ID
 app.put(
@@ -148,46 +280,95 @@ app.put(
   }
 );
 
-// app.get("/movies", async (req: Request, res: Response) => {
-//   try {
-//     const movies = await Movie.findAll();
-//     res.status(200).json(movies);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Failed to fetch movies" });
-//   }
-// });
+// Define the query parameter interface
+interface MovieSearchQuery {
+  title?: string;
+}
+
+// Route: Search for movies by title
+app.get("/search", async (req: Request, res: Response) => {
+  try {
+    const { title } = req.query; // Get the title from query parameters
+    // console.log(title);
+    // res.status(200).send(title);
+    const movies = await Movie.findAll({
+      where: {
+        title: {
+          [Op.iLike]: `%${title}%`, // Case-insensitive partial match
+        },
+      },
+      attributes: {
+        include: [
+          // Add the average rating as a computed field
+          [
+            Sequelize.fn("AVG", Sequelize.col("ratingsReviews.rating")),
+            "averageRating",
+          ],
+        ],
+      },
+      include: [
+        {
+          model: RR,
+          as: "ratingsReviews", // Match the alias defined in the associations
+          attributes: [], // Do not include all RR fields in the response
+        },
+        {
+          model: Genre,
+          as: "genres", // Match the alias for the many-to-many association
+          attributes: ["genre"], // Include only the genre name
+          through: { attributes: [] }, // Exclude junction table fields
+        },
+      ],
+      group: ["Movie.movie_id", "genres.genre_id"], // Group by movie ID and genre ID
+    });
+
+    if (movies.length === 0) {
+      res.status(404).json({ message: "No movies found" });
+    } else {
+      res.status(200).json(movies);
+    }
+  } catch (error) {
+    console.error("Error searching for movies:", error);
+    res.status(500).json({ error: "Failed to search for movies" });
+  }
+});
 
 
-// app.get("/movies", async (req: Request, res: Response) => {
-//   try {
-//     // Fetch all movies with their average rating
-//     const movies = await Movie.findAll({
-//       attributes: {
-//         include: [
-//           // Add the average rating as a computed field
-//           [
-//             Sequelize.fn("AVG", Sequelize.col("ratingsReviews.rating")),
-//             "averageRating",
-//           ],
-//         ],
-//       },
-//       include: [
-//         {
-//           model: RR,
-//           as: "ratingsReviews", // Match the alias defined in the associations
-//           attributes: [], // Do not include all RR fields in the response
-//         },
-//       ],
-//       group: ["Movie.movie_id"], // Group by movie ID to compute aggregate ratings
-//     });
 
-//     res.status(200).json(movies);
-//   } catch (error) {
-//     console.error("Error fetching movies with ratings:", error);
-//     res.status(500).json({ error: "Failed to fetch movies with ratings" });
-//   }
-// });
+// Route: Read multiple movies by user ID
+app.get("/moviesFromUser/:id", async (req: Request, res: Response) => {
+  try {
+    const movies = await Movie.findAll({ where: { user_id: req.params.id },
+      attributes: {
+        include: [
+          // Add the average rating as a computed field
+          [
+            Sequelize.fn("AVG", Sequelize.col("ratingsReviews.rating")),
+            "averageRating",
+          ],
+        ],
+      },
+      include: [
+        {
+          model: RR,
+          as: "ratingsReviews", // Match the alias defined in the associations
+          attributes: [], // Do not include all RR fields in the response
+        },
+        {
+          model: Genre,
+          as: "genres", // Match the alias for the many-to-many association
+          attributes: ["genre"], // Include only the genre name
+          through: { attributes: [] }, // Exclude junction table fields
+        },
+      ],
+      group: ["Movie.movie_id", "genres.genre_id"], // Group by movie ID and genre ID
+     });
+     res.status(200).json(movies);
+  } catch (error) {
+    console.error("Error fetching movies with genres and ratings:", error);
+    res.status(500).json({ error: "Failed to fetch movies with genres and ratings" });
+  }
+});
 
 // Route: Read all movies
 app.get("/movies", async (req: Request, res: Response) => {
@@ -397,7 +578,8 @@ sequelize.sync({ alter: true }).then(() => {
 //   "release_yr": 2010,
 //   "director": "Christopher Nolan",
 //   "length": 148,
-//   "producer": "Emma Thomas"
+//   "producer": "Emma Thomas",
+//   "genre": "Action"
 // }
 
 // {
