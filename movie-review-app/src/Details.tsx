@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { data, useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Rating } from '@smastrom/react-rating';
 import { UserContext } from "./UserContext";
 
