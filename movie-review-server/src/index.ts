@@ -9,22 +9,22 @@ import Movie from "./../models/Movies";
 import RR from "./../models/Ratings&Reviews";
 import Genre from "./../models/Genre";
 import MG from "./../models/MovieGenre";
-import routes from './routes/router'
+import routes from './routes/router';
 
 // Initialize associations
 Movie.hasMany(RR, { foreignKey: "movie_id", as: "ratingsReviews" });
-RR.belongsTo(Movie, { foreignKey: "movie_id", as: "movie" });
+RR.belongsTo(Movie, { foreignKey: "movie_id" });
 
 // Define associations
-Movie.hasMany(MG, { foreignKey: "movie_id", as: "movieGenres" });
+Movie.hasMany(MG, { foreignKey: "movie_id" });
 MG.belongsTo(Movie, { foreignKey: "movie_id" });
 
-Genre.hasMany(MG, { foreignKey: "genre_id", as: "genreMovies" });
+Genre.hasMany(MG, { foreignKey: "genre_id" });
 MG.belongsTo(Genre, { foreignKey: "genre_id" });
 
 // Add an association to include genres via MG
 Movie.belongsToMany(Genre, { through: MG, foreignKey: "movie_id", as: "genres" });
-Genre.belongsToMany(Movie, { through: MG, foreignKey: "genre_id", as: "movies" });
+Genre.belongsToMany(Movie, { through: MG, foreignKey: "genre_id" });
 
 
 const app: Express = express();
@@ -279,6 +279,36 @@ app.put(
     }
   }
 );
+
+// Route: Delete a single movie by ID
+app.delete('/movies/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params; // Get movie ID from URL
+
+    // Delete the movie by ID
+    const movie = await Movie.destroy({
+      where: {
+        movie_id: id,
+      },
+    });
+    const rr = await RR.destroy({
+      where: {
+        movie_id: id,
+      },
+    });
+    const mg = await MG.destroy({
+      where: {
+        movie_id: id,
+      },
+    });
+    // console.log(movie, rr, mg);
+    // Return the deleted movie
+    res.status(200).json({deleted: true});
+  } catch (error) {
+    console.error("Error deleting movie:", error);
+    res.status(500).json({ error: "Failed to delete movie" });
+  }
+});
 
 // Define the query parameter interface
 interface MovieSearchQuery {

@@ -21,7 +21,6 @@ function App() {
   // Use the defined type for the state
   const [data, setData] = useState<Movie[]>([]);
   const [initialResults, setInitialResults] = useState<Movie[]>([]);
-  const [searchResults, setSearchResults] = useState<Movie[]>([]);
   useEffect(() => {
     fetch('http://localhost:3000/movies')
       .then((res) => res.json())
