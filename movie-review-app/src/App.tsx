@@ -38,7 +38,13 @@ function App() {
         // console.log(event.target.value.trim());
       fetch('http://localhost:3000/search?title=' + event.target.value.trim())
       .then((res) => res.json())
-      .then((data: Movie[]) => setData(data)) // Ensure the fetched data matches the Movie type
+      .then((data: Movie[]) => {
+        if (Array.isArray(data)) {
+          setData(data);
+        } else {
+          setData([]);
+        }
+      }) // Ensure the fetched data matches the Movie type
       .catch((err) => console.error("Error fetching data:", err));
       document.getElementById('sh')?.classList.remove('hidden');
       } else {

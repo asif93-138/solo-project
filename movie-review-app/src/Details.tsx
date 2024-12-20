@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Rating } from '@smastrom/react-rating';
 import { UserContext } from "./UserContext";
+import MUForm from "./MUForm";
 
 interface Movie {
     movie_id: number;
@@ -33,7 +34,7 @@ const Details = () => {
         .then((data: Movie) => setDataObj(data))
     }, [refresh])
     function handleSubmit(event: {
-      target: any; preventDefault: () => void; 
+      target: any; preventDefault: () => void;
 }) {
       event.preventDefault();
       // console.log({movie_id: dataObj?.movie_id, user_id: context?.user?.user_id, rating: rating, review: event.target.review.value});
@@ -92,6 +93,18 @@ function handleDelete() {
     }
   })
 }
+function handleUpdate() {
+  document.getElementById('my_modal_4')?.classList.add('modal-open');
+  // fetch('http://localhost:3000/movies/' + dataObj?.movie_id, {
+  //   method: 'DELETE'
+  // })
+  // .then(res => res.json())
+  // .then(data => {
+  //   if (data.deleted) {
+  //     document.getElementById('my_modal_3')?.classList.add('modal-open');
+  //   }
+  // })
+}
 function closeModal_3() {
   document.getElementById('my_modal_3')?.classList.remove('modal-open');
   navigate('/user');
@@ -101,7 +114,7 @@ function closeModal_3() {
         <section className="bg-slate-700 text-white py-10">
                     <div className="flex justify-around">
             <div>
-            <h2 className="text-5xl mb-4">{dataObj?.title} {dataObj?.user_id == context?.user?.user_id && <span><button onClick={handleDelete} className="btn btn-xs btn-error text-white" type="button">Delete</button></span>}</h2>
+            <h2 className="text-5xl mb-4">{dataObj?.title} {dataObj?.user_id == context?.user?.user_id && <span><button onClick={handleUpdate} className="btn btn-xs text-black" type="button">Update</button> <button onClick={handleDelete} className="btn btn-xs btn-error text-white" type="button">Delete</button></span>}</h2>
             <p className="text-slate-200">{dataObj?.release_yr} . {dataObj?.length}min</p>
             <p>
                 <svg className='inline mb-1' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="15">
@@ -184,6 +197,19 @@ function closeModal_3() {
   <div className="modal-box text-center">
   <h4 className="text-red-500 text-2xl my-4">Deleted!</h4>
       <button type="button" className="btn" onClick={closeModal_3}>Close</button>
+  </div>
+</dialog>
+<dialog id="my_modal_4" className="modal">
+  <div className="modal-box text-black">
+    <article id="my_modal_4A1" className=""><MUForm setRefresh={setRefresh} mId={dataObj?.movie_id} /></article>
+    <article id="my_modal_4A2" className="hidden text-center">
+    <h4 className="text-black text-2xl my-4">Updated!</h4>
+    <button type="button" className="btn" onClick={() => {
+      document.getElementById('my_modal_4')?.classList.remove('modal-open');
+      document.getElementById('my_modal_4A2')?.classList.add('hidden');
+    document.getElementById('my_modal_4A1')?.classList.remove('hidden');
+    }}>Close</button>
+    </article>
   </div>
 </dialog>
         </section>

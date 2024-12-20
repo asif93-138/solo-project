@@ -9,7 +9,7 @@ import Movie from "./../models/Movies";
 import RR from "./../models/Ratings&Reviews";
 import Genre from "./../models/Genre";
 import MG from "./../models/MovieGenre";
-import routes from './routes/router';
+// import routes from './routes/router';
 
 // Initialize associations
 Movie.hasMany(RR, { foreignKey: "movie_id", as: "ratingsReviews" });
@@ -34,7 +34,7 @@ app.use(cors());
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 
-app.use('/api', routes);
+// app.use('/api', routes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('DB testing!');
@@ -48,9 +48,7 @@ app.post('/', (req: Request, res: Response) => {
 // Route: Insert a single user
 app.post("/users", async (req: Request, res: Response) => {
   try {
-    const users = await User.findAll();
-    const dataObj = {user_id: users.length + 1, ...req.body};
-    const user = await User.create(dataObj);
+    const user = await User.create(req.body);
     res.status(201).json(user);
   } catch (error) {
     console.error(error);
@@ -113,8 +111,8 @@ app.post("/movies", async (req: Request, res: Response) => {
         { transaction }
       );
 
-      console.log("Created movie:", movie);
-      console.log("Movie ID:", movie.dataValues.movie_id);
+      // console.log("Created movie:", movie);
+      // console.log("Movie ID:", movie.dataValues.movie_id);
 
 if (!movie.dataValues.movie_id) {
   throw new Error("Movie ID is null after creation");
@@ -310,10 +308,10 @@ app.delete('/movies/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Define the query parameter interface
-interface MovieSearchQuery {
-  title?: string;
-}
+// // Define the query parameter interface
+// interface MovieSearchQuery {
+//   title?: string;
+// }
 
 // Route: Search for movies by title
 app.get("/search", async (req: Request, res: Response) => {
@@ -441,9 +439,7 @@ app.get("/movies", async (req: Request, res: Response) => {
 // Route: Insert a single rr
 app.post("/rrs", async (req: Request, res: Response) => {
   try {
-    const rrs = await RR.findAll();
-    const dataObj = {rr_id: rrs.length + 1, ...req.body};
-    const rr = await RR.create(dataObj);
+    const rr = await RR.create(req.body);
     res.status(201).json(rr);
   } catch (error) {
     console.error(error);
@@ -512,9 +508,7 @@ app.get("/rrs", async (req: Request, res: Response) => {
 // Route: Insert a single genre
 app.post("/genres", async (req: Request, res: Response) => {
   try {
-    const genres = await Genre.findAll();
-    const dataObj = {genre_id: genres.length + 1, ...req.body};
-    const genre = await Genre.create(dataObj);
+    const genre = await Genre.create(req.body);
     res.status(201).json(genre);
   } catch (error) {
     console.error(error);
@@ -551,9 +545,7 @@ app.get("/genres", async (req: Request, res: Response) => {
 // Route: Insert a single mg
 app.post("/mgs", async (req: Request, res: Response) => {
   try {
-    const mgs = await MG.findAll();
-    const dataObj = {mg_id: mgs.length + 1, ...req.body};
-    const mg = await MG.create(dataObj);
+    const mg = await MG.create(req.body);
     res.status(201).json(mg);
   } catch (error) {
     console.error(error);

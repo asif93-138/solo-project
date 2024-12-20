@@ -1,10 +1,11 @@
 import { useContext } from "react";
-import { Outlet, Link, useLocation } from "react-router";
+import { Outlet, Link, useLocation, useNavigate } from "react-router";
 import { UserContext } from "./UserContext";
 
 const Layout = () => {
     const context = useContext(UserContext);
     const location = useLocation();
+    const navigate = useNavigate();
     // console.log(); 
     return (
         <>
@@ -29,7 +30,12 @@ const Layout = () => {
                                         </div>
                                     </div>
                                 </Link>
-                                <button className="btn" onClick={() => { context?.setUser(null) }}>Logout</button>
+                                <button className="btn" onClick={() => {
+                                    context?.setUser(null);
+                                    if (location.pathname != '/') {
+                                        navigate('/');
+                                    }
+                                }}>Logout</button>
                             </>
                             :
                             <Link to="/login"><button className="btn">Login</button></Link>
