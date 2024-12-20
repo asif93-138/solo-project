@@ -53,7 +53,7 @@ const User = () => {
         {data.map((x) => (
           <div key={x.movie_id} className="card bg-slate-800 shadow-xl">
             <figure>
-              <img className='w-full' src={x.img} alt="poster" />
+              <img className='w-full' src={'http://localhost:3000' + x.img} alt="poster" />
             </figure>
             <div className="p-6">
               <p>

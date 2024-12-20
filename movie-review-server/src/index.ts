@@ -3,6 +3,8 @@ import cors from 'cors';
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import { Sequelize, Op } from "sequelize";
+import multer from 'multer';
+import path from 'path';
 import sequelize from "./sequelize";
 import User from "./../models/Users";
 import Movie from "./../models/Movies";
@@ -43,6 +45,34 @@ app.get('/', (req: Request, res: Response) => {
 app.post('/', (req: Request, res: Response) => {
   console.log(req.body);
   res.send('Got a POST request');
+});
+
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Configure Multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, '../uploads');
+    cb(null, uploadPath); // Directory to save the files
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname)); // Unique filename
+  },
+});
+
+const upload = multer({ storage });
+
+// Endpoint to upload image
+app.post('/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    res.status(400).send('No file uploaded.');
+  } else {
+    res.status(200).json({
+      message: 'File uploaded successfully!',
+      filePath: `/uploads/${req.file.filename}`,
+    });
+  }
 });
 
 // Route: Insert a single user

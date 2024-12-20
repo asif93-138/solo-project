@@ -157,7 +157,7 @@ function closeModal_3() {
 </dialog>
               
         </div>
-        <img src={'/' + dataObj?.img} />
+        <img src={'http://localhost:3000' + dataObj?.img} />
         </div>
         <hr className="my-8 w-4/5 mx-auto" />
         <h3 className="text-3xl text-center">User Reviews</h3>

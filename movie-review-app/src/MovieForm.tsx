@@ -1,6 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from "react";
 import { UserContext } from "./UserContext";
-
 
 interface MovieData {
   title: string;
@@ -14,30 +13,32 @@ interface MovieData {
 }
 
 interface Genre {
-    genre_id: number;
-    genre: string;
-  }
+  genre_id: number;
+  genre: string;
+}
 
-  interface MovieFormProps {
-    predefinedGenres: Genre[];
-    setRefresh: React.Dispatch<React.SetStateAction<number>>;
-  }
-  
+interface MovieFormProps {
+  predefinedGenres: Genre[];
+  setRefresh: React.Dispatch<React.SetStateAction<number>>;
+}
 
 const MovieForm: React.FC<MovieFormProps> = ({ predefinedGenres, setRefresh }) => {
   const content = useContext(UserContext);
   const [formData, setFormData] = useState<MovieData>({
-    title: '',
-    img: '',
-    desc: '',
+    title: "",
+    img: "",
+    desc: "",
     release_yr: new Date().getFullYear(),
-    director: '',
+    director: "",
     length: 0,
-    producer: '',
+    producer: "",
     genre: [],
   });
 
-  const [newGenre, setNewGenre] = useState('');
+  const [newGenre, setNewGenre] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [message, setMessage] = useState("");
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,54 +53,94 @@ const MovieForm: React.FC<MovieFormProps> = ({ predefinedGenres, setRefresh }) =
   };
 
   const handleAddNewGenre = () => {
-    // console.log({genre: newGenre});
-    if (newGenre.trim() && !predefinedGenres.find(x => x.genre == newGenre)) {
-      fetch('http://localhost:3000/genres', {
-        method: 'POST',
+    if (newGenre.trim() && !predefinedGenres.find((x) => x.genre === newGenre)) {
+      fetch("http://localhost:3000/genres", {
+        method: "POST",
         headers: {
-          'content-type': 'application/json'
+          "content-type": "application/json",
         },
-        body: JSON.stringify({genre: newGenre})
+        body: JSON.stringify({ genre: newGenre }),
       })
-    .then(res => res.json())
-    .then(data => {
-        if (data.genre_id) {
-          setRefresh((prev) => prev + 1);
-          setNewGenre('');
-        }
-    })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.genre_id) {
+            setRefresh((prev) => prev + 1);
+            setNewGenre("");
+          }
+        });
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleCancelImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // console.log({user_id: content?.user?.user_id, ...formData});
-    fetch('http://localhost:3000/movies', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({user_id: content?.user?.user_id, ...formData})
-      })
-    .then(res => res.json())
-    .then(data => {
-        if (data.movie.movie_id) {
+    setMessage("");
+
+    if (imageFile) {
+      // Upload image first
+      const formDataImage = new FormData();
+      formDataImage.append("image", imageFile);
+
+      try {
+        const imageResponse = await fetch("http://localhost:3000/upload", {
+          method: "POST",
+          body: formDataImage,
+        });
+
+        const imageData = await imageResponse.json();
+
+        if (imageData.filePath) {
+          // Update form data with image URL
+          const updatedFormData = { ...formData, img: imageData.filePath };
+
+          // Submit movie data
+          const movieResponse = await fetch("http://localhost:3000/movies", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({ user_id: content?.user?.user_id, ...updatedFormData }),
+          });
+
+          const movieData = await movieResponse.json();
+          if (movieData.movie.movie_id) {
             setFormData({
-                title: '',
-                img: '',
-                desc: '',
-                release_yr: new Date().getFullYear(),
-                director: '',
-                length: 0,
-                producer: '',
-                genre: [],
-              });
-              setNewGenre('');
-              document.getElementsByTagName('section')[1].classList.add('hidden');
+              title: "",
+              img: "",
+              desc: "",
+              release_yr: new Date().getFullYear(),
+              director: "",
+              length: 0,
+              producer: "",
+              genre: [],
+            });
+            setImageFile(null);
+            setImagePreview(null);
+            setRefresh((prev) => prev + 1);
+            document.getElementsByTagName('section')[1].classList.add('hidden');
               document.getElementsByTagName('section')[0].classList.remove('hidden');
-              setRefresh((prev) => prev + 1);
+            setMessage("Movie successfully added!");
+          }
         }
-    })
+      } catch (error) {
+        console.error("Error during upload:", error);
+        setMessage("Image upload or movie submission failed.");
+      }
+    } else {
+      setMessage("Please select an image before submitting.");
+    }
   };
 
   return (
@@ -112,15 +153,6 @@ const MovieForm: React.FC<MovieFormProps> = ({ predefinedGenres, setRefresh }) =
           value={formData.title}
           onChange={handleInputChange}
           placeholder="Movie Title"
-          className="input input-bordered w-full"
-        />
-
-        <input
-          type="text"
-          name="img"
-          value={formData.img}
-          onChange={handleInputChange}
-          placeholder="Image URL"
           className="input input-bordered w-full"
         />
 
@@ -197,6 +229,42 @@ const MovieForm: React.FC<MovieFormProps> = ({ predefinedGenres, setRefresh }) =
             Add
           </button>
         </div>
+
+
+ {/* Image Upload Section */}
+        {!imageFile && (
+          <label className="btn btn-block">
+            Select Image
+            <input
+              type="file"
+              className="hidden"
+              onChange={handleImageChange}
+              accept="image/*"
+            />
+          </label>
+        )}
+
+        {/* Preview Section */}
+        {imagePreview && (
+          <div className="card w-96 bg-base-100 shadow-xl">
+            <figure>
+              <img src={imagePreview} alt="Preview" className="rounded-t-lg max-h-60 object-cover" />
+            </figure>
+            <div className="card-body">
+              <h2 className="card-title">Image Preview</h2>
+              <div className="card-actions justify-end gap-2">
+                <button
+                  type="button"
+                  className="btn text-white btn-error"
+                  onClick={handleCancelImage}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+       
 
         <button type="submit" className="btn btn-accent w-full">
           Submit
