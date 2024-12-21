@@ -428,6 +428,56 @@ app.get("/moviesFromUser/:id", async (req: Request, res: Response) => {
   }
 });
 
+// Route: Search for movies by genre
+app.get("/search/genre", async (req: Request, res: Response) => {
+  try {
+    const { genre } = req.query; // Get the genre from query params
+    if (!genre) {
+      res.status(400).json({ message: "Genre query parameter is required." });
+    } else {
+      // Query to find movies by genre
+      const movies = await Movie.findAll({
+        include: [
+          {
+            model: Genre,
+            as: "genres",
+            where: { genre }, // Filter by the genre
+            attributes: ["genre"],
+            through: { attributes: [] }, // Exclude join table attributes
+          },
+          {
+            model: RR,
+            as: "ratingsReviews",
+            attributes: [], // We only need averageRating, not individual reviews
+          },
+        ],
+        attributes: [
+          "movie_id",
+          "user_id",
+          "title",
+          "img",
+          "desc",
+          "release_yr",
+          "director",
+          "length",
+          "producer",
+          [
+            Sequelize.fn("AVG", Sequelize.col("ratingsReviews.rating")),
+            "averageRating", // Calculate average rating
+          ],
+        ],
+        group: ["Movie.movie_id", "genres.genre_id"], // Group by movie and genre
+      });
+  
+      // Send response
+      res.status(200).json(movies);
+    }
+  } catch (error) {
+    console.error("Error fetching movies by genre:", error);
+    res.status(500).json({ message: "An error occurred while fetching movies." });
+  }
+})
+
 // Route: Read all movies
 app.get("/movies", async (req: Request, res: Response) => {
   try {

@@ -28,6 +28,7 @@ const Details = () => {
     const [dataObj, setDataObj] = useState<Movie | null>(null);
     const [rating, setRating] = useState(0);
     const [refresh, setRefresh] = useState(0);
+    const [reviewTxt, setReviewTxt] = useState('');
     useEffect(() => {
         fetch('http://localhost:3000/movies/' + location.pathname.slice(9))
         .then(res => res.json())
@@ -168,7 +169,11 @@ function closeModal_3() {
                   <path fill="#f5c518" d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
                 </svg>
                 <span className=''> {x?.rating || 0}</span><br />
-                {x.user_id == context?.user?.user_id && <button onClick={() => document.getElementById('my_modal_2')?.classList.add('modal-open')} type="button" className="btn min-h-0 h-auto p-1">Edit</button>}
+                {x.user_id == context?.user?.user_id && <button onClick={() => {
+                  setRating(x?.rating);
+                  setReviewTxt(x.review);
+                  document.getElementById('my_modal_2')?.classList.add('modal-open');
+                }} type="button" className="btn min-h-0 h-auto p-1">Edit</button>}
                 
               </p>
         </article>))}
@@ -181,10 +186,12 @@ function closeModal_3() {
       style={{ maxWidth: 180, margin: 'auto'}}
       value={rating}
       onChange={setRating} />
-<textarea
+<textarea defaultValue={reviewTxt}
   placeholder="Write your review" name="review"
   className="textarea textarea-bordered textarea-lg w-full max-w-xs text-black my-2"></textarea><br />
-  <button type="submit" className="btn">Submit</button>
+  <button type="submit" className="btn">Submit</button> <button type="button" onClick={() => {
+    document.getElementById('my_modal_2')?.classList.remove('modal-open');
+  }} className="btn">Cancel</button>
           </section>
           <section className="hidden" id="updateFormClose">
           <h4 className="text-center text-black text-2xl my-4">Updated!</h4>
@@ -201,7 +208,9 @@ function closeModal_3() {
 </dialog>
 <dialog id="my_modal_4" className="modal">
   <div className="modal-box text-black">
-    <article id="my_modal_4A1" className=""><MUForm setRefresh={setRefresh} mId={dataObj?.movie_id} /></article>
+    <article id="my_modal_4A1" className="">
+      <MUForm setRefresh={setRefresh} mId={dataObj?.movie_id} />
+      </article>
     <article id="my_modal_4A2" className="hidden text-center">
     <h4 className="text-black text-2xl my-4">Updated!</h4>
     <button type="button" className="btn" onClick={() => {

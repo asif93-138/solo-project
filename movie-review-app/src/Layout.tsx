@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
 import { UserContext } from "./UserContext";
 
@@ -6,6 +6,15 @@ const Layout = () => {
     const context = useContext(UserContext);
     const location = useLocation();
     const navigate = useNavigate();
+    const [tooltipLeft, setTooltipLeft] = useState(90);
+    useEffect(() => {
+        if (context?.user) {
+            setTimeout(() => {
+                const tooltipElement = document.getElementsByClassName('tooltiptext')[0] as HTMLElement;
+                setTooltipLeft(tooltipElement.offsetWidth - 131 + 90);
+            }, 1500);
+        }
+    }, [context?.user])
     // console.log(); 
     return (
         <>
@@ -20,18 +29,21 @@ const Layout = () => {
                         {context?.user ?
                             <>
                                 <Link to='/user'>
-                                    <div className="dropdown dropdown-end">
+                                    <div className="dropdown dropdown-end  tool-tip">
                                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                                             <div className="w-10 rounded-full">
                                                 <img
                                                     alt="Tailwind CSS Navbar component"
                                                     src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                                    
                                             </div>
                                         </div>
+                                        <small style={{left: '-' + tooltipLeft + '%'}} className="tooltiptext">{context.user.name}<br />{context.user.email}</small>
                                     </div>
                                 </Link>
                                 <button className="btn" onClick={() => {
                                     context?.setUser(null);
+                                    localStorage.clear();
                                     if (location.pathname != '/') {
                                         navigate('/');
                                     }

@@ -38,7 +38,6 @@ const MovieForm: React.FC<MovieFormProps> = ({ predefinedGenres, setRefresh }) =
   const [newGenre, setNewGenre] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [message, setMessage] = useState("");
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -86,7 +85,6 @@ const MovieForm: React.FC<MovieFormProps> = ({ predefinedGenres, setRefresh }) =
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("");
 
     if (imageFile) {
       // Upload image first
@@ -131,15 +129,11 @@ const MovieForm: React.FC<MovieFormProps> = ({ predefinedGenres, setRefresh }) =
             setRefresh((prev) => prev + 1);
             document.getElementsByTagName('section')[1].classList.add('hidden');
               document.getElementsByTagName('section')[0].classList.remove('hidden');
-            setMessage("Movie successfully added!");
           }
         }
       } catch (error) {
         console.error("Error during upload:", error);
-        setMessage("Image upload or movie submission failed.");
       }
-    } else {
-      setMessage("Please select an image before submitting.");
     }
   };
 
@@ -224,7 +218,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ predefinedGenres, setRefresh }) =
           <button
             type="button"
             onClick={handleAddNewGenre}
-            className="btn btn-primary"
+            className="btn"
           >
             Add
           </button>
@@ -266,9 +260,12 @@ const MovieForm: React.FC<MovieFormProps> = ({ predefinedGenres, setRefresh }) =
         )}
        
 
-        <button type="submit" className="btn btn-accent w-full">
+        <button type="submit" className="btn w-full">
           Submit
         </button>
+        <button type="button" className="btn btn-block" onClick={() => {
+          document.getElementById('my_modal_1')?.classList.remove('modal-open');
+        }}>Cancel</button>
       </form>
     </div>
   );

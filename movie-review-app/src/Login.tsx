@@ -20,6 +20,10 @@ const Login = () => {
                 formName.email.value = '';
                 formName.pass.value = '';
                 context?.setUser({user_id: data.user_id, name: data.name, email: data.email});
+                localStorage.clear();
+                localStorage.setItem('user_id', data.user_id);
+                localStorage.setItem('name', data.name);
+                localStorage.setItem('email', data.email);
                 document.getElementById('my_modal_2')?.classList.add('modal-open');
             } else {
                 document.getElementById('my_modal_1')?.classList.add('modal-open');

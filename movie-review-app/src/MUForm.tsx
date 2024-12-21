@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 
 interface MovieData {
-  img?: string;
   desc?: string;
   release_yr?: number;
   director?: string;
@@ -68,14 +67,6 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, mId }) => {
     <div className="p-6 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Movie Data Update Form</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="img"
-          value={formData.img || ''}
-          onChange={handleInputChange}
-          placeholder="Image URL"
-          className="input input-bordered w-full"
-        />
         <textarea
           name="desc"
           value={formData.desc || ''}
@@ -115,9 +106,12 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, mId }) => {
           placeholder="Producer"
           className="input input-bordered w-full"
         />
-        <button type="submit" className="btn btn-accent w-full">
+        <button type="submit" className="btn w-full">
           Submit
         </button>
+        <button type="button" className="btn btn-block" onClick={() => {
+          document.getElementById('my_modal_4')?.classList.remove('modal-open');
+        }}>Cancel</button>
       </form>
     </div>
   );

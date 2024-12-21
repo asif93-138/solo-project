@@ -25,35 +25,34 @@ interface Genre {
   }
 
 const User = () => {
-    const content = useContext(UserContext);
+    const context = useContext(UserContext);
     const [refresh, setRefresh] = useState(0);
       const [data, setData] = useState<Movie[]>([]);
       const [genres, setGenres] = useState<Genre[]>([]);
       useEffect(() => {
-        fetch('http://localhost:3000/moviesFromUser/' + content?.user?.user_id)
+        if (context?.user) {
+          fetch('http://localhost:3000/moviesFromUser/' + context?.user?.user_id)
           .then((res) => res.json())
           .then((data: Movie[]) => setData(data))
 
         fetch('http://localhost:3000/genres')
           .then((res) => res.json())
           .then((data: Genre[]) => setGenres(data))
-      }, [refresh]);
+        }
+      }, [refresh, context?.user]);
       // console.log();
     function showModal() {
         document.getElementById('my_modal_1')?.classList.add('modal-open');
     }
     return (
-        <div className="bg-slate-700 text-white py-10">
-            <h4 className="text-2xl text-center mb-6">User Information</h4>
-            <p className="text-center"><span className='font-bold me-1'>User Name</span> <span className="text-blue-300">{content?.user?.name}</span></p>
-            <p className="text-center"><span className='font-bold me-1'>User Email</span> <span className="text-blue-300">{content?.user?.email}</span></p>
+        <div className="bg-slate-700 text-white py-4 min-h-screen">
             <h4 className="text-2xl text-center my-6">Your Movies</h4>
             <p className="text-center mb-6"><button type="button" className="btn" onClick={showModal}>Insert a new Movie</button></p>
             <div className='grid grid-cols-4 gap-6 w-9-10 mx-auto'>
         {data.map((x) => (
           <div key={x.movie_id} className="card bg-slate-800 shadow-xl">
             <figure>
-              <img className='w-full' src={'http://localhost:3000' + x.img} alt="poster" />
+              <img className='poster-img' src={'http://localhost:3000' + x.img} alt="poster" />
             </figure>
             <div className="p-6">
               <p>
