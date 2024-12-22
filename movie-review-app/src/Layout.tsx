@@ -24,7 +24,10 @@ const Layout = () => {
                 &&
                 <nav className="navbar bg-neutral text-neutral-content px-8">
                     <div className="flex-1">
-                        <Link to="/" className=""><img width='100' src={img} alt="logo" /></Link>
+                        <Link to="/" className="m-2">      <div className="text-3xl md:text-4xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
+        <span className="bg-yellow-500 text-black px-2 py-1 rounded">FILM</span>
+        <span className="text-white">Critic</span>
+      </div></Link>
                     </div>
                     <div className="flex-none gap-2">
                         {context?.user ?

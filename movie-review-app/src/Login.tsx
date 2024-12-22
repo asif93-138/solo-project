@@ -1,7 +1,6 @@
 import {Link, useNavigate } from "react-router";
 import { UserContext } from "./UserContext";
 import { useContext } from "react";
-import img from '../public/e4e42631158aa2ab3a546299087e534d.png'
 
 
 const Login = () => {
@@ -40,7 +39,10 @@ const Login = () => {
     }
     return (
         <div className="p-8">
-            <Link to="/" className=""><img width='100' className="mx-auto" src={img} alt="logo" /></Link>
+            <Link to="/" className="text-center"><div className="text-3xl md:text-4xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
+        <span className="bg-yellow-500 text-white px-2 py-1 rounded">FILM</span>
+        <span className="text-black">Critic</span>
+      </div></Link>
             <form className="border-2 p-6 rounded-lg w-1/2 mx-auto mt-4" onSubmit={handleSubmit}>
                 <p className="text-2xl mb-4 font-medium">Log In</p>
                 <label htmlFor="email" className="font-medium">Email</label><br />
