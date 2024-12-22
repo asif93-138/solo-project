@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
 import { UserContext } from "./UserContext";
+import img from '../public/e4e42631158aa2ab3a546299087e534d.png'
 
 const Layout = () => {
     const context = useContext(UserContext);
@@ -21,9 +22,9 @@ const Layout = () => {
             {
                 !(location.pathname == '/login' || location.pathname == '/register')
                 &&
-                <nav className="navbar bg-neutral text-neutral-content">
+                <nav className="navbar bg-neutral text-neutral-content px-8">
                     <div className="flex-1">
-                        <Link to="/" className="btn btn-ghost text-xl">Home</Link>
+                        <Link to="/" className=""><img width='100' src={img} alt="logo" /></Link>
                     </div>
                     <div className="flex-none gap-2">
                         {context?.user ?
@@ -41,7 +42,7 @@ const Layout = () => {
                                         <small style={{left: '-' + tooltipLeft + '%'}} className="tooltiptext">{context.user.name}<br />{context.user.email}</small>
                                     </div>
                                 </Link>
-                                <button className="btn" onClick={() => {
+                                <button className="btn text-slate-50 btn-nav-l min-h-0 h-auto py-3 bg-slate-500 border-0" onClick={() => {
                                     context?.setUser(null);
                                     localStorage.clear();
                                     if (location.pathname != '/') {
@@ -50,7 +51,7 @@ const Layout = () => {
                                 }}>Logout</button>
                             </>
                             :
-                            <Link to="/login"><button className="btn">Login</button></Link>
+                            <Link to="/login"><button className="btn text-slate-50 btn-nav-l min-h-0 h-auto py-3 bg-slate-500 border-0">Login</button></Link>
                         }
                     </div>
                 </nav>

@@ -113,39 +113,26 @@ function closeModal_3() {
   // console.log();
     return (
         <section className="bg-slate-700 text-white py-10">
-                    <div className="flex justify-around">
-            <div>
+                    <div className="flex justify-around items-center">
+            <div className="w-2/5">
             <h2 className="text-5xl mb-4">{dataObj?.title} {dataObj?.user_id == context?.user?.user_id && <span><button onClick={handleUpdate} className="btn btn-xs text-black" type="button">Update</button> <button onClick={handleDelete} className="btn btn-xs btn-error text-white" type="button">Delete</button></span>}</h2>
             <p className="text-slate-200">{dataObj?.release_yr} . {dataObj?.length}min</p>
-            <p>
+            <p className="mb-8">
                 <svg className='inline mb-1' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="15">
                   <path fill="#f5c518" d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
                 </svg>
                 <span className='text-slate-300'> {dataObj?.rating || 0}</span>
               </p>
-            <p style={{marginTop: '50px'}}>{dataObj?.desc}</p>
-            <p className=''><span className='font-bold me-1'>Genre</span> {dataObj?.genres.map((y, index) => (
+            <p>{dataObj?.desc}</p>
+            <p className='mt-8 text-lg'><span className='font-bold me-1'>Genre</span> {dataObj?.genres.map((y, index) => (
                 <span key={y} className="text-blue-300">
                   {y}
                   {index < dataObj?.genres.length - 1 && ", "}
                 </span>
               ))}</p>
-              <p><span className='font-bold me-1'>Director</span> <span className="text-blue-300">{dataObj?.director}</span></p>
-              <p><span className='font-bold me-1'>Producer</span> <span className="text-blue-300">{dataObj?.producer}</span></p>
-              <p><span className='font-bold me-1'>Created By</span> <span className="text-blue-300">{dataObj?.user}</span></p>
-              {context?.user && !dataObj?.rr.find(x => x.user_id == context?.user?.user_id) && <>
-              <h4 className="text-center text-2xl mt-8 my-4">Rate and Review</h4>
-              <form name="rr" className="text-center" onSubmit={handleSubmit}>
-              <Rating
-      style={{ maxWidth: 180, margin: 'auto'}}
-      value={rating}
-      onChange={setRating} />
-<textarea
-  placeholder="Write your review" name="review"
-  className="textarea textarea-bordered textarea-lg w-full max-w-xs text-black my-2"></textarea><br />
-  <button type="submit" className="btn">Submit</button>
-              </form>
-              </>}
+              <p className="text-lg"><span className='font-bold me-1'>Director</span> <span className="text-blue-300">{dataObj?.director}</span></p>
+              <p className="text-lg"><span className='font-bold me-1'>Producer</span> <span className="text-blue-300">{dataObj?.producer}</span></p>
+              <p className="text-lg"><span className='font-bold me-1'>Created By</span> <span className="text-blue-300">{dataObj?.user}</span></p>
               <dialog id="my_modal_1" className="modal">
   <div className="modal-box">
     <p className="py-4 text-black font-medium text-center">Rating and review posted!</p>
@@ -158,24 +145,39 @@ function closeModal_3() {
 </dialog>
               
         </div>
-        <img src={'http://localhost:3000' + dataObj?.img} />
+        <img src={'http://localhost:3000' + dataObj?.img} alt="poster" className="poster-img-1 rounded-xl" />
         </div>
         <hr className="my-8 w-4/5 mx-auto" />
         <h3 className="text-3xl text-center">User Reviews</h3>
+        {context?.user && !dataObj?.rr.find(x => x.user_id == context?.user?.user_id) && <>
+              <h4 className="text-2xl my-4 ml-32">Rate and Review</h4>
+              <form name="rr" className="mb-10" onSubmit={handleSubmit}>
+              <Rating
+      style={{ maxWidth: 180, marginLeft: '120px'}}
+      value={rating}
+      onChange={setRating} />
+<textarea
+  placeholder="Write your review" name="review"
+  className="textarea textarea-bordered textarea-md w-4/5 ml-32 text-black my-2"></textarea><br />
+  <button type="submit" className="btn ml-32">Submit</button>
+              </form>
+              </>}
         {dataObj?.rr.map(x => (<article key={x.rr_id} className="flex w-3/4 mx-auto justify-between bg-white text-black my-6 p-4 rounded-md">
-            <div><p>{x.review}</p><b>{x.user}</b></div>
-            <p>
-                <svg className='inline mb-1' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="15">
+            <div><p className="w-11/12 text-justify mb-3">{x.review}</p><b>{x.user}</b></div>
+            <div>
+                <article className="flex">
+                <svg className='inline' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="15">
                   <path fill="#f5c518" d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
                 </svg>
-                <span className=''> {x?.rating || 0}</span><br />
+                <span className='ml-1'> {x?.rating || 0}</span>
+                </article>
                 {x.user_id == context?.user?.user_id && <button onClick={() => {
                   setRating(x?.rating);
                   setReviewTxt(x.review);
                   document.getElementById('my_modal_2')?.classList.add('modal-open');
-                }} type="button" className="btn min-h-0 h-auto p-1">Edit</button>}
+                }} type="button" className="btn min-h-0 h-auto p-1 mt-4">Edit</button>}
                 
-              </p>
+              </div>
         </article>))}
         <dialog id="my_modal_2" className="modal">
   <div className="modal-box">
@@ -188,7 +190,7 @@ function closeModal_3() {
       onChange={setRating} />
 <textarea defaultValue={reviewTxt}
   placeholder="Write your review" name="review"
-  className="textarea textarea-bordered textarea-lg w-full max-w-xs text-black my-2"></textarea><br />
+  className="textarea textarea-bordered textarea-md w-full max-w-xs text-black my-2"></textarea><br />
   <button type="submit" className="btn">Submit</button> <button type="button" onClick={() => {
     document.getElementById('my_modal_2')?.classList.remove('modal-open');
   }} className="btn">Cancel</button>

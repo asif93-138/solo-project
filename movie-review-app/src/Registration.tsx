@@ -1,6 +1,7 @@
 import {Link, useNavigate } from "react-router";
 import { UserContext } from "./UserContext";
 import { useContext } from "react";
+import img from '../public/e4e42631158aa2ab3a546299087e534d.png'
 
 const Registration = () => {
     const context = useContext(UserContext);
@@ -46,8 +47,8 @@ const Registration = () => {
     }
     return (
         <div className="p-8">
-        <p className="text-center mb-4"><Link to="/" className="link">Home</Link></p>
-        <form className="border-2 p-6 rounded-lg w-1/2 mx-auto" onSubmit={handleSubmit}>
+        <Link to="/" className=""><img width='100' className="mx-auto" src={img} alt="logo" /></Link>
+        <form className="border-2 p-6 rounded-lg w-1/2 mx-auto mt-4" onSubmit={handleSubmit}>
             <p className="text-2xl mb-4 font-medium">Register</p>
             <label htmlFor="name" className="font-medium">Name</label><br />
             <input type="text" id="name" name="name" className="border border-gray-400 rounded text-sm p-1 w-full" required/><br />
