@@ -420,6 +420,7 @@ app.get("/moviesFromUser/:id", async (req: Request, res: Response) => {
         },
       ],
       group: ["Movie.movie_id", "genres.genre_id"], // Group by movie ID and genre ID
+      order: [["movie_id", "DESC"]], // Sort by movie_id in ascending order
      });
      res.status(200).json(movies);
   } catch (error) {
@@ -478,6 +479,7 @@ app.get("/search/genre", async (req: Request, res: Response) => {
   }
 })
 
+
 // Route: Read all movies
 app.get("/movies", async (req: Request, res: Response) => {
   try {
@@ -506,6 +508,7 @@ app.get("/movies", async (req: Request, res: Response) => {
         },
       ],
       group: ["Movie.movie_id", "genres.genre_id"], // Group by movie ID and genre ID
+      order: [["movie_id", "DESC"]], // Sort by movie_id in ascending order
     });
 
     res.status(200).json(movies);
@@ -514,6 +517,42 @@ app.get("/movies", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch movies with genres and ratings" });
   }
 });
+
+// app.get("/movies", async (req: Request, res: Response) => {
+//   try {
+//     // Fetch all movies with their average rating and genres
+//     const movies = await Movie.findAll({
+//       attributes: {
+//         include: [
+//           // Add the average rating as a computed field
+//           [
+//             Sequelize.fn("AVG", Sequelize.col("ratingsReviews.rating")),
+//             "averageRating",
+//           ],
+//         ],
+//       },
+//       include: [
+//         {
+//           model: RR,
+//           as: "ratingsReviews", // Match the alias defined in the associations
+//           attributes: [], // Do not include all RR fields in the response
+//         },
+//         {
+//           model: Genre,
+//           as: "genres", // Match the alias for the many-to-many association
+//           attributes: ["genre"], // Include only the genre name
+//           through: { attributes: [] }, // Exclude junction table fields
+//         },
+//       ],
+//       group: ["Movie.movie_id", "genres.genre_id"], // Group by movie ID and genre ID
+//     });
+
+//     res.status(200).json(movies);
+//   } catch (error) {
+//     console.error("Error fetching movies with genres and ratings:", error);
+//     res.status(500).json({ error: "Failed to fetch movies with genres and ratings" });
+//   }
+// });
 
 
 // Route: Insert a single rr

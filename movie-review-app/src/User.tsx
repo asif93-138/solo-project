@@ -46,7 +46,7 @@ const User = () => {
     }
     return (
         <div className="bg-black text-white py-4 min-h-screen">
-            <h4 className="text-2xl text-center my-6">Your Movies</h4>
+            <h4 className="text-2xl text-center mt-0 my-4">Your Movies</h4>
             <p className="text-center mb-6"><button type="button" className="btn" onClick={showModal}>Insert a new Movie</button></p>
             <div className='grid grid-cols-4 gap-6 w-9-10 mx-auto'>
         {data.map((x) => (
@@ -67,10 +67,9 @@ const User = () => {
   </p>
 </article>
 
-  <small className='text-white'>Genre : {x.genres.map((y, index) => (
-    <span key={y.genre}>
+  <small className='text-white'>Genre : {x.genres.map((y) => (
+    <span key={y.genre} className="mx-1 border px-2 p-1 text-blue-400 border-blue-400 rounded-3xl">
       {y.genre}
-      {index < x.genres.length - 1 && ", "}
     </span>
   ))}</small>
   <div className="card-actions mt-4 justify-center">

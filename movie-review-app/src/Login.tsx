@@ -39,7 +39,7 @@ const Login = () => {
     }
     return (
         <div className="p-8">
-            <Link to="/" className="text-center"><div className="text-3xl md:text-4xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
+            <Link to="/" className="text-center"><div className="text-2xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
         <span className="bg-yellow-500 text-white px-2 py-1 rounded">FILM</span>
         <span className="text-black">Critic</span>
       </div></Link>

@@ -17,3 +17,7 @@
 .btn-nav-l:hover {
   background-color: transparent;
 }
+.btn-d-del:hover {
+  background-color: white;
+  color: red;
+}

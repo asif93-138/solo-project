@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
 import { UserContext } from "./UserContext";
-import img from '../public/e4e42631158aa2ab3a546299087e534d.png'
 
 const Layout = () => {
     const context = useContext(UserContext);
@@ -22,9 +21,9 @@ const Layout = () => {
             {
                 !(location.pathname == '/login' || location.pathname == '/register')
                 &&
-                <nav className="navbar bg-neutral text-neutral-content px-8">
+                <nav className="navbar bg-slate-900 bg-neutral text-neutral-content px-8">
                     <div className="flex-1">
-                        <Link to="/" className="m-2">      <div className="text-3xl md:text-4xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
+                        <Link to="/" className="m-2">      <div className="text-2xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
         <span className="bg-yellow-500 text-black px-2 py-1 rounded">FILM</span>
         <span className="text-white">Critic</span>
       </div></Link>

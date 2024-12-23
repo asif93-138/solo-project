@@ -148,8 +148,8 @@ function App() {
             <figure className='rounded-3xl'>
               <img className='poster-img' src={'http://localhost:3000' + x.img} alt="poster" />
             </figure>
-            <div className="absolute bottom-0 w-full p-2" style={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}>
-            <h2 className="card-title block text-white">{x.title}</h2>
+            <div className="absolute bottom-0 w-full pb-1 p-2" style={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}>
+            <h2 title={x.title} className="card-title block text-white">{x.title.length > 22 ? x.title.slice(0, 22) + '...' : x.title}</h2>
             <article className='flex justify-between'>
               <p className='text-slate-300'>{x.release_yr}</p>
             <p>
@@ -160,12 +160,12 @@ function App() {
               </p>
             </article>
 
-              <small className='text-white'>Genre : {x.genres.map((y, index) => (
+              {/* <small className='text-white'>Genre : {x.genres.map((y, index) => (
                 <span key={y.genre}>
                   {y.genre}
                   {index < x.genres.length - 1 && ", "}
                 </span>
-              ))}</small>
+              ))}</small> */}
               <div className="card-actions mt-4 justify-center">
                 
               </div>
