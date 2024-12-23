@@ -385,7 +385,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ predefinedGenres, setRefresh }) =
         if (imageData.filePath) {
           // Update form data with image URL and selected genres
           const updatedFormData = { ...formData, img: imageData.filePath, genre: selectedGenres };
-
+          // console.log({ user_id: content?.user?.user_id, ...updatedFormData });
           // Submit movie data
           const movieResponse = await fetch("http://localhost:3000/movies", {
             method: "POST",

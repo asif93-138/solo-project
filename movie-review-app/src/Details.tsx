@@ -153,7 +153,7 @@ function closeModal_3() {
         <div className="bg-slate-900 mt-20 px-4 py-10 rounded-3xl mx-28">
         <h3 className="text-3xl text-center">User Reviews</h3>
         {context?.user && !dataObj?.rr.find(x => x.user_id == context?.user?.user_id) && <>
-              <h4 className="text-2xl my-4 ml-32">Rate and Review</h4>
+              <h4 className="text-2xl my-3 ml-32">Rate and Review</h4>
               <form name="rr" className="mb-10" onSubmit={handleSubmit}>
               <Rating
       style={{ maxWidth: 180, marginLeft: '120px'}}
@@ -161,7 +161,7 @@ function closeModal_3() {
       onChange={setRating} />
 <textarea
   placeholder="Write your review" name="review"
-  className="textarea textarea-bordered textarea-md w-4/5 ml-32 bg-slate-700 text-white my-2"></textarea><br />
+  className="textarea textarea-bordered textarea-md w-4/5 ml-32 bg-slate-700 text-white mt-4 my-2"></textarea><br />
   <button type="submit" className="btn ml-32 text-slate-50 min-h-0 h-auto py-3 bg-slate-500 border-0 btn-nav-l">Submit</button>
               </form>
               </>}

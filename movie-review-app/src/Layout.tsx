@@ -34,7 +34,7 @@ const Layout = () => {
                                 <Link to='/user'>
                                     <div className="dropdown dropdown-end  tool-tip">
                                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                                            <div className="w-10 rounded-full">
+                                            <div className="w-10 rounded-full border-2 border-yellow-500">
                                                 <img
                                                     alt="Tailwind CSS Navbar component"
                                                     src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
@@ -44,7 +44,7 @@ const Layout = () => {
                                         <small style={{left: '-' + tooltipLeft + '%'}} className="tooltiptext">{context.user.name}<br />{context.user.email}</small>
                                     </div>
                                 </Link>
-                                <button className="btn text-slate-50 btn-nav-l min-h-0 h-auto py-3 bg-slate-500 border-0" onClick={() => {
+                                <button className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full" onClick={() => {
                                     context?.setUser(null);
                                     localStorage.clear();
                                     if (location.pathname != '/') {
@@ -53,11 +53,11 @@ const Layout = () => {
                                 }}>Logout</button>
                             </>
                             :
-                            <Link to="/login"><button className="btn text-slate-50 btn-nav-l min-h-0 h-auto py-3 bg-slate-500 border-0">Login</button></Link>
+                            <Link to="/login"><button className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full">Login</button></Link>
                         }
                     </div>
                 </nav>
-                // <nav className="navbar bg-neutral text-neutral-content justify-between">
+                // <nav className="navbar bg-neutral text-neutral-content justify-between">           text-slate-50    bg-slate-500 border-0
                 //     <Link to="/"><button className="btn btn-ghost text-xl">Home</button></Link>
                 //     <div className="">
                 //         {true ?

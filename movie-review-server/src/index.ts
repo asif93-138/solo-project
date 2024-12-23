@@ -47,6 +47,7 @@ app.post('/', (req: Request, res: Response) => {
   res.send('Got a POST request');
 });
 
+
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Configure Multer
@@ -130,6 +131,7 @@ app.get("/users", async (req: Request, res: Response) => {
 
 // Route: Insert a single movie
 app.post("/movies", async (req: Request, res: Response) => {
+  // console.log(req.body);
   const { user_id, title, img, desc, release_yr, director, length, producer, genre } = req.body;
 
   try {
@@ -177,8 +179,6 @@ await Promise.all(
     res.status(500).json({ error: "Failed to create movie" });
   }
 });
-
-
 
 // app.get("/movies/:id", async (req: Request, res: Response) => {
 //   try {
@@ -705,39 +705,16 @@ sequelize.sync({ alter: true }).then(() => {
 });
 
 
-// {
-//   "name": "Asif Iqbal",
-//   "email": "ai@example.com",
-//   "password": "1234"
-// }
+
 
 // {
-//   "user_id": 1,
-//   "title": "Inception",
-//   "img": "https://image-url.com/inception.jpg",
-//   "desc": "A mind-bending thriller.",
-//   "release_yr": 2010,
-//   "director": "Christopher Nolan",
-//   "length": 148,
-//   "producer": "Emma Thomas",
-//   "genre": "Action"
-// }
-
-// {
-//   "rr_id": 1,
-//   "movie_id": 1,
-//   "user_id": 1,
-//   "rating": 4.5,
-//   "review": "Good Movie!"
-// }
-
-// {
-//   "genre_id": 1,
-//   "genre": "Horror"
-// }
-
-// {
-//   "mg_id": 1,
-//   "movie_id": 1,
-//   "genre_id": 1
+//   user_id: 10,
+//   title: 'Taare Zameen Par',
+//   img: '/uploads/1734964440123-271502859.jpg',
+//   desc: 'Ishaan is criticised by his parents for his poor academic performance and is sent away to a boarding school. Ram, an art teacher, however, realises he has dyslexia and helps him uncover his potential.',
+//   release_yr: '2007',
+//   director: 'Aamir Khan',
+//   length: '164',
+//   producer: 'David Heyman',
+//   genre: [ 'Family', 'Musical' ]
 // }
