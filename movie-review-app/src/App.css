@@ -22,3 +22,6 @@
   background-color: white;
   color: red;
 }
+.txt-outline-c {
+  text-shadow: -1px 0 rgb(234, 179, 8), 0 1px rgb(234, 179, 8), 1px 0 rgb(234, 179, 8), 0 -1px rgb(234, 179, 8);
+}

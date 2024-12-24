@@ -12,7 +12,7 @@ const Layout = () => {
             setTimeout(() => {
                 const tooltipElement = document.getElementsByClassName('tooltiptext')[0] as HTMLElement;
                 setTooltipLeft(tooltipElement.offsetWidth - 131 + 90);
-            }, 1500);
+            }, 2000);
         }
     }, [context?.user])
     // console.log(); 
@@ -50,10 +50,10 @@ const Layout = () => {
                                     if (location.pathname != '/') {
                                         navigate('/');
                                     }
-                                }}>Logout</button>
+                                }}><i className="fa-solid fa-right-from-bracket"></i> Logout</button>
                             </>
                             :
-                            <Link to="/login"><button className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full">Login</button></Link>
+                            <Link to="/login"><button className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full"><i className="fa-solid fa-right-to-bracket"></i> Login</button></Link>
                         }
                     </div>
                 </nav>

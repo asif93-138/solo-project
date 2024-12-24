@@ -46,8 +46,8 @@ const User = () => {
     }
     return (
         <div className="bg-black text-white py-4 min-h-screen">
-            <h4 className="text-2xl text-center mt-0 my-4">Your Movies</h4>
-            <p className="text-center mb-6"><button type="button" className="btn" onClick={showModal}>Insert a new Movie</button></p>
+            <h4 className="text-2xl txt-outline-c text-center mb-2">Your Movies</h4>
+            <p className="text-right pr-16 mb-4"><button type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full" onClick={showModal}><i className="fa-solid fa-plus"></i> New Movie</button></p>
             <div className='grid grid-cols-4 gap-6 w-9-10 mx-auto'>
         {data.map((x) => (
           <Link to={`/details/${x.movie_id}`} key={x.movie_id}>
