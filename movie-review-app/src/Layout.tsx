@@ -12,7 +12,7 @@ const Layout = () => {
             setTimeout(() => {
                 const tooltipElement = document.getElementsByClassName('tooltiptext')[0] as HTMLElement;
                 setTooltipLeft(tooltipElement.offsetWidth - 131 + 90);
-            }, 2000);
+            }, 1000);
         }
     }, [context?.user])
     // console.log(); 

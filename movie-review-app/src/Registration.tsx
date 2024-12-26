@@ -23,12 +23,16 @@ const Registration = () => {
         .then(res => res.json())
         .then(data => {
             if (data.user_id) {
-                context?.setUser({user_id: data.user_id, name: data.name, email: data.email});
-                localStorage.clear();
-                localStorage.setItem('user_id', data.user_id);
-                localStorage.setItem('name', data.name);
-                localStorage.setItem('email', data.email);
                 document.getElementById('my_modal_2')?.classList.add('modal-open');
+                setTimeout(() => {
+                  localStorage.clear();
+                  localStorage.setItem('user_id', data.user_id);
+                  localStorage.setItem('name', data.name);
+                  localStorage.setItem('email', data.email);
+                  context?.setUser({user_id: data.user_id, name: data.name, email: data.email});
+                  document.getElementById('my_modal_2')?.classList.remove('modal-open');
+                  navigate('/');
+                }, 1000)
             } else {
                 document.getElementById('my_modal_1')?.classList.add('modal-open');
             }
@@ -39,10 +43,6 @@ const Registration = () => {
     }
     function closeModal() {
         document.getElementById('my_modal_1')?.classList.remove('modal-open');
-    }
-    function closeModal_1() {
-        document.getElementById('my_modal_2')?.classList.remove('modal-open');
-        navigate('/');
     }
     return (
         <div className="p-8">
@@ -78,11 +78,7 @@ const Registration = () => {
 <dialog id="my_modal_2" className="modal">
   <div className="modal-box">
     <p className="py-4 font-medium text-center">Registration successful!</p>
-    <div className="">
-      <form method="dialog" className="text-center">
-        <button className="btn" onClick={closeModal_1}>Close</button>
-      </form>
-    </div>
+
   </div>
 </dialog>
     </div>

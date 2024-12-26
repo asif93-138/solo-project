@@ -84,6 +84,7 @@ const Details = () => {
     document.getElementById('updateFormClose')?.classList.add('hidden');
 }
 function handleDelete() {
+  document.getElementById('my_modal_5')?.classList.remove('modal-open');
   fetch('http://localhost:3000/movies/' + dataObj?.movie_id, {
     method: 'DELETE'
   })
@@ -134,7 +135,7 @@ function closeModal_3() {
               <p className="text-lg my-1"><span className='font-bold me-1'>Producer</span> <span className="text-blue-300">{dataObj?.producer}</span></p>
               <p className="text-lg mb-6"><span className='font-bold me-1'>Created By</span> <span className="text-blue-300">{dataObj?.user}</span></p>
               <p className="mb-4">{dataObj?.desc}</p>
-              {dataObj?.user_id == context?.user?.user_id && <span><button onClick={handleUpdate} className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-regular fa-pen-to-square"></i> Edit</button> &nbsp; <button onClick={handleDelete} className="btn btn-d-del btn-error text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-solid fa-trash"></i> Delete</button></span>}
+              {dataObj?.user_id == context?.user?.user_id && <span><button onClick={handleUpdate} className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-regular fa-pen-to-square"></i> Edit</button> &nbsp; <button onClick={() => document.getElementById('my_modal_5')?.classList.add('modal-open')} className="btn btn-d-del btn-error text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-solid fa-trash"></i> Delete</button></span>}
               <dialog id="my_modal_1" className="modal">
   <div className="modal-box">
     <p className="py-4 text-black font-medium text-center">Rating and review posted!</p>
@@ -210,6 +211,12 @@ function closeModal_3() {
   <div className="modal-box text-center">
   <h4 className="text-red-500 text-2xl my-4">Deleted!</h4>
       <button type="button" className="btn" onClick={closeModal_3}>Close</button>
+  </div>
+</dialog>
+<dialog id="my_modal_5" className="modal">
+  <div className="modal-box text-center">
+  <h4 className="text-black text-2xl mb-4">Delete this item?</h4>
+   <button type="button" className="btn text-red-500" onClick={handleDelete}>Confirm</button> &nbsp; &nbsp; <button type="button" className="btn" onClick={() => document.getElementById('my_modal_5')?.classList.remove('modal-open')}>Cancel</button>
   </div>
 </dialog>
 <dialog id="my_modal_4" className="modal">
