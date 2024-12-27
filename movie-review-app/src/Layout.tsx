@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
 import { UserContext } from "./UserContext";
+import MovieForm from "./MovieForm";
 
 const Layout = () => {
     const context = useContext(UserContext);
@@ -16,6 +17,9 @@ const Layout = () => {
         }
     }, [context?.user])
     // console.log(); 
+    function showModal() {
+        document.getElementById('my_modal_nav')?.classList.add('modal-open');
+    }
     return (
         <>
             {
@@ -31,6 +35,7 @@ const Layout = () => {
                     <div className="flex-none gap-2">
                         {context?.user ?
                             <>
+                                <button onClick={showModal} type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full"><i className="fa-solid fa-plus"></i> New Movie</button>
                                 <Link to='/user'>
                                     <div className="dropdown dropdown-end  tool-tip">
                                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
@@ -57,22 +62,24 @@ const Layout = () => {
                         }
                     </div>
                 </nav>
-                // <nav className="navbar bg-neutral text-neutral-content justify-between">           text-slate-50    bg-slate-500 border-0
-                //     <Link to="/"><button className="btn btn-ghost text-xl">Home</button></Link>
-                //     <div className="">
-                //         {true ?
-                //             <div className="flex">
-                //                 <Link to=''>
-                //                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M399 384.2C376.9 345.8 335.4 320 288 320l-64 0c-47.4 0-88.9 25.8-111 64.2c35.2 39.2 86.2 63.8 143 63.8s107.8-24.7 143-63.8zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 16a72 72 0 1 0 0-144 72 72 0 1 0 0 144z"/></svg>
-                //                 </Link>
-                //                 <button className="btn" onClick={() => { context?.setUser(null) }}>Logout</button>
-                //             </div>
-                //             :
-                //             <Link to="/login"><button className="btn">Login</button></Link>
-                //         }
-                //     </div>
-                // </nav>
             }
+            <dialog id="my_modal_nav" className="modal text-black">
+  <div className="modal-box">
+  <section className="hidden text-center">
+  <p className="py-4">Successfully inserted a new movie!</p>
+  <button type="button" className="btn" onClick={() => {
+    document.getElementById('my_modal_nav')?.classList.remove('modal-open');
+    document.getElementsByTagName('section')[0].classList.add('hidden');
+    document.getElementsByTagName('section')[1].classList.remove('hidden');
+    if (location.pathname != '/' && location.pathname != '/user') {navigate('/user');}
+  }}>Close</button>
+  </section>
+    <section className="">
+      <MovieForm setHomeRefresh={context?.setHomeRefresh ? context?.setHomeRefresh : setTooltipLeft} setListRefresh={context?.setListRefresh ? context?.setListRefresh : setTooltipLeft} />
+    </section>
+
+  </div>
+</dialog>
             <Outlet />
         </>
     )

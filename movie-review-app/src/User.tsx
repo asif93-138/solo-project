@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { Link } from "react-router";
-import MovieForm from "./MovieForm";
 
 // Define the type for a movie item
 interface Movie {
@@ -18,36 +17,21 @@ interface Movie {
     genres: { genre: string }[];
   }
 
-  // Define the type for a genre item
-interface Genre {
-    genre_id: number;
-    genre: string;
-  }
-
 const User = () => {
     const context = useContext(UserContext);
-    const [refresh, setRefresh] = useState(0);
       const [data, setData] = useState<Movie[]>([]);
-      const [genres, setGenres] = useState<Genre[]>([]);
       useEffect(() => {
         if (context?.user) {
           fetch('http://localhost:3000/moviesFromUser/' + context?.user?.user_id)
           .then((res) => res.json())
           .then((data: Movie[]) => setData(data))
-
-        fetch('http://localhost:3000/genres')
-          .then((res) => res.json())
-          .then((data: Genre[]) => setGenres(data))
         }
-      }, [refresh, context?.user]);
+      }, [context?.listRefresh, context?.user]);
       // console.log();
-    function showModal() {
-        document.getElementById('my_modal_1')?.classList.add('modal-open');
-    }
+
     return (
         <div className="bg-black text-white py-4 min-h-screen">
-            <h4 className="text-2xl txt-outline-c text-center mb-2">Your Movies</h4>
-            <p className="text-right pr-16 mb-4"><button type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full" onClick={showModal}><i className="fa-solid fa-plus"></i> New Movie</button></p>
+            <h4 className="text-2xl txt-outline-c text-center mb-6">Your Movies</h4>
             <div className='grid grid-cols-4 gap-6 w-9-10 mx-auto'>
         {data.map((x) => (
           <Link to={`/details/${x.movie_id}`} key={x.movie_id}>
@@ -79,23 +63,7 @@ const User = () => {
 </div>
 </Link>
         ))}
-<dialog id="my_modal_1" className="modal text-black">
-  <div className="modal-box">
-  <section className="hidden text-center">
-  <p className="py-4">Successfully inserted a new movie!</p>
-  <button type="button" className="btn" onClick={() => {
-    document.getElementById('my_modal_1')?.classList.remove('modal-open');
-    document.getElementsByTagName('section')[0].classList.add('hidden');
-        document.getElementsByTagName('section')[1].classList.remove('hidden');
 
-  }}>Close</button>
-  </section>
-    <section className="">
-      <MovieForm predefinedGenres={genres} setRefresh={setRefresh} />
-    </section>
-
-  </div>
-</dialog>
       </div>
         </div>
     );

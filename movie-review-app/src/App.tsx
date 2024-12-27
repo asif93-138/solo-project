@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router';
+import { UserContext } from "./UserContext";
 import './App.css';
 
 interface Movie {
@@ -27,7 +28,7 @@ function App() {
   const [searchType, setSearchType] = useState<'title' | 'genre'>('title');
   const [searchValue, setSearchValue] = useState('');
   const [genres, setGenres] = useState<Genre[]>([]);
-
+  const context = useContext(UserContext);
   useEffect(() => {
     fetch('http://localhost:3000/movies')
       .then((res) => res.json())
@@ -39,7 +40,7 @@ function App() {
       fetch('http://localhost:3000/genres')
       .then((res) => res.json())
       .then((data: Genre[]) => setGenres(data))
-  }, []);
+  }, [context?.homeRefresh]);
 
   const handleSearch = async () => {
     if (searchValue.trim().length) {
