@@ -222,7 +222,7 @@ function closeModal_3() {
 <dialog id="my_modal_4" className="modal">
   <div className="modal-box text-black">
     <article id="my_modal_4A1" className="">
-      <MUForm setRefresh={setRefresh} mId={dataObj?.movie_id} />
+      {dataObj && <MUForm setRefresh={setRefresh} dataObj={dataObj} />}
       </article>
     <article id="my_modal_4A2" className="hidden text-center">
     <h4 className="text-black text-2xl my-4">Updated!</h4>
