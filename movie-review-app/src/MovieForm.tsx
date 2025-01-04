@@ -27,6 +27,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
   const content = useContext(UserContext);
   const location = useLocation();
   const [genres, setGenres] = useState<Genre[]>([]);
+  const [genreReloader, setGenreReloader] = useState(0);
   const [formData, setFormData] = useState<MovieData>({
     title: "",
     img: "",
@@ -47,7 +48,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
     fetch('http://localhost:3000/genres')
     .then((res) => res.json())
     .then((data: Genre[]) => setGenres(data))
-  }, [])
+  }, [genreReloader])
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -80,12 +81,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
         .then((data) => {
           if (data.genre_id) {
             setNewGenre("");
-            if (location.pathname == '/') {
-              setHomeRefresh((prev) => prev + 1);
-            }
-            else if (location.pathname == '/user') {
-              setListRefresh((prev) => prev + 1);
-            }
+            setGenreReloader(genreReloader + 1);
           }
         });
     }
