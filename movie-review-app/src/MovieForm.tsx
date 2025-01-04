@@ -6,9 +6,9 @@ interface MovieData {
   title: string;
   img: string;
   desc: string;
-  release_yr: number;
+  release_yr: number | string;
   director: string;
-  length: number;
+  length: number | string;
   producer: string;
   genre: string[];
 }
@@ -32,9 +32,9 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
     title: "",
     img: "",
     desc: "",
-    release_yr: new Date().getFullYear(),
+    release_yr: "",
     director: "",
-    length: 0,
+    length: "",
     producer: "",
     genre: [],
   });
@@ -135,9 +135,9 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
               title: "",
               img: "",
               desc: "",
-              release_yr: new Date().getFullYear(),
+              release_yr: "",
               director: "",
-              length: 0,
+              length: "",
               producer: "",
               genre: [],
             });
