@@ -12,8 +12,14 @@ const Login = () => {
     }) {
         event.preventDefault();
         const formName = event.target;
-        // console.log(formName.email.value, formName.pass.value);
-        fetch('http://localhost:3000/user/' + formName.email.value)
+        // console.log(formName.email.value, formName.pass.value); formName.email.value
+        fetch('http://localhost:3000/api/user/', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({email: formName.email.value, password: formName.pass.value})
+        })
         .then(res => res.json())
         .then(data => {
             if (data.password == formName.pass.value) {
