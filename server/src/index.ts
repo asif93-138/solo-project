@@ -8,8 +8,8 @@ import multer from 'multer';
 import path from 'path';
 import User from "./models/Users";
 import sequelize from "./models/sequelize";
-
 import db from "./models";
+
 const Movie = db.Movie;
 const RR = db.RR;
 const Genre = db.Genre;
