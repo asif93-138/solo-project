@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
-import sequelize from "./../src/sequelize";
+import sequelize from "../sequelize";
 
-class User extends Model {}
+class User extends Model { }
 
 User.init(
   {
@@ -11,7 +11,7 @@ User.init(
       autoIncrement: true,
     },
     name: {
-        type: DataTypes.STRING(50),
+      type: DataTypes.STRING(50),
     },
     email: {
       type: DataTypes.STRING(50),
