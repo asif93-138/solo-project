@@ -193,7 +193,7 @@ function closeModal_3() {
       style={{ maxWidth: 180, margin: 'auto'}}
       value={rating}
       onChange={setRating} />
-<textarea defaultValue={reviewTxt}
+<textarea value={reviewTxt} onChange={(e) => setReviewTxt(e.target.value)}
   placeholder="Write your review" name="review"
   className="textarea textarea-bordered textarea-md w-full max-w-xs text-black my-2"></textarea><br />
   <button type="submit" className="btn">Submit</button> <button type="button" onClick={() => {
