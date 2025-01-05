@@ -6,11 +6,11 @@ import { Sequelize, Op } from "sequelize";
 import multer from 'multer';
 import path from 'path';
 import sequelize from "./sequelize";
-import User from "./../models/Users";
-import Movie from "./../models/Movies";
-import RR from "./../models/Ratings&Reviews";
-import Genre from "./../models/Genre";
-import MG from "./../models/MovieGenre";
+import User from "./models/Users";
+import Movie from "./models/Movies";
+import RR from "./models/Ratings&Reviews";
+import Genre from "./models/Genre";
+import MG from "./models/MovieGenre";
 // import routes from './routes/router';
 
 // Initialize associations
@@ -136,7 +136,7 @@ app.post("/movies", async (req: Request, res: Response) => {
 
   try {
     const transaction = await sequelize.transaction();
-  
+
     try {
       const movie = await Movie.create(
         { user_id, title, img, desc, release_yr, director, length, producer },
@@ -146,28 +146,28 @@ app.post("/movies", async (req: Request, res: Response) => {
       // console.log("Created movie:", movie);
       // console.log("Movie ID:", movie.dataValues.movie_id);
 
-if (!movie.dataValues.movie_id) {
-  throw new Error("Movie ID is null after creation");
-}
+      if (!movie.dataValues.movie_id) {
+        throw new Error("Movie ID is null after creation");
+      }
 
-const genreInstances = await Promise.all(
-  genre.map(async (g: string) =>
-    Genre.findOrCreate({ where: { genre: g }, transaction })
-  )
-);
+      const genreInstances = await Promise.all(
+        genre.map(async (g: string) =>
+          Genre.findOrCreate({ where: { genre: g }, transaction })
+        )
+      );
 
-// Mapping through the genreInstances and using genreInstance correctly
-await Promise.all(
-  genreInstances.map(async ([genreInstance]) =>
-    MG.create(
-      { movie_id: movie.dataValues.movie_id, genre_id: genreInstance.genre_id },
-      { transaction }
-    )
-  )
-);
+      // Mapping through the genreInstances and using genreInstance correctly
+      await Promise.all(
+        genreInstances.map(async ([genreInstance]) =>
+          MG.create(
+            { movie_id: movie.dataValues.movie_id, genre_id: genreInstance.genre_id },
+            { transaction }
+          )
+        )
+      );
 
 
-  
+
       await transaction.commit();
       res.status(201).json({ message: "Movie created successfully", movie });
     } catch (error) {
@@ -331,7 +331,7 @@ app.delete('/movies/:id', async (req: Request, res: Response) => {
     });
     // console.log(movie, rr, mg);
     // Return the deleted movie
-    res.status(200).json({deleted: true});
+    res.status(200).json({ deleted: true });
   } catch (error) {
     console.error("Error deleting movie:", error);
     res.status(500).json({ error: "Failed to delete movie" });
@@ -396,7 +396,8 @@ app.get("/search", async (req: Request, res: Response) => {
 // Route: Read multiple movies by user ID
 app.get("/moviesFromUser/:id", async (req: Request, res: Response) => {
   try {
-    const movies = await Movie.findAll({ where: { user_id: req.params.id },
+    const movies = await Movie.findAll({
+      where: { user_id: req.params.id },
       attributes: {
         include: [
           // Add the average rating as a computed field
@@ -421,8 +422,8 @@ app.get("/moviesFromUser/:id", async (req: Request, res: Response) => {
       ],
       group: ["Movie.movie_id", "genres.genre_id"], // Group by movie ID and genre ID
       order: [["movie_id", "DESC"]], // Sort by movie_id in ascending order
-     });
-     res.status(200).json(movies);
+    });
+    res.status(200).json(movies);
   } catch (error) {
     console.error("Error fetching movies with genres and ratings:", error);
     res.status(500).json({ error: "Failed to fetch movies with genres and ratings" });
@@ -469,7 +470,7 @@ app.get("/search/genre", async (req: Request, res: Response) => {
         ],
         group: ["Movie.movie_id", "genres.genre_id"], // Group by movie and genre
       });
-  
+
       // Send response
       res.status(200).json(movies);
     }
