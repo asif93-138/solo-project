@@ -7,6 +7,12 @@ import { Sequelize, Op } from "sequelize";
 import multer from 'multer';
 import path from 'path';
 import User from "./models/Users";
+// import Movie from "./models/Movies";
+// import RR from "./models/Ratings&Reviews";
+// import Genre from "./models/Genre";
+// import MG from "./models/MovieGenre";
+// import routes from './routes/router';
+
 import sequelize from "./models/sequelize";
 
 import db from "./models";
@@ -14,12 +20,6 @@ const Movie = db.Movie;
 const RR = db.RR;
 const Genre = db.Genre;
 const MG = db.MG;
-
-// import Movie from "./models/Movies";
-// import RR from "./models/Ratings&Reviews";
-// import Genre from "./models/Genre";
-// import MG from "./models/MovieGenre";
-// import routes from './routes/router';
 
 // // Initialize associations
 // Movie.hasMany(RR, { foreignKey: "movie_id", as: "ratingsReviews" });

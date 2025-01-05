@@ -1,27 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router";
 import { UserContext } from "./UserContext";
+import { Genre } from "./interfaces/home";
+import { MovieData, MovieFormProps } from "./interfaces/movieForm";
 
-interface MovieData {
-  title: string;
-  img: string;
-  desc: string;
-  release_yr: number | string;
-  director: string;
-  length: number | string;
-  producer: string;
-  genre: string[];
-}
-
-interface Genre {
-  genre_id: number;
-  genre: string;
-}
-
-interface MovieFormProps {
-  setHomeRefresh: React.Dispatch<React.SetStateAction<number>>;
-  setListRefresh: React.Dispatch<React.SetStateAction<number>>;
-}
 
 const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh }) => {
   const content = useContext(UserContext);
