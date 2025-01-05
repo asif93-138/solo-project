@@ -7,12 +7,6 @@ import { Sequelize, Op } from "sequelize";
 import multer from 'multer';
 import path from 'path';
 import User from "./models/Users";
-// import Movie from "./models/Movies";
-// import RR from "./models/Ratings&Reviews";
-// import Genre from "./models/Genre";
-// import MG from "./models/MovieGenre";
-// import routes from './routes/router';
-
 import sequelize from "./models/sequelize";
 
 import db from "./models";
@@ -21,29 +15,12 @@ const RR = db.RR;
 const Genre = db.Genre;
 const MG = db.MG;
 
-// // Initialize associations
-// Movie.hasMany(RR, { foreignKey: "movie_id", as: "ratingsReviews" });
-// RR.belongsTo(Movie, { foreignKey: "movie_id" });
-
-// // Define associations
-// Movie.hasMany(MG, { foreignKey: "movie_id" });
-// MG.belongsTo(Movie, { foreignKey: "movie_id" });
-
-// Genre.hasMany(MG, { foreignKey: "genre_id" });
-// MG.belongsTo(Genre, { foreignKey: "genre_id" });
-
-// // Add an association to include genres via MG
-// Movie.belongsToMany(Genre, { through: MG, foreignKey: "movie_id", as: "genres" });
-// Genre.belongsToMany(Movie, { through: MG, foreignKey: "genre_id" });
-
-
 const app: Express = express();
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
-
 // app.use('/api', routes);
 
 app.get('/', (req: Request, res: Response) => {

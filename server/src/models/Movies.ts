@@ -1,23 +1,7 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import sequelize from "./sequelize";
+import { MovieAttributes, MovieCreationAttributes } from "../interfaces/Movie";
 
-// Define the attributes of the Movie table
-interface MovieAttributes {
-  movie_id: number;
-  user_id: number;
-  title: string;
-  img?: string;
-  desc?: string;
-  release_yr: number;
-  director?: string;
-  length?: number;
-  producer?: string;
-}
-
-// Define creation attributes (attributes required during creation)
-interface MovieCreationAttributes extends Optional<MovieAttributes, "movie_id"> { }
-
-// Extend the Sequelize Model class with Movie attributes
 class Movie extends Model<MovieAttributes, MovieCreationAttributes> { }
 
 Movie.init(

@@ -1,6 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./sequelize";
-import Movie from "./Movies";
 
 class RR extends Model { }
 

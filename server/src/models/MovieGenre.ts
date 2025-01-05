@@ -1,6 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./sequelize";
-import Genre from "./Genre";
 
 class MG extends Model {
   public movie_id!: number;
