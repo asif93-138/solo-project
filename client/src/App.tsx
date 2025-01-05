@@ -50,8 +50,10 @@ function App() {
           const searchData: Movie[] = await response.json();
           if (Array.isArray(searchData)) {
             setData(searchData);
+            document.getElementById('nrf')?.classList.add('hidden');
           } else {
             setData([]);
+            document.getElementById('nrf')?.classList.remove('hidden');
           }
           document.getElementById('sh')?.classList.remove('hidden');
         } catch (err) {
@@ -64,8 +66,10 @@ function App() {
           const searchData: Movie[] = await response.json();
           if (Array.isArray(searchData)) {
             setData(searchData);
+            document.getElementById('nrf')?.classList.add('hidden');
           } else {
             setData([]);
+            document.getElementById('nrf')?.classList.remove('hidden');
           }
           document.getElementById('sh')?.classList.remove('hidden');
         } catch (err) {
@@ -76,6 +80,7 @@ function App() {
     } else {
       setData(initialResults);
       document.getElementById('sh')?.classList.add('hidden');
+      document.getElementById('nrf')?.classList.add('hidden');
     }
   };
 
@@ -142,6 +147,7 @@ function App() {
       </div>
 
       <h4 id='sh' className='text-white text-2xl text-center mb-6 hidden'>Search Results!</h4>
+      <p id='nrf' className='text-white text-center hidden'>No results found..</p>
       <div className='grid grid-cols-4 gap-12 w-9-10 mx-auto'>
         {data.map((x) => (
           <Link to={`/details/${x.movie_id}`} key={x.movie_id}>
