@@ -3,22 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { Rating } from '@smastrom/react-rating';
 import { UserContext } from "./UserContext";
 import MUForm from "./MUForm";
-
-interface Movie {
-    movie_id: number;
-    user_id: number;
-    title: string;
-    img: string;
-    desc: string;
-    release_yr: number;
-    director: string;
-    length: number; // in minutes
-    producer: string;
-    rating: number; // e.g., 4.75
-    genres: string[]; // array of genres
-    user: string; // name of the user
-    rr: { rr_id: number; user_id: number; user: string; review: string; rating: number }[]; // array of reviews
-}
+import { Movie } from "./interfaces/details";
 
 const Details = () => {
   const context = useContext(UserContext);

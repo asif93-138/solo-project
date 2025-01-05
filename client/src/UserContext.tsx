@@ -1,29 +1,10 @@
-import { createContext, useEffect, useState, ReactNode } from 'react';
-
-// Define the shape of the user object
-interface User {
-  user_id: number;
-  name: string;
-  email: string;
-}
-
-// Define the shape of the context value
-interface UserContextType {
-  homeRefresh: number;
-  listRefresh: number;
-  user: User | null; // User can be an object or null
-  setUser: React.Dispatch<React.SetStateAction<User | null>>; // For updating the user
-  setHomeRefresh: React.Dispatch<React.SetStateAction<number>>;
-  setListRefresh: React.Dispatch<React.SetStateAction<number>>;
-}
+import { createContext, useEffect, useState } from 'react';
+import { User, UserContextType, ContextProviderProps } from './interfaces/contextAPI';
 
 // Create the context with a default value
 export const UserContext = createContext<UserContextType | null>(null);
 
-// Define props for the provider component
-interface ContextProviderProps {
-  children: ReactNode; // Properly typing children
-}
+
 
 const ContextProvider = ({ children }: ContextProviderProps) => {
   const [user, setUser] = useState<User | null>(null); // Initialize user as null

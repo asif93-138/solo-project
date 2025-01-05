@@ -121,20 +121,7 @@
 
 
 import React, { useState, useEffect } from "react";
-
-interface MovieData {
-  movie_id?: number;
-  desc?: string;
-  release_yr?: number;
-  director?: string;
-  length?: number;
-  producer?: string;
-}
-
-interface MUFormProps {
-  setRefresh: React.Dispatch<React.SetStateAction<number>>;
-  dataObj: MovieData;
-}
+import { MovieData, MUFormProps } from "./interfaces/MUForm";
 
 const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj }) => {
   const [formData, setFormData] = useState<Partial<MovieData>>({});

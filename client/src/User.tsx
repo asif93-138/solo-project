@@ -1,21 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { Link } from "react-router";
-
-// Define the type for a movie item
-interface Movie {
-    movie_id: number;
-    user_id: number;
-    title: string;
-    img: string;
-    desc: string;
-    release_yr: number;
-    director: string;
-    length: number;
-    producer: string;
-    averageRating: number;
-    genres: { genre: string }[];
-  }
+import { Movie } from './interfaces/home';
 
 const User = () => {
     const context = useContext(UserContext);

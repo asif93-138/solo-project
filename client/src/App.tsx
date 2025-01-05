@@ -2,25 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router';
 import { UserContext } from "./UserContext";
 import './App.css';
-
-interface Movie {
-  movie_id: number;
-  user_id: number;
-  title: string;
-  img: string;
-  desc: string;
-  release_yr: number;
-  director: string;
-  length: number;
-  producer: string;
-  averageRating: number;
-  genres: { genre: string }[];
-}
-
-interface Genre {
-  genre_id: number;
-  genre: string;
-}
+import { Movie, Genre } from './interfaces/home';
 
 function App() {
   const [data, setData] = useState<Movie[]>([]);
@@ -167,12 +149,6 @@ function App() {
               </p>
             </article>
 
-              {/* <small className='text-white'>Genre : {x.genres.map((y, index) => (
-                <span key={y.genre}>
-                  {y.genre}
-                  {index < x.genres.length - 1 && ", "}
-                </span>
-              ))}</small> */}
               <div className="card-actions mt-4 justify-center">
                 
               </div>
