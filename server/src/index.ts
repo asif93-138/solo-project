@@ -1,15 +1,15 @@
 // @ts-nocheck
 import express, { Express, Request, Response } from "express";
-import cors from 'cors';
+import cors from "cors";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import { Sequelize, Op } from "sequelize";
-import multer from 'multer';
-import path from 'path';
+import multer from "multer";
+import path from "path";
 import User from "./models/Users";
 import sequelize from "./models/sequelize";
 import db from "./models";
-
+import userRoute from "./routes/userRoute";
 const Movie = db.Movie;
 const RR = db.RR;
 const Genre = db.Genre;
@@ -22,27 +22,26 @@ app.use(cors());
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 // app.use('/api', routes);
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('DB testing!');
+app.use("/api/user", userRoute); ///////////////////////////////////////////
+app.get("/", (req: Request, res: Response) => {
+  res.send("DB testing!");
 });
 
-app.post('/', (req: Request, res: Response) => {
+app.post("/", (req: Request, res: Response) => {
   console.log(req.body);
-  res.send('Got a POST request');
+  res.send("Got a POST request");
 });
 
-
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Configure Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '../uploads');
+    const uploadPath = path.join(__dirname, "../uploads");
     cb(null, uploadPath); // Directory to save the files
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, uniqueSuffix + path.extname(file.originalname)); // Unique filename
   },
 });
@@ -50,12 +49,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Endpoint to upload image
-app.post('/upload', upload.single('image'), (req, res) => {
+app.post("/upload", upload.single("image"), (req, res) => {
   if (!req.file) {
-    res.status(400).send('No file uploaded.');
+    res.status(400).send("No file uploaded.");
   } else {
     res.status(200).json({
-      message: 'File uploaded successfully!',
+      message: "File uploaded successfully!",
       filePath: `/uploads/${req.file.filename}`,
     });
   }
@@ -117,7 +116,17 @@ app.get("/users", async (req: Request, res: Response) => {
 // Route: Insert a single movie
 app.post("/movies", async (req: Request, res: Response) => {
   // console.log(req.body);
-  const { user_id, title, img, desc, release_yr, director, length, producer, genre } = req.body;
+  const {
+    user_id,
+    title,
+    img,
+    desc,
+    release_yr,
+    director,
+    length,
+    producer,
+    genre,
+  } = req.body;
 
   try {
     const transaction = await sequelize.transaction();
@@ -145,13 +154,14 @@ app.post("/movies", async (req: Request, res: Response) => {
       await Promise.all(
         genreInstances.map(async ([genreInstance]) =>
           MG.create(
-            { movie_id: movie.dataValues.movie_id, genre_id: genreInstance.genre_id },
+            {
+              movie_id: movie.dataValues.movie_id,
+              genre_id: genreInstance.genre_id,
+            },
             { transaction }
           )
         )
       );
-
-
 
       await transaction.commit();
       res.status(201).json({ message: "Movie created successfully", movie });
@@ -175,10 +185,14 @@ app.get("/movies/:id", async (req: Request, res: Response) => {
     }
 
     // Fetch all ratings for the movie
-    const ratings = await RR.findAll({ where: { movie_id: movie.dataValues.movie_id } });
+    const ratings = await RR.findAll({
+      where: { movie_id: movie.dataValues.movie_id },
+    });
 
     // Fetch the user who created the movie
-    const user = await User.findOne({ where: { user_id: movie.dataValues.user_id } });
+    const user = await User.findOne({
+      where: { user_id: movie.dataValues.user_id },
+    });
 
     // Calculate the average rating
     const averageRating =
@@ -194,7 +208,9 @@ app.get("/movies/:id", async (req: Request, res: Response) => {
     // Resolve reviews (rr array) with user data
     const rr = await Promise.all(
       ratings.map(async (rating) => {
-        const user = await User.findOne({ where: { user_id: rating.dataValues.user_id } });
+        const user = await User.findOne({
+          where: { user_id: rating.dataValues.user_id },
+        });
         return {
           rr_id: rating?.dataValues.rr_id,
           user_id: user?.dataValues.user_id,
@@ -218,7 +234,6 @@ app.get("/movies/:id", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch movie" });
   }
 });
-
 
 // Route: Update a single movie by ID
 app.put(
@@ -253,7 +268,7 @@ app.put(
 );
 
 // Route: Delete a single movie by ID
-app.delete('/movies/:id', async (req: Request, res: Response) => {
+app.delete("/movies/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params; // Get movie ID from URL
 
@@ -281,7 +296,6 @@ app.delete('/movies/:id', async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to delete movie" });
   }
 });
-
 
 // Route: Search for movies by title
 app.get("/search", async (req: Request, res: Response) => {
@@ -331,8 +345,6 @@ app.get("/search", async (req: Request, res: Response) => {
   }
 });
 
-
-
 // Route: Read multiple movies by user ID
 app.get("/moviesFromUser/:id", async (req: Request, res: Response) => {
   try {
@@ -366,7 +378,9 @@ app.get("/moviesFromUser/:id", async (req: Request, res: Response) => {
     res.status(200).json(movies);
   } catch (error) {
     console.error("Error fetching movies with genres and ratings:", error);
-    res.status(500).json({ error: "Failed to fetch movies with genres and ratings" });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch movies with genres and ratings" });
   }
 });
 
@@ -416,10 +430,11 @@ app.get("/search/genre", async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.error("Error fetching movies by genre:", error);
-    res.status(500).json({ message: "An error occurred while fetching movies." });
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching movies." });
   }
-})
-
+});
 
 // Route: Read all movies
 app.get("/movies", async (req: Request, res: Response) => {
@@ -455,7 +470,9 @@ app.get("/movies", async (req: Request, res: Response) => {
     res.status(200).json(movies);
   } catch (error) {
     console.error("Error fetching movies with genres and ratings:", error);
-    res.status(500).json({ error: "Failed to fetch movies with genres and ratings" });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch movies with genres and ratings" });
   }
 });
 
