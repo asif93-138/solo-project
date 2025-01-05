@@ -86,6 +86,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
     e.preventDefault();
 
     if (imageFile) {
+      document.getElementById('img-notification')?.classList.add('hidden');
       // Upload image first
       const formDataImage = new FormData();
       formDataImage.append("image", imageFile);
@@ -101,7 +102,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
         if (imageData.filePath) {
           // Update form data with image URL and selected genres
           const updatedFormData = { ...formData, img: imageData.filePath, genre: selectedGenres };
-          // console.log({ user_id: content?.user?.user_id, ...updatedFormData });
+          // console.log(JSON.stringify({ user_id: content?.user?.user_id, ...updatedFormData }));
           // Submit movie data
           const movieResponse = await fetch("http://localhost:3000/movies", {
             method: "POST",
@@ -139,6 +140,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
       } catch (error) {
         console.error("Error during upload:", error);
       }
+    } else {
+      document.getElementById('img-notification')?.classList.remove('hidden');
     }
   };
 
@@ -153,6 +156,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
           onChange={handleInputChange}
           placeholder="Movie Title"
           className="input input-bordered w-full"
+          required
         />
 
         <textarea
@@ -246,7 +250,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
 
         {/* Image Upload Section */}
         {!imageFile && (
-          <label className="btn btn-block">
+          <>
+                    <label className="btn btn-block">
             Select Image
             <input
               type="file"
@@ -255,6 +260,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
               accept="image/*"
             />
           </label>
+          <p id="img-notification" className="text-red-500 text-center hidden"><b>Image is required!!</b></p>
+          </>
         )}
 
         {/* Preview Section */}
@@ -282,6 +289,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
           Submit
         </button>
         <button type="button" className="btn btn-block" onClick={() => {
+          document.getElementById('img-notification')?.classList.add('hidden');
           document.getElementById('my_modal_nav')?.classList.remove('modal-open');
         }}>Cancel</button>
       </form>
