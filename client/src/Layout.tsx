@@ -24,7 +24,7 @@ const Layout = () => {
         <>
             {
                 !(location.pathname == '/login' || location.pathname == '/register')
-                &&
+                ?
                 <nav className="navbar bg-slate-900 bg-neutral text-neutral-content px-8">
                     <div className="flex-1">
                         <Link to="/" className="m-2">      <div className="text-2xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
@@ -61,6 +61,13 @@ const Layout = () => {
                             <Link to="/login"><button className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full"><i className="fa-solid fa-right-to-bracket"></i> Login</button></Link>
                         }
                     </div>
+                </nav>
+                :
+                <nav className="mt-6">
+                                       <Link to="/" className="text-center"><div className="text-2xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
+        <span className="bg-yellow-500 text-white px-2 py-1 rounded">FILM</span>
+        <span className="text-black">Critic</span>
+      </div></Link>
                 </nav>
             }
             <dialog id="my_modal_nav" className="modal text-black">
