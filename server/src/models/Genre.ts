@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
-import sequelize from "./../src/sequelize";
+import sequelize from "../sequelize";
 
-class Genre extends Model {}
+class Genre extends Model { }
 
 Genre.init(
   {
@@ -11,9 +11,9 @@ Genre.init(
       autoIncrement: true,
     },
     genre: {
-        type: DataTypes.STRING(10),
-        unique: true,
-        allowNull: false,
+      type: DataTypes.STRING(10),
+      unique: true,
+      allowNull: false,
     },
   },
   {
