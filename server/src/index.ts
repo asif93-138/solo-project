@@ -11,7 +11,6 @@ import Movie from "./models/Movies";
 import RR from "./models/Ratings&Reviews";
 import Genre from "./models/Genre";
 import MG from "./models/MovieGenre";
-// import routes from './routes/router';
 
 // Initialize associations
 Movie.hasMany(RR, { foreignKey: "movie_id", as: "ratingsReviews" });
