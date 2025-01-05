@@ -13,7 +13,7 @@ const Registration = () => {
         // console.log(formName.pass.value.length > 7);
         if (formName.pass.value.length > 7) {
           document.getElementById('passWarn')?.classList.add('hidden');
-          fetch('http://localhost:3000/users', {
+          fetch('http://localhost:3000/api/user/signup', {
             method: 'POST',
             headers: {
               'content-type': 'application/json'
