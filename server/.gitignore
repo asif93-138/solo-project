@@ -37,3 +37,7 @@ desktop.ini
 
 # Coverage directory for test output
 coverage/
+
+# Mine
+src/dbConfig
+uploads

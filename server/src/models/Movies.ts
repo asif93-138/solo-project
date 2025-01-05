@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../sequelize";
+import sequelize from "./sequelize";
 
 // Define the attributes of the Movie table
 interface MovieAttributes {

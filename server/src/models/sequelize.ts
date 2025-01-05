@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
-import dbConfig from "./dbConfig";
+import dbConfig from "../dbConfig";
 
-const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+export const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect as any,
   logging: console.log, // This enables logging of raw SQL queries to the console
@@ -15,5 +15,5 @@ sequelize
   .catch((err) => {
     console.error("Unable to connect to the database:", err);
   });
-  
-  export default sequelize;
+
+export default sequelize;
