@@ -38,6 +38,8 @@ desktop.ini
 # Coverage directory for test output
 coverage/
 
-# Mine
-src/dbConfig
-uploads
+# Configuration files
+src/dbConfig.ts
+
+# Uploads directory
+uploads/
