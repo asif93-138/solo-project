@@ -39,7 +39,7 @@ desktop.ini
 coverage/
 
 # Configuration files
-src/dbConfig.ts
+src/config/dbConfig.ts
 
 # Uploads directory
 uploads/
