@@ -1,15 +1,17 @@
 // @ts-nocheck
-import express, { Express, Request, Response } from "express";
 import cors from "cors";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
-import { Sequelize, Op } from "sequelize";
-import multer from "multer";
 import path from "path";
+import db from "./models";
+import { ParsedQs } from "qs";
+import multer from "multer";
 import User from "./models/Users";
 import sequelize from "./models/sequelize";
-import db from "./models";
+import { Sequelize, Op } from "sequelize";
 import userRoute from "./routes/userRoute";
+import movieRoute from "./routes/movieRoute";
+import { ParamsDictionary } from "express-serve-static-core";
+import express, { Express, Request, Response } from "express";
+
 const Movie = db.Movie;
 const RR = db.RR;
 const Genre = db.Genre;
@@ -23,6 +25,8 @@ app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 // app.use('/api', routes);
 app.use("/api/user", userRoute);
+app.use("/api/movie", movieRoute);
+
 app.get("/", (req: Request, res: Response) => {
   res.send("DB testing!");
 });
@@ -61,15 +65,15 @@ app.post("/upload", upload.single("image"), (req, res) => {
 });
 
 // Route: Insert a single user
-app.post("/users", async (req: Request, res: Response) => {
-  try {
-    const user = await User.create(req.body);
-    res.status(201).json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to create user" });
-  }
-});
+// app.post("/users", async (req: Request, res: Response) => {
+//   try {
+//     const user = await User.create(req.body);
+//     res.status(201).json(user);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Failed to create user" });
+//   }
+// });
 
 // Route: Read a single user by ID
 app.get("/users/:id", async (req: Request, res: Response) => {
@@ -87,20 +91,20 @@ app.get("/users/:id", async (req: Request, res: Response) => {
 });
 
 // Route: Read a single user by email
-app.get("/user/:id", async (req: Request, res: Response) => {
-  try {
-    const user = await User.findOne({ where: { email: req.params.id } });
-    // console.log('user :', user);
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json({ error: "User not found" });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch user" });
-  }
-});
+// app.get("/user/:id", async (req: Request, res: Response) => {
+//   try {
+//     const user = await User.findOne({ where: { email: req.params.id } });
+//     // console.log('user :', user);
+//     if (user) {
+//       res.status(200).json(user);
+//     } else {
+//       res.status(404).json({ error: "User not found" });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Failed to fetch user" });
+//   }
+// });
 
 // Route: Read all users
 app.get("/users", async (req: Request, res: Response) => {

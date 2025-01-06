@@ -1,11 +1,16 @@
 import { Sequelize } from "sequelize";
-import dbConfig from "../dbConfig";
+import dbConfig from "../config/dbConfig";
 
-export const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-  host: dbConfig.HOST,
-  dialect: dbConfig.dialect as any,
-  logging: false
-});
+export const sequelize = new Sequelize(
+  dbConfig.DB,
+  dbConfig.USER,
+  dbConfig.PASSWORD,
+  {
+    host: dbConfig.HOST,
+    dialect: dbConfig.dialect as any,
+    logging: false,
+  }
+);
 
 sequelize
   .authenticate()
