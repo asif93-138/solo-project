@@ -7,6 +7,7 @@ import MovieGenre from "../models/MovieGenre";
 import User from "../models/Users";
 import RR from "../models/Ratings&Reviews";
 import MG from "../models/MovieGenre";
+import { Op, Sequelize } from "sequelize";
 
 export const createMovie: RequestHandler = async (
   req: Request,
@@ -184,5 +185,67 @@ export const deleteMovie: RequestHandler = async (
   } catch (error) {
     console.error("Error deleting movie:", error);
     res.status(500).json({ error: "Failed to delete movie" });
+  }
+};
+
+export const getAllMovies: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { title, genre } = req.query;
+
+    // Define the base query options
+    const queryOptions: any = {
+      attributes: {
+        include: [
+          [
+            Sequelize.fn("AVG", Sequelize.col("ratingsReviews.rating")),
+            "averageRating", // Compute average rating
+          ],
+        ],
+      },
+      include: [
+        {
+          model: RR,
+          as: "ratingsReviews",
+          attributes: [], // Exclude individual review details
+        },
+        {
+          model: Genre,
+          as: "genres",
+          attributes: ["genre"],
+          through: { attributes: [] }, // Exclude junction table fields
+        },
+      ],
+      group: ["Movie.movie_id", "genres.genre_id"], // Group by movie and genre
+      order: [["movie_id", "DESC"]], // Sort by movie_id in descending order
+    };
+
+    // Add conditions based on query parameters
+    if (title) {
+      queryOptions.where = {
+        ...queryOptions.where,
+        title: {
+          [Op.iLike]: `%${title}%`, // Partial match for title
+        },
+      };
+    }
+
+    if (genre) {
+      queryOptions.include[1].where = { genre }; // Filter by genre
+    }
+
+    // Fetch movies based on query options
+    const movies = await Movie.findAll(queryOptions);
+
+    if (movies.length === 0) {
+      res.status(404).json({ message: "No movies found" });
+    } else {
+      res.status(200).json(movies);
+    }
+  } catch (error) {
+    console.error("Error searching for movies:", error);
+    res.status(500).json({ error: "Failed to search for movies" });
   }
 };
