@@ -27,6 +27,7 @@ function App() {
   const handleSearch = async () => {
     if (searchValue.trim().length) {
       if (searchType == 'title') {
+        // console.log('http://localhost:3000/search?title=' + searchValue.trim());
         try {
           const response = await fetch('http://localhost:3000/search?title=' + searchValue.trim());
           const searchData: Movie[] = await response.json();
@@ -43,6 +44,7 @@ function App() {
           setData([]);
         }
       } else if (searchType == 'genre') {
+        // console.log('http://localhost:3000/search/genre?genre=' + searchValue.trim());
         try {
           const response = await fetch('http://localhost:3000/search/genre?genre=' + searchValue.trim());
           const searchData: Movie[] = await response.json();
