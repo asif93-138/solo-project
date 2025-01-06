@@ -518,43 +518,6 @@ app.get("/genres", async (req: Request, res: Response) => {
   }
 });
 
-// Route: Insert a single mg
-app.post("/mgs", async (req: Request, res: Response) => {
-  try {
-    const mg = await MG.create(req.body);
-    res.status(201).json(mg);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to create mg" });
-  }
-});
-
-// Route: Read a single mg by ID
-app.get("/mgs/:id", async (req: Request, res: Response) => {
-  try {
-    const mg = await MG.findByPk(req.params.id);
-    if (mg) {
-      res.status(200).json(mg);
-    } else {
-      res.status(404).json({ error: "MG not found" });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch mg" });
-  }
-});
-
-// Route: Read all mgs
-app.get("/mgs", async (req: Request, res: Response) => {
-  try {
-    const mgs = await MG.findAll();
-    res.status(200).json(mgs);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch mgs" });
-  }
-});
-
 sequelize.sync({ alter: true }).then(() => {
   app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
