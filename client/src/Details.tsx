@@ -15,7 +15,7 @@ const Details = () => {
     const [refresh, setRefresh] = useState(0);
     const [reviewTxt, setReviewTxt] = useState('');
     useEffect(() => {
-        fetch('http://localhost:3000/movies/' + location.pathname.slice(9))
+        fetch('http://localhost:3000/api/movie/' + location.pathname.slice(9))
         .then(res => res.json())
         .then((data: Movie) => setDataObj(data))
     }, [refresh])
@@ -70,7 +70,7 @@ const Details = () => {
 }
 function handleDelete() {
   document.getElementById('my_modal_5')?.classList.remove('modal-open');
-  fetch('http://localhost:3000/movies/' + dataObj?.movie_id, {
+  fetch('http://localhost:3000/api/movie/' + dataObj?.movie_id, {
     method: 'DELETE'
   })
   .then(res => res.json())
