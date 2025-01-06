@@ -1,0 +1,188 @@
+import Movie from "../models/Movies";
+import Genre from "../models/Genre";
+import { RequestHandler } from "express";
+import { Request, Response } from "express";
+import sequelize from "../models/sequelize";
+import MovieGenre from "../models/MovieGenre";
+import User from "../models/Users";
+import RR from "../models/Ratings&Reviews";
+import MG from "../models/MovieGenre";
+
+export const createMovie: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  //console.log("api/movie: ", req.body);
+  const {
+    user_id,
+    title,
+    img,
+    desc,
+    release_yr,
+    director,
+    length,
+    producer,
+    genre,
+  } = req.body;
+
+  try {
+    const transaction = await sequelize.transaction();
+
+    try {
+      const movie = await Movie.create(
+        { user_id, title, img, desc, release_yr, director, length, producer },
+        { transaction }
+      );
+
+      // console.log("Created movie:", movie);
+      // console.log("Movie ID:", movie.dataValues.movie_id);
+
+      if (!movie.dataValues.movie_id) {
+        throw new Error("Movie ID is null after creation");
+      }
+
+      const genreInstances = await Promise.all(
+        genre.map(async (g: string) =>
+          Genre.findOrCreate({ where: { genre: g }, transaction })
+        )
+      );
+
+      // Mapping through the genreInstances and using genreInstance correctly
+      await Promise.all(
+        genreInstances.map(async ([genreInstance]) =>
+          MovieGenre.create(
+            {
+              movie_id: movie.dataValues.movie_id,
+              genre_id: genreInstance.genre_id,
+            },
+            { transaction }
+          )
+        )
+      );
+
+      await transaction.commit();
+      res.status(201).json({ message: "Movie created successfully", movie });
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  } catch (error) {
+    console.error("Error during movie creation:", error);
+    res.status(500).json({ error: "Failed to create movie" });
+  }
+};
+
+export const getMovieById: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const movie = await Movie.findByPk(req.params.id);
+    if (!movie) {
+      res.status(404).json({ error: "Movie not found" });
+      return;
+    }
+
+    // Fetch all ratings for the movie
+    const ratings = await RR.findAll({
+      where: { movie_id: movie.dataValues.movie_id },
+    });
+
+    const user = await User.findOne({
+      where: { user_id: movie.dataValues.user_id },
+    });
+
+    const averageRating =
+      ratings.reduce((sum, item) => sum + item.dataValues.rating, 0) /
+      (ratings.length || 1); // Avoid division by zero
+
+    const genres = await MG.findAll({
+      where: { movie_id: movie.dataValues.movie_id },
+      include: [{ model: Genre, attributes: ["genre"] }],
+    });
+
+    const rr = await Promise.all(
+      ratings.map(async (rating) => {
+        const user = await User.findOne({
+          where: { user_id: rating.dataValues.user_id },
+        });
+        return {
+          rr_id: rating?.dataValues.rr_id,
+          user_id: user?.dataValues.user_id,
+          user: user?.dataValues.name,
+          review: rating.dataValues.review,
+          rating: rating.dataValues.rating,
+        };
+      })
+    );
+
+    res.status(200).json({
+      ...movie.dataValues,
+      rating: averageRating || null, // Handle no ratings gracefully
+      genres: genres.map((x) => x.dataValues.Genre?.genre || "Unknown Genre"),
+      user: user?.dataValues.name || "Unknown User", // Handle missing user gracefully
+      rr,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch movie" });
+  }
+};
+
+export const editMovie: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params; // Get movie ID from URL
+    const updatedData = req.body; // Get new data from request body
+
+    // Find the movie by ID
+    const movie = await Movie.findByPk(id);
+
+    if (!movie) {
+      res.status(404).json({ error: "Movie not found" });
+      return;
+    }
+
+    await movie.update(updatedData);
+
+    res.status(200).json(movie);
+  } catch (error) {
+    console.error("Error updating movie:", error);
+    res.status(500).json({ error: "Failed to update movie" });
+  }
+};
+
+export const deleteMovie: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { id } = req.params; // Get movie ID from URL
+
+    // Delete the movie by ID
+    const movie = await Movie.destroy({
+      where: {
+        movie_id: id,
+      },
+    });
+
+    const rr = await RR.destroy({
+      where: {
+        movie_id: id,
+      },
+    });
+
+    const mg = await MG.destroy({
+      where: {
+        movie_id: id,
+      },
+    });
+
+    res.status(200).json({ deleted: true });
+  } catch (error) {
+    console.error("Error deleting movie:", error);
+    res.status(500).json({ error: "Failed to delete movie" });
+  }
+};
