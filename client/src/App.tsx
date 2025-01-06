@@ -77,8 +77,19 @@ function App() {
   return (
     <section className="bg-black py-10 min-h-screen">
       <div className="items-center mb-10 flex w-3/4 mx-auto justify-center">
+      <details className="dropdown">
+  <summary className="btn rounded-e-none">{searchType === 'title' ? 'Title' : 'Genre'} <i className="fa-solid fa-chevron-down"></i></summary>
+  <ul className="mt-1 menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+    <li><button type='button' className='' onClick={() => {
+      document.getElementsByTagName("details")[1].removeAttribute("open"); setSearchType('title'); setSearchValue('');
+    }}>Title</button></li>
+    <li><button type='button' className='' onClick={() => {
+      document.getElementsByTagName("details")[1].removeAttribute("open"); setSearchType('genre'); setSearchValue('');
+    }}>Genre</button></li>
+  </ul>
+</details>
         {searchType === 'title' ? (
-          <label className="input input-bordered flex items-center gap-2 w-1/2">
+          <label className="input input-bordered flex items-center gap-2 w-1/2 rounded-s-none">
             <input 
               type="search" 
               className="grow" 
@@ -103,7 +114,7 @@ function App() {
           </label>
         ) : (
           <select 
-            className="select select-bordered  w-1/2" 
+            className="select select-bordered w-1/2 rounded-s-none" 
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
           >
@@ -114,23 +125,15 @@ function App() {
           </select>
         )}
         
-        <div className="flex justify-center ml-4 space-x-2">
-          <button 
-            className={`btn ${searchType === 'title' && 'btn-active'}`}
-            onClick={() => {setSearchType('title'); setSearchValue('')}}
-          >
-            Search by Title
-          </button>
-          <button 
-            className={`btn ${searchType === 'genre' && 'btn-active'}`}
-            onClick={() => {setSearchType('genre'); setSearchValue('')}}
-          >
-            Search by Genre
-          </button>
-        </div>
       </div>
 
-      <h4 id='sh' className='text-white text-2xl text-center mb-6 hidden'>Search Results!</h4>
+      <h4 id='sh' className='text-white text-2xl text-center mb-6 hidden'><span>Search Results!</span>
+      <button type='button' className='btn ms-10 h-auto min-h-0 py-2' onClick={() => {
+        setSearchValue('');
+        setData(initialResults);
+        document.getElementById('sh')?.classList.add('hidden');
+        document.getElementById('nrf')?.classList.add('hidden');
+      }}>close</button></h4>
       <p id='nrf' className='text-white text-center hidden'>No results found..</p>
       <div className='grid grid-cols-4 gap-12 w-9-10 mx-auto'>
         {data.map((x) => (
