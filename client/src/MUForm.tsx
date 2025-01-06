@@ -177,7 +177,7 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj }) => {
 
   return (
     <div className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Movie Data Update Form</h1>
+      <h1 className="text-2xl font-bold mb-4">Edit this entry</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <textarea
           name="desc"

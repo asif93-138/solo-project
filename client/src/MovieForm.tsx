@@ -154,7 +154,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
 
   return (
     <div className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Movie Data Form</h1>
+      <h1 className="text-2xl font-bold mb-4">Create New Movie Entry</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"

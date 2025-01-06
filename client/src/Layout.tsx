@@ -8,15 +8,6 @@ const Layout = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [tooltipLeft, setTooltipLeft] = useState(90);
-    useEffect(() => {
-        if (context?.user) {
-            setTimeout(() => {
-                const tooltipElement = document.getElementsByClassName('tooltiptext')[0] as HTMLElement;
-                setTooltipLeft(tooltipElement.offsetWidth - 131 + 90);
-            }, 1000);
-        }
-    }, [context?.user])
-    // console.log(); 
     function showModal() {
         document.getElementById('my_modal_nav')?.classList.add('modal-open');
     }
@@ -36,26 +27,31 @@ const Layout = () => {
                         {context?.user ?
                             <>
                                 <button onClick={showModal} type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full"><i className="fa-solid fa-plus"></i> New Movie</button>
-                                <Link to='/user'>
-                                    <div className="dropdown dropdown-end  tool-tip">
-                                        <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                                            <div className="w-10 rounded-full border-2 border-yellow-500">
-                                                <img
+                                {/* <Link to='/user'></Link> */}
+                                    <details className="dropdown dropdown-end">
+                                    <summary tabIndex={0} className="btn p-0 btn-ghost tool-tip">
+                                                <img style={{height: 'auto'}}
                                                     alt="Tailwind CSS Navbar component"
-                                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                                                    
-                                            </div>
-                                        </div>
-                                        <small style={{left: '-' + tooltipLeft + '%'}} className="tooltiptext">{context.user.name}<br />{context.user.email}</small>
-                                    </div>
-                                </Link>
-                                <button className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full" onClick={() => {
+                                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" 
+                                                    className="w-10 rounded-full border-2 border-yellow-500"
+                                                    />  
+                                                     <small className="tooltiptext">{context.user.name}<br />{context.user.email}</small>
+                                        </summary>
+                                        <ul tabIndex={0} style={{right: '-15px'}} className="menu mt-1 dropdown-content bg-base-100 rounded-box z-[1] w-32 shadow">
+    {location.pathname != '/' && <li className="text-black"><Link className="mb-1" to='/' onClick={() => document.getElementsByTagName("details")[0].removeAttribute("open")}>Home</Link></li>}
+    {location.pathname != '/user' && <li className="text-black"><Link className="mb-1" to='/user' onClick={() => document.getElementsByTagName("details")[0].removeAttribute("open")}>My List</Link></li>}
+    <li className="text-black"><button type="button" className="" onClick={() => {
                                     context?.setUser(null);
                                     localStorage.clear();
                                     if (location.pathname != '/') {
                                         navigate('/');
                                     }
-                                }}><i className="fa-solid fa-right-from-bracket"></i> Logout</button>
+                                }}><i className="fa-solid fa-right-from-bracket"></i> Logout</button></li>
+  </ul>
+                                       
+                                    </details>
+                                
+                                {/* <button className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full"><i className="fa-solid fa-right-from-bracket"></i> Logout</button>   style={{left: '-' + tooltipLeft + '%'}} */}
                             </>
                             :
                             <Link to="/login"><button className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full"><i className="fa-solid fa-right-to-bracket"></i> Login</button></Link>
@@ -63,7 +59,7 @@ const Layout = () => {
                     </div>
                 </nav>
                 :
-                <nav className="mt-6">
+                <nav className="mt-16">
                                        <Link to="/" className="text-center"><div className="text-2xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
         <span className="bg-yellow-500 text-white px-2 py-1 rounded">FILM</span>
         <span className="text-black">Critic</span>

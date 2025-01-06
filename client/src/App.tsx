@@ -29,7 +29,7 @@ function App() {
       if (searchType == 'title') {
         // console.log('http://localhost:3000/search?title=' + searchValue.trim());
         try {
-          const response = await fetch('http://localhost:3000/search?title=' + searchValue.trim());
+          const response = await fetch('http://localhost:3000/api/movie/?title=' + searchValue.trim());
           const searchData: Movie[] = await response.json();
           if (Array.isArray(searchData)) {
             setData(searchData);
@@ -46,7 +46,7 @@ function App() {
       } else if (searchType == 'genre') {
         // console.log('http://localhost:3000/search/genre?genre=' + searchValue.trim());
         try {
-          const response = await fetch('http://localhost:3000/search/genre?genre=' + searchValue.trim());
+          const response = await fetch('http://localhost:3000/api/movie/?genre=' + searchValue.trim());
           const searchData: Movie[] = await response.json();
           if (Array.isArray(searchData)) {
             setData(searchData);
