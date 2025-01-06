@@ -152,7 +152,7 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj }) => {
       return acc;
     }, {} as Partial<MovieData>);
 
-    fetch("http://localhost:3000/movies/" + dataObj.movie_id, {
+    fetch("http://localhost:3000/api/movie/" + dataObj.movie_id, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

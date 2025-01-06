@@ -10,6 +10,7 @@ import { Sequelize, Op } from "sequelize";
 import userRoute from "./routes/userRoute";
 import movieRoute from "./routes/movieRoute";
 import reviewRoute from "./routes/reviewRoute";
+import genreRoute from "./routes/genreRoute";
 import { ParamsDictionary } from "express-serve-static-core";
 import express, { Express, Request, Response } from "express";
 
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use("/api/user", userRoute);
 app.use("/api/movie", movieRoute);
 app.use("/api/review", reviewRoute);
+app.use("/api/genre", genreRoute);
 app.get("/", (req: Request, res: Response) => {
   res.send("DB testing!");
 });
@@ -478,43 +480,6 @@ app.get("/movies", async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ error: "Failed to fetch movies with genres and ratings" });
-  }
-});
-
-// Route: Insert a single genre
-app.post("/genres", async (req: Request, res: Response) => {
-  try {
-    const genre = await Genre.create(req.body);
-    res.status(201).json(genre);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to create genre" });
-  }
-});
-
-// Route: Read a single genre by ID
-app.get("/genres/:id", async (req: Request, res: Response) => {
-  try {
-    const genre = await Genre.findByPk(req.params.id);
-    if (genre) {
-      res.status(200).json(genre);
-    } else {
-      res.status(404).json({ error: "Genre not found" });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch genre" });
-  }
-});
-
-// Route: Read all genres
-app.get("/genres", async (req: Request, res: Response) => {
-  try {
-    const genres = await Genre.findAll();
-    res.status(200).json(genres);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch genres" });
   }
 });
 

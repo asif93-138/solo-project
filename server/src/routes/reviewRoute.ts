@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { addReview, getReviewByID, updateReviewByID } from "../controllers/reviewController";
+import { addReview, updateReviewById } from "../controllers/reviewController";
 
 const router = Router();
 
 router.post("/", addReview);
-router.get("/:id", getReviewByID);
-router.put("/:id", updateReviewByID);
+router.put("/:id", updateReviewById);
 
 export default router;
