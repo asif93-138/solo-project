@@ -11,7 +11,7 @@ export const addReview = async (req: Request, res: Response) => {
     }
 }
 
-export const updateReviewByID = async (req: Request, res: Response) => {
+export const updateReviewById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const updatedData = req.body;
