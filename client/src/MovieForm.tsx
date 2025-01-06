@@ -41,7 +41,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
 
   const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    if (!selectedGenres.includes(value)) {
+    if (!selectedGenres.includes(value) && value != 'Select a genre') {
       document.getElementById('genre-notification')?.classList.add('hidden');
       setSelectedGenres(prev => [...prev, value]);
     }
@@ -212,16 +212,17 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
         />
 
         <div className="space-y-2">
-          <select
+          {genres.length > 0 &&           <select
             onChange={handleGenreChange}
             className="select select-bordered w-full">
-            <option disabled>Select a genre</option>
+            <option>Select a genre</option>
             {genres.map((genre) => (
               <option key={genre.genre_id} value={genre.genre}>
                 {genre.genre}
               </option>
             ))}
-          </select>
+          </select>}
+
           <p id="genre-notification" className="text-red-500 text-center hidden"><b>Genre must be added!</b></p>
           <div className="flex flex-wrap gap-2">
             {selectedGenres.map((genre) => (
