@@ -42,6 +42,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
   const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     if (!selectedGenres.includes(value)) {
+      document.getElementById('genre-notification')?.classList.add('hidden');
       setSelectedGenres(prev => [...prev, value]);
     }
   };
@@ -86,6 +87,10 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
     e.preventDefault();
 
     if (imageFile) {
+      document.getElementById('img-notification')?.classList.add('hidden');
+
+      if (selectedGenres.length > 0) {
+        document.getElementById('genre-notification')?.classList.add('hidden');
       // Upload image first
       const formDataImage = new FormData();
       formDataImage.append("image", imageFile);
@@ -101,7 +106,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
         if (imageData.filePath) {
           // Update form data with image URL and selected genres
           const updatedFormData = { ...formData, img: imageData.filePath, genre: selectedGenres };
-          // console.log({ user_id: content?.user?.user_id, ...updatedFormData });
+          // console.log(JSON.stringify({ user_id: content?.user?.user_id, ...updatedFormData }));
           // Submit movie data
           const movieResponse = await fetch("http://localhost:3000/movies", {
             method: "POST",
@@ -139,6 +144,11 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
       } catch (error) {
         console.error("Error during upload:", error);
       }
+      } else {
+        document.getElementById('genre-notification')?.classList.remove('hidden');
+      }
+    } else {
+      document.getElementById('img-notification')?.classList.remove('hidden');
     }
   };
 
@@ -153,6 +163,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
           onChange={handleInputChange}
           placeholder="Movie Title"
           className="input input-bordered w-full"
+          required
         />
 
         <textarea
@@ -170,6 +181,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
           onChange={handleInputChange}
           placeholder="Release Year"
           className="input input-bordered w-full"
+          required  max="9999"
         />
 
         <input
@@ -187,7 +199,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
           value={formData.length}
           onChange={handleInputChange}
           placeholder="Length (minutes)"
-          className="input input-bordered w-full"
+          className="input input-bordered w-full" required
         />
 
         <input
@@ -202,8 +214,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
         <div className="space-y-2">
           <select
             onChange={handleGenreChange}
-            className="select select-bordered w-full"
-          >
+            className="select select-bordered w-full">
             <option disabled>Select a genre</option>
             {genres.map((genre) => (
               <option key={genre.genre_id} value={genre.genre}>
@@ -211,6 +222,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
               </option>
             ))}
           </select>
+          <p id="genre-notification" className="text-red-500 text-center hidden"><b>Genre must be added!</b></p>
           <div className="flex flex-wrap gap-2">
             {selectedGenres.map((genre) => (
               <div key={genre} className="badge badge-ghost gap-1">
@@ -246,7 +258,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
 
         {/* Image Upload Section */}
         {!imageFile && (
-          <label className="btn btn-block">
+          <>
+                    <label className="btn btn-block">
             Select Image
             <input
               type="file"
@@ -255,6 +268,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
               accept="image/*"
             />
           </label>
+          <p id="img-notification" className="text-red-500 text-center hidden"><b>Image is required!!</b></p>
+          </>
         )}
 
         {/* Preview Section */}
@@ -282,7 +297,9 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
           Submit
         </button>
         <button type="button" className="btn btn-block" onClick={() => {
+          document.getElementById('img-notification')?.classList.add('hidden');
           document.getElementById('my_modal_nav')?.classList.remove('modal-open');
+          document.getElementById('genre-notification')?.classList.add('hidden');
         }}>Cancel</button>
       </form>
     </div>
