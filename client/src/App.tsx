@@ -12,14 +12,14 @@ function App() {
   const [genres, setGenres] = useState<Genre[]>([]);
   const context = useContext(UserContext);
   useEffect(() => {
-    fetch('http://localhost:3000/movies')
+    fetch('http://localhost:3000/api/movie')
       .then((res) => res.json())
       .then((data: Movie[]) => {
         setInitialResults(data);
         setData(data);
       })
       .catch((err) => console.error("Error fetching data:", err));
-      fetch('http://localhost:3000/genres')
+      fetch('http://localhost:3000/api/genre/')
       .then((res) => res.json())
       .then((data: Genre[]) => setGenres(data))
   }, [context?.homeRefresh]);

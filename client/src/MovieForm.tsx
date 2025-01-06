@@ -27,7 +27,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('http://localhost:3000/genres')
+    fetch('http://localhost:3000/api/genre/')
     .then((res) => res.json())
     .then((data: Genre[]) => setGenres(data))
   }, [genreReloader])
@@ -53,7 +53,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
 
   const handleAddNewGenre = () => {
     if (newGenre.trim() && !genres.find((x) => x.genre === newGenre)) {
-      fetch("http://localhost:3000/genres", {
+      fetch("http://localhost:3000/api/genre/", {
         method: "POST",
         headers: {
           "content-type": "application/json",

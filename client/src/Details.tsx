@@ -26,7 +26,7 @@ const Details = () => {
       // console.log({movie_id: dataObj?.movie_id, user_id: context?.user?.user_id, rating: rating, review: event.target.review.value});
       const checkerValue = dataObj?.rr.find(x => x.user_id == context?.user?.user_id);
       if (checkerValue) {
-        fetch('http://localhost:3000/rrs/' + checkerValue.rr_id, {
+        fetch('http://localhost:3000/api/review/' + checkerValue.rr_id, {
           method: 'PUT',
           headers: {
             'content-type': 'application/json'
@@ -43,7 +43,7 @@ const Details = () => {
           }
       })
       } else {
-        fetch('http://localhost:3000/rrs', {
+        fetch('http://localhost:3000/api/review/', {
           method: 'POST',
           headers: {
             'content-type': 'application/json'
