@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router';
 import { UserContext } from "../contextAPI/UserContext";
-import './App.css';
+import '../index.css';
 import { Movie, Genre } from '../interfaces/home';
 
 function App() {

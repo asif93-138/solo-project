@@ -1,14 +1,14 @@
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from "react-router"
 import './index.css'
-import App from './pages/App.tsx'
+import App from './pages/Home.tsx'
 import Layout from './pages/Layout.tsx'
 import Login from './pages/Login.tsx'
 import ContextProvider from './contextAPI/UserContext.tsx'
 import Registration from './pages/Registration.tsx'
 import Details from './pages/Details.tsx'
 import '@smastrom/react-rating/style.css'
-import User from './pages/User.tsx'
+import User from './pages/MyList.tsx'
 
 createRoot(document.getElementById('root')!).render(
     <ContextProvider>
