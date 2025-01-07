@@ -39,6 +39,7 @@ describe("Register Integration Test", () => {
       until.elementLocated(By.css("#my_modal_2")),
       10000
     );
+    await driver.wait(until.elementIsVisible(modal), 10000);
     const modalText = await modal.getText();
     console.log("modalText:", modalText);
 
@@ -80,6 +81,7 @@ describe("Register Integration Test", () => {
       until.elementLocated(By.css("#my_modal_1")),
       10000
     );
+    await driver.wait(until.elementIsVisible(modal), 10000);
     const modalText = await modal.getText();
     console.log("modalText:", modalText);
 
