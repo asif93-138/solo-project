@@ -15,7 +15,7 @@
 //   setRefresh: React.Dispatch<React.SetStateAction<number>>;
 //   mId: number | undefined; // Add mId to the props interface
 // }
-  
+
 
 // const MUForm: React.FC<MUFormProps> = ({ setRefresh, mId }) => {
 
@@ -43,7 +43,7 @@
 //           }
 //           return acc;
 //         }, {} as Partial<MovieData>);
-    
+
 //         // console.log(filteredData); // Log only changed or non-empty fields
 //     fetch('http://localhost:3000/movies/' + mId, {
 //         method: 'PUT',

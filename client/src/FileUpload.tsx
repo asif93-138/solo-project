@@ -41,10 +41,10 @@ const FileUpload: React.FC = () => {
   };
 
   return (
-      <form className="" onSubmit={handleSubmit}>
-        {/* File Input */}
+    <form className="" onSubmit={handleSubmit}>
+      {/* File Input */}
 
-      </form>
+    </form>
   );
 };
 
