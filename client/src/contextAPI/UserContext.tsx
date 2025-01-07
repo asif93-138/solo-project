@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import { User, UserContextType, ContextProviderProps } from './interfaces/contextAPI';
+import { User, UserContextType, ContextProviderProps } from '../interfaces/contextAPI';
 
 // Create the context with a default value
 export const UserContext = createContext<UserContextType | null>(null);

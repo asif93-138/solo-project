@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Rating } from '@smastrom/react-rating';
-import { UserContext } from "./UserContext";
-import MUForm from "./MUForm";
-import { Movie } from "./interfaces/details";
+import { UserContext } from "../contextAPI/UserContext";
+import MUForm from "../components/MUForm";
+import { Movie } from "../interfaces/details";
 
 const Details = () => {
   const context = useContext(UserContext);
@@ -119,7 +119,7 @@ const Details = () => {
           <p className="text-lg my-1"><span className='font-bold me-1'>Director</span> <span className="text-blue-300">{dataObj?.director}</span></p>
           <p className="text-lg my-1"><span className='font-bold me-1'>Producer</span> <span className="text-blue-300">{dataObj?.producer}</span></p>
           <p className="text-lg mb-6"><span className='font-bold me-1'>Added By</span> <span className="text-blue-300">{dataObj?.user}</span></p>
-          <p className="mb-4">{dataObj?.desc}</p>
+          <p className="mb-6">{dataObj?.desc}</p>
           {dataObj?.user_id == context?.user?.user_id && <span><button onClick={handleUpdate} className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-regular fa-pen-to-square"></i> Edit</button> &nbsp; <button onClick={() => document.getElementById('my_modal_5')?.classList.add('modal-open')} className="btn btn-d-del btn-error text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-solid fa-trash"></i> Delete</button></span>}
           <dialog id="my_modal_1" className="modal">
             <div className="modal-box">
@@ -152,20 +152,21 @@ const Details = () => {
           </form>
         </>}
         {dataObj?.rr.map(x => (<article key={x.rr_id} className="flex w-3/4 mx-auto justify-between bg-slate-700 text-white my-6 p-4 rounded-md">
-          <div className="w-11/12"><p className="text-justify mb-3">{x.review}</p><b>{x.user}</b></div>
-          <div>
-            <article className="flex">
+          <div className="w-9-10"><p className="text-justify mb-3">{x.review}</p><b>{x.user}</b></div>
+          <div className="">
+          <article className="flex justify-end">
               <svg className='inline' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="15">
                 <path fill="#f5c518" d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
               </svg>
               <span className='ml-1'> {x?.rating || 0}</span>
             </article>
-            {x.user_id == context?.user?.user_id && <button onClick={() => {
+            {x.user_id == context?.user?.user_id && <><button onClick={() => {
               setRating(x?.rating);
               setReviewTxt(x.review);
               document.getElementById('my_modal_2')?.classList.add('modal-open');
-            }} type="button" className="btn min-h-0 h-auto p-1 mt-4">Edit</button>}
-
+            }} type="button" className="btn bg-transparent text-white min-h-0 h-auto p-1 px-2 me-2"><i className="fa-regular fa-pen-to-square"></i></button>
+            <button type="button" className="btn bg-transparent text-white min-h-0 h-auto p-1 px-2"><i className="fa-solid fa-trash"></i></button>
+            </>}
           </div>
         </article>))}
       </div>

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { UserContext } from "./UserContext";
+import { UserContext } from "../contextAPI/UserContext";
 import { Link } from "react-router";
-import { Movie } from './interfaces/home';
+import { Movie } from '../interfaces/home';
 
 const User = () => {
   const context = useContext(UserContext);

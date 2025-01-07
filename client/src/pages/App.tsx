@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router';
-import { UserContext } from "./UserContext";
+import { UserContext } from "../contextAPI/UserContext";
 import './App.css';
-import { Movie, Genre } from './interfaces/home';
+import { Movie, Genre } from '../interfaces/home';
 
 function App() {
   const [data, setData] = useState<Movie[]>([]);

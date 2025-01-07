@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
-import { UserContext } from "./UserContext";
-import MovieForm from "./MovieForm";
+import { UserContext } from "../contextAPI/UserContext";
+import MovieForm from "../components/MovieForm";
 
 const Layout = () => {
     const context = useContext(UserContext);

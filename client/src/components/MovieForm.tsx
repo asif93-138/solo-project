@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router";
-import { UserContext } from "./UserContext";
-import { Genre } from "./interfaces/home";
-import { MovieData, MovieFormProps } from "./interfaces/movieForm";
+import { UserContext } from "../contextAPI/UserContext";
+import { Genre } from "../interfaces/home";
+import { MovieData, MovieFormProps } from "../interfaces/movieForm";
 
 
 const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh }) => {
