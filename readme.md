@@ -51,18 +51,18 @@ Users can browse movies, read and post reviews, and rate films. The goal is to c
    cd solo-project
    ```
 
-2. **Run client**
+2. **Run server**
 
    ```bash
-   cd client
+   cd server
    npm install
    npm run dev
    ```
 
-3. **Run the development server**
+3. **Run client**
 
    ```bash
-   cd server
+   cd client
    npm install
    npm run dev
    ```
