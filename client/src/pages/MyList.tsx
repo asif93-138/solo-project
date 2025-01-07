@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../contextAPI/UserContext";
+import { UserContext } from "../context/UserContext";
 import { Link } from "react-router";
 import { Movie } from "../interfaces/home";
 

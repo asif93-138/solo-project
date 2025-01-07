@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Rating } from '@smastrom/react-rating';
-import { UserContext } from "../contextAPI/UserContext";
-import MUForm from "../components/MUForm";
+import { UserContext } from "../context/UserContext";
+import MUForm from "../components/EditMovie";
 import { Movie } from "../interfaces/details";
 
 const Details = () => {

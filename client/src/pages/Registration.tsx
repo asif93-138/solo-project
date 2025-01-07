@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import { UserContext } from "../contextAPI/UserContext";
+import { UserContext } from "../context/UserContext";
 import { useContext } from "react";
 
 const Registration = () => {

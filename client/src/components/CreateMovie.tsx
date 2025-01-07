@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router";
-import { UserContext } from "../contextAPI/UserContext";
+import { UserContext } from "../context/UserContext";
 import { Genre } from "../interfaces/home";
 import { MovieData, MovieFormProps } from "../interfaces/movieForm";
 

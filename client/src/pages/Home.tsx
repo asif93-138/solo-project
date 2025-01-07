@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router';
-import { UserContext } from "../contextAPI/UserContext";
+import { UserContext } from "../context/UserContext";
 import '../index.css';
 import { Movie, Genre } from '../interfaces/home';
 
