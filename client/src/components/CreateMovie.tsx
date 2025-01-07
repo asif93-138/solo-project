@@ -3,6 +3,7 @@ import { useLocation } from "react-router";
 import { UserContext } from "../context/UserContext";
 import { Genre } from "../interfaces/home";
 import { MovieData, MovieFormProps } from "../interfaces/movieForm";
+import { createMovie } from "../services/movieService";
 
 
 const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh }) => {
@@ -108,16 +109,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
             const updatedFormData = { ...formData, img: imageData.filePath, genre: selectedGenres };
             // console.log(JSON.stringify({ user_id: content?.user?.user_id, ...updatedFormData }));
             // Submit movie data
-            const movieResponse = await fetch("http://localhost:3000/api/movie/", {
-              method: "POST",
-              headers: {
-                "content-type": "application/json",
-              },
-              body: JSON.stringify({ user_id: content?.user?.user_id, ...updatedFormData }),
-            });
-
-            const movieData = await movieResponse.json();
-            if (movieData.movie.movie_id) {
+            const movie = await createMovie({ user_id: content?.user?.user_id, ...updatedFormData });
+            if (movie.movie_id) {
               setFormData({
                 title: "",
                 img: "",
