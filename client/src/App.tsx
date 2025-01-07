@@ -29,7 +29,7 @@ function App() {
       if (searchType == 'title') {
         // console.log('http://localhost:3000/search?title=' + searchValue.trim());
         try {
-          const response = await fetch('http://localhost:3000/search?title=' + searchValue.trim());
+          const response = await fetch('http://localhost:3000/api/movie/?title=' + searchValue.trim());
           const searchData: Movie[] = await response.json();
           if (Array.isArray(searchData)) {
             setData(searchData);
@@ -39,6 +39,7 @@ function App() {
             document.getElementById('nrf')?.classList.remove('hidden');
           }
           document.getElementById('sh')?.classList.remove('hidden');
+          document.getElementById('scb')?.classList.remove('hidden');
         } catch (err) {
           console.error("Error fetching data:", err);
           setData([]);
@@ -46,7 +47,7 @@ function App() {
       } else if (searchType == 'genre') {
         // console.log('http://localhost:3000/search/genre?genre=' + searchValue.trim());
         try {
-          const response = await fetch('http://localhost:3000/search/genre?genre=' + searchValue.trim());
+          const response = await fetch('http://localhost:3000/api/movie/?genre=' + searchValue.trim());
           const searchData: Movie[] = await response.json();
           if (Array.isArray(searchData)) {
             setData(searchData);
@@ -56,6 +57,7 @@ function App() {
             document.getElementById('nrf')?.classList.remove('hidden');
           }
           document.getElementById('sh')?.classList.remove('hidden');
+          document.getElementById('scb')?.classList.remove('hidden');
         } catch (err) {
           console.error("Error fetching data:", err);
           setData([]);
@@ -65,6 +67,7 @@ function App() {
       setData(initialResults);
       document.getElementById('sh')?.classList.add('hidden');
       document.getElementById('nrf')?.classList.add('hidden');
+      document.getElementById('scb')?.classList.add('hidden');
     }
   };
 
@@ -77,8 +80,19 @@ function App() {
   return (
     <section className="bg-black py-10 min-h-screen">
       <div className="items-center mb-10 flex w-3/4 mx-auto justify-center">
+        <details id='details-tag' className="dropdown">
+          <summary className="btn rounded-e-none">{searchType === 'title' ? 'Title' : 'Genre'} <i className="fa-solid fa-chevron-down"></i></summary>
+          <ul className="mt-1 menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+            <li><button type='button' className='' onClick={() => {
+              document.getElementById("details-tag")?.removeAttribute("open"); setSearchType('title'); setSearchValue('');
+            }}>Title</button></li>
+            <li><button type='button' className='' onClick={() => {
+              document.getElementById("details-tag")?.removeAttribute("open"); setSearchType('genre'); setSearchValue('');
+            }}>Genre</button></li>
+          </ul>
+        </details>
         {searchType === 'title' ? (
-          <label className="input input-bordered flex items-center gap-2 w-1/2">
+          <label className="input input-bordered flex items-center gap-2 w-1/2 rounded-s-none">
             <input
               type="search"
               className="grow"
@@ -103,7 +117,7 @@ function App() {
           </label>
         ) : (
           <select
-            className="select select-bordered  w-1/2"
+            className="select select-bordered w-1/2 rounded-s-none"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
           >
@@ -113,21 +127,13 @@ function App() {
             ))}
           </select>
         )}
-
-        <div className="flex justify-center ml-4 space-x-2">
-          <button
-            className={`btn ${searchType === 'title' && 'btn-active'}`}
-            onClick={() => { setSearchType('title'); setSearchValue('') }}
-          >
-            Search by Title
-          </button>
-          <button
-            className={`btn ${searchType === 'genre' && 'btn-active'}`}
-            onClick={() => { setSearchType('genre'); setSearchValue('') }}
-          >
-            Search by Genre
-          </button>
-        </div>
+        <button id='scb' type='button' className='btn ms-10 hidden' onClick={() => {
+          setSearchValue('');
+          setData(initialResults);
+          document.getElementById('sh')?.classList.add('hidden');
+          document.getElementById('nrf')?.classList.add('hidden');
+          document.getElementById('scb')?.classList.add('hidden');
+        }}>Return</button>
       </div>
 
       <h4 id='sh' className='text-white text-2xl text-center mb-6 hidden'>Search Results!</h4>

@@ -118,7 +118,7 @@ const Details = () => {
           {/* <p className='mt-6 mb-2 text-lg'><span className='font-bold me-1'>Genre</span> </p> */}
           <p className="text-lg my-1"><span className='font-bold me-1'>Director</span> <span className="text-blue-300">{dataObj?.director}</span></p>
           <p className="text-lg my-1"><span className='font-bold me-1'>Producer</span> <span className="text-blue-300">{dataObj?.producer}</span></p>
-          <p className="text-lg mb-6"><span className='font-bold me-1'>Created By</span> <span className="text-blue-300">{dataObj?.user}</span></p>
+          <p className="text-lg mb-6"><span className='font-bold me-1'>Added By</span> <span className="text-blue-300">{dataObj?.user}</span></p>
           <p className="mb-4">{dataObj?.desc}</p>
           {dataObj?.user_id == context?.user?.user_id && <span><button onClick={handleUpdate} className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-regular fa-pen-to-square"></i> Edit</button> &nbsp; <button onClick={() => document.getElementById('my_modal_5')?.classList.add('modal-open')} className="btn btn-d-del btn-error text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-solid fa-trash"></i> Delete</button></span>}
           <dialog id="my_modal_1" className="modal">
