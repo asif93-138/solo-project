@@ -20,7 +20,7 @@ const Genre = db.Genre;
 const MG = db.MG;
 
 const app: Express = express();
-// const port = 3000;
+// const port = 5000;
 const port = 3000;
 
 app.use(cors());
