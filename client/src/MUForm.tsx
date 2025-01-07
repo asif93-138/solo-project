@@ -125,12 +125,14 @@ import { MovieData, MUFormProps } from "./interfaces/MUForm";
 
 const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj }) => {
   const [formData, setFormData] = useState<Partial<MovieData>>({});
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   // Populate formData with dataObj values when the component mounts or dataObj changes
   useEffect(() => {
     setFormData(dataObj);
   }, [dataObj]);
-
+  // console.log(dataObj);
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -142,7 +144,20 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj }) => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        setImageFile(file);
+        setImagePreview(URL.createObjectURL(file));
+      }
+    };
+  
+    const handleCancelImage = () => {
+      setImageFile(null);
+      setImagePreview(null);
+    };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const filteredData = Object.entries(formData).reduce((acc, [key, value]) => {
@@ -151,23 +166,55 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj }) => {
       }
       return acc;
     }, {} as Partial<MovieData>);
-
-    fetch("http://localhost:3000/api/movie/" + dataObj.movie_id, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(filteredData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.movie_id) {
-          setFormData({}); // Clear form fields
-          document.getElementById('my_modal_4A1')?.classList.add('hidden');
-          document.getElementById('my_modal_4A2')?.classList.remove('hidden');
-          setRefresh((prev) => prev + 1);
-        }
+    // console.log(filteredData);
+    if (imageFile) {
+      // Upload image first
+      const formDataImage = new FormData();
+      formDataImage.append("image", imageFile);
+      const imageResponse = await fetch("http://localhost:3000/upload", {
+        method: "POST",
+        body: formDataImage,
       });
+
+      const imageData = await imageResponse.json();
+      if (imageData.filePath) {
+        filteredData.img = imageData.filePath;
+        fetch("http://localhost:3000/api/movie/" + dataObj.movie_id, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(filteredData),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.movie_id) {
+              setFormData({}); // Clear form fields
+              document.getElementById('my_modal_4A1')?.classList.add('hidden');
+              document.getElementById('my_modal_4A2')?.classList.remove('hidden');
+              setRefresh((prev) => prev + 1);
+            }
+          });
+      }
+    } else {
+      fetch("http://localhost:3000/api/movie/" + dataObj.movie_id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(filteredData),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.movie_id) {
+            setFormData({}); // Clear form fields
+            document.getElementById('my_modal_4A1')?.classList.add('hidden');
+            document.getElementById('my_modal_4A2')?.classList.remove('hidden');
+            setRefresh((prev) => prev + 1);
+          }
+        });
+    }
+
   };
 
   const handleCancel = () => {
@@ -179,6 +226,14 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj }) => {
     <div className="p-6 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Edit this entry</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
+      <input
+          type="text"
+          name="title"
+          value={formData.title || ''}
+          onChange={handleInputChange}
+          placeholder="Movie Title"
+          className="input input-bordered w-full"
+        />
         <textarea
           name="desc"
           value={formData.desc || ""}
@@ -218,6 +273,42 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj }) => {
           placeholder="Producer"
           className="input input-bordered w-full"
         />
+                {/* Image Upload Section */}
+                {!imageFile && (
+          <>
+                    <label className="btn btn-block">
+            Select Image
+            <input
+              type="file"
+              className="hidden"
+              onChange={handleImageChange}
+              accept="image/*"
+            />
+          </label>
+          <p id="img-notification" className="text-red-500 text-center hidden"><b>Image is required!!</b></p>
+          </>
+        )}
+
+        {/* Preview Section */}
+        {imagePreview && (
+          <div className="card w-96 bg-base-100 shadow-xl">
+            <figure>
+              <img src={imagePreview} alt="Preview" className="rounded-t-lg max-h-60 object-cover" />
+            </figure>
+            <div className="card-body">
+              <h2 className="card-title">Image Preview</h2>
+              <div className="card-actions justify-end gap-2">
+                <button
+                  type="button"
+                  className="btn btn-error text-white"
+                  onClick={handleCancelImage}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         <button type="submit" className="btn w-full">
           Submit
         </button>

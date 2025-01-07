@@ -39,6 +39,7 @@ function App() {
             document.getElementById('nrf')?.classList.remove('hidden');
           }
           document.getElementById('sh')?.classList.remove('hidden');
+          document.getElementById('scb')?.classList.remove('hidden');
         } catch (err) {
           console.error("Error fetching data:", err);
           setData([]);
@@ -56,6 +57,7 @@ function App() {
             document.getElementById('nrf')?.classList.remove('hidden');
           }
           document.getElementById('sh')?.classList.remove('hidden');
+          document.getElementById('scb')?.classList.remove('hidden');
         } catch (err) {
           console.error("Error fetching data:", err);
           setData([]);
@@ -65,6 +67,7 @@ function App() {
       setData(initialResults);
       document.getElementById('sh')?.classList.add('hidden');
       document.getElementById('nrf')?.classList.add('hidden');
+      document.getElementById('scb')?.classList.add('hidden');
     }
   };
 
@@ -77,14 +80,14 @@ function App() {
   return (
     <section className="bg-black py-10 min-h-screen">
       <div className="items-center mb-10 flex w-3/4 mx-auto justify-center">
-      <details className="dropdown">
+      <details id='details-tag' className="dropdown">
   <summary className="btn rounded-e-none">{searchType === 'title' ? 'Title' : 'Genre'} <i className="fa-solid fa-chevron-down"></i></summary>
   <ul className="mt-1 menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
     <li><button type='button' className='' onClick={() => {
-      document.getElementsByTagName("details")[1].removeAttribute("open"); setSearchType('title'); setSearchValue('');
+      document.getElementById("details-tag")?.removeAttribute("open"); setSearchType('title'); setSearchValue('');
     }}>Title</button></li>
     <li><button type='button' className='' onClick={() => {
-      document.getElementsByTagName("details")[1].removeAttribute("open"); setSearchType('genre'); setSearchValue('');
+      document.getElementById("details-tag")?.removeAttribute("open"); setSearchType('genre'); setSearchValue('');
     }}>Genre</button></li>
   </ul>
 </details>
@@ -124,16 +127,16 @@ function App() {
             ))}
           </select>
         )}
-        
-      </div>
-
-      <h4 id='sh' className='text-white text-2xl text-center mb-6 hidden'><span>Search Results!</span>
-      <button type='button' className='btn ms-10 h-auto min-h-0 py-2' onClick={() => {
+        <button id='scb' type='button' className='btn ms-10 hidden' onClick={() => {
         setSearchValue('');
         setData(initialResults);
         document.getElementById('sh')?.classList.add('hidden');
         document.getElementById('nrf')?.classList.add('hidden');
-      }}>close</button></h4>
+        document.getElementById('scb')?.classList.add('hidden');
+      }}>Return</button>
+      </div>
+
+      <h4 id='sh' className='text-white text-2xl text-center mb-6 hidden'>Search Results!</h4>
       <p id='nrf' className='text-white text-center hidden'>No results found..</p>
       <div className='grid grid-cols-4 gap-12 w-9-10 mx-auto'>
         {data.map((x) => (
