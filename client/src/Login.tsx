@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router";
 import { UserContext } from "./UserContext";
 import { useContext } from "react";
 
-
 const Login = () => {
   const context = useContext(UserContext);
   const navigate = useNavigate();
