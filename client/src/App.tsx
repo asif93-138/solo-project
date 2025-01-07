@@ -81,7 +81,7 @@ function App() {
     <section className="bg-black py-10 min-h-screen">
       <div className="items-center mb-10 flex w-3/4 mx-auto justify-center">
         <details id='details-tag' className="dropdown">
-          <summary className="btn rounded-e-none">{searchType === 'title' ? 'Title' : 'Genre'} <i className="fa-solid fa-chevron-down"></i></summary>
+          <summary className="btn rounded-e-none w-24">{searchType === 'title' ? 'Title' : 'Genre'} <i className="fa-solid fa-chevron-down"></i></summary>
           <ul className="mt-1 menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
             <li><button type='button' className='' onClick={() => {
               document.getElementById("details-tag")?.removeAttribute("open"); setSearchType('title'); setSearchValue('');
