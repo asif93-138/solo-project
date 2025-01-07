@@ -1,6 +1,6 @@
 # Movie Review System | Solo Project | Legacy Project
 
-### 🚧 WORK IN PROGRESS 🚧
+### 🚧 WORK IN PROGRESS 🚧 😀
 
 ## 📽️ Overview
 
