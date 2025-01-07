@@ -13,3 +13,13 @@ export interface Movie {
     user: string; // name of the user
     rr: { rr_id: number; user_id: number; user: string; review: string; rating: number }[]; // array of reviews
 }
+
+export interface DetailsModalsProps {
+    handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+    rating: number;
+    setRating: React.Dispatch<React.SetStateAction<number>>;
+    reviewTxt: string;
+    setReviewTxt: React.Dispatch<React.SetStateAction<string>>;
+    dataObj: Movie | null;
+    setRefresh: React.Dispatch<React.SetStateAction<number>>;
+  }

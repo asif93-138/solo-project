@@ -16,3 +16,7 @@ export interface Genre {
     genre_id: number;
     genre: string;
   }
+
+export interface MovieCardsProps {
+  dataObj: Movie[];
+}

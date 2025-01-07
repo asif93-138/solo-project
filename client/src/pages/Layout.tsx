@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
 import { UserContext } from "../context/UserContext";
 import MovieForm from "../components/CreateMovie";
@@ -7,7 +7,6 @@ const Layout = () => {
     const context = useContext(UserContext);
     const location = useLocation();
     const navigate = useNavigate();
-    const [tooltipLeft, setTooltipLeft] = useState(90);
     function showModal() {
         document.getElementById('my_modal_nav')?.classList.add('modal-open');
     }
@@ -78,7 +77,7 @@ const Layout = () => {
                         }}>Close</button>
                     </section>
                     <section className="">
-                        <MovieForm setHomeRefresh={context?.setHomeRefresh ? context?.setHomeRefresh : setTooltipLeft} setListRefresh={context?.setListRefresh ? context?.setListRefresh : setTooltipLeft} />
+                        {context &&  <MovieForm setHomeRefresh={context.setHomeRefresh} setListRefresh={context.setListRefresh} />}
                     </section>
 
                 </div>
