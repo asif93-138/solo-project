@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 export const signUpWithLogin = async (req: Request, res: Response) => {
   try {
     const user = await User.create(req.body);
+    console.log("user", user);
     res.status(201).json(user);
   } catch (error) {
     console.error(error);
