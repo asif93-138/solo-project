@@ -28,8 +28,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
 
   useEffect(() => {
     fetch('http://localhost:3000/api/genre/')
-    .then((res) => res.json())
-    .then((data: Genre[]) => setGenres(data))
+      .then((res) => res.json())
+      .then((data: Genre[]) => setGenres(data))
   }, [genreReloader])
 
   const handleInputChange = (
@@ -91,59 +91,59 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
 
       if (selectedGenres.length > 0) {
         document.getElementById('genre-notification')?.classList.add('hidden');
-      // Upload image first
-      const formDataImage = new FormData();
-      formDataImage.append("image", imageFile);
+        // Upload image first
+        const formDataImage = new FormData();
+        formDataImage.append("image", imageFile);
 
-      try {
-        const imageResponse = await fetch("http://localhost:3000/upload", {
-          method: "POST",
-          body: formDataImage,
-        });
-
-        const imageData = await imageResponse.json();
-
-        if (imageData.filePath) {
-          // Update form data with image URL and selected genres
-          const updatedFormData = { ...formData, img: imageData.filePath, genre: selectedGenres };
-          // console.log(JSON.stringify({ user_id: content?.user?.user_id, ...updatedFormData }));
-          // Submit movie data
-          const movieResponse = await fetch("http://localhost:3000/api/movie/", {
+        try {
+          const imageResponse = await fetch("http://localhost:3000/upload", {
             method: "POST",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify({ user_id: content?.user?.user_id, ...updatedFormData }),
+            body: formDataImage,
           });
 
-          const movieData = await movieResponse.json();
-          if (movieData.movie.movie_id) {
-            setFormData({
-              title: "",
-              img: "",
-              desc: "",
-              release_yr: "",
-              director: "",
-              length: "",
-              producer: "",
-              genre: [],
+          const imageData = await imageResponse.json();
+
+          if (imageData.filePath) {
+            // Update form data with image URL and selected genres
+            const updatedFormData = { ...formData, img: imageData.filePath, genre: selectedGenres };
+            // console.log(JSON.stringify({ user_id: content?.user?.user_id, ...updatedFormData }));
+            // Submit movie data
+            const movieResponse = await fetch("http://localhost:3000/api/movie/", {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify({ user_id: content?.user?.user_id, ...updatedFormData }),
             });
-            setImageFile(null);
-            setImagePreview(null);
-            setSelectedGenres([]);
-            if (location.pathname == '/') {
-              setHomeRefresh((prev) => prev + 1);
+
+            const movieData = await movieResponse.json();
+            if (movieData.movie.movie_id) {
+              setFormData({
+                title: "",
+                img: "",
+                desc: "",
+                release_yr: "",
+                director: "",
+                length: "",
+                producer: "",
+                genre: [],
+              });
+              setImageFile(null);
+              setImagePreview(null);
+              setSelectedGenres([]);
+              if (location.pathname == '/') {
+                setHomeRefresh((prev) => prev + 1);
+              }
+              else if (location.pathname == '/user') {
+                setListRefresh((prev) => prev + 1);
+              }
+              document.getElementsByTagName('section')[1].classList.add('hidden');
+              document.getElementsByTagName('section')[0].classList.remove('hidden');
             }
-            else if (location.pathname == '/user') {
-              setListRefresh((prev) => prev + 1);
-            }
-            document.getElementsByTagName('section')[1].classList.add('hidden');
-            document.getElementsByTagName('section')[0].classList.remove('hidden');
           }
+        } catch (error) {
+          console.error("Error during upload:", error);
         }
-      } catch (error) {
-        console.error("Error during upload:", error);
-      }
       } else {
         document.getElementById('genre-notification')?.classList.remove('hidden');
       }
@@ -181,7 +181,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
           onChange={handleInputChange}
           placeholder="Release Year"
           className="input input-bordered w-full"
-          required  max="9999"
+          required max="9999"
         />
 
         <input
@@ -212,7 +212,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
         />
 
         <div className="space-y-2">
-          {genres.length > 0 &&           <select
+          {genres.length > 0 && <select
             onChange={handleGenreChange}
             className="select select-bordered w-full">
             <option>Select a genre</option>
@@ -260,16 +260,16 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
         {/* Image Upload Section */}
         {!imageFile && (
           <>
-                    <label className="btn btn-block">
-            Select Image
-            <input
-              type="file"
-              className="hidden"
-              onChange={handleImageChange}
-              accept="image/*"
-            />
-          </label>
-          <p id="img-notification" className="text-red-500 text-center hidden"><b>Image is required!!</b></p>
+            <label className="btn btn-block">
+              Select Image
+              <input
+                type="file"
+                className="hidden"
+                onChange={handleImageChange}
+                accept="image/*"
+              />
+            </label>
+            <p id="img-notification" className="text-red-500 text-center hidden"><b>Image is required!!</b></p>
           </>
         )}
 

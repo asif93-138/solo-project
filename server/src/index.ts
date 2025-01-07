@@ -20,16 +20,17 @@ const Genre = db.Genre;
 const MG = db.MG;
 
 const app: Express = express();
+// const port = 3000;
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
-// app.use('/api', routes);
 app.use("/api/user", userRoute);
 app.use("/api/movie", movieRoute);
 app.use("/api/review", reviewRoute);
 app.use("/api/genre", genreRoute);
+
 app.get("/", (req: Request, res: Response) => {
   res.send("DB testing!");
 });
