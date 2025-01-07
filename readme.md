@@ -1,4 +1,4 @@
-# Movie Review System | Solo Project | Legacy Project
+# Movie Review Application | Solo Project | Legacy Project
 
 ### 🚧 WORK IN PROGRESS 🚧 
 
@@ -74,7 +74,7 @@ Users can browse movies, read and post reviews, and rate films. The goal is to c
 ## 📂 Project Structure
 
 ```
-/movie-review-system
+/movie-review-app
 ├── client (React Frontend)
 │   ├── src
 │   └── public
