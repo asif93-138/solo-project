@@ -9,15 +9,8 @@ import {
   getAllGenres,
 } from "../services/movieService";
 
-<<<<<<< HEAD
 
 const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, setShowFirstModal, setShowSecondModal }) => {
-=======
-const MovieForm: React.FC<MovieFormProps> = ({
-  setHomeRefresh,
-  setListRefresh,
-}) => {
->>>>>>> 4a4b2cc56d6ccbaaf3a6c6878225a3b44643b16f
   const content = useContext(UserContext);
   const location = useLocation();
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -139,17 +132,8 @@ const MovieForm: React.FC<MovieFormProps> = ({
               } else if (location.pathname == "/user") {
                 setListRefresh((prev) => prev + 1);
               }
-<<<<<<< HEAD
               setShowSecondModal(false);
               setShowFirstModal(true);
-=======
-              document
-                .getElementsByTagName("section")[1]
-                .classList.add("hidden");
-              document
-                .getElementsByTagName("section")[0]
-                .classList.remove("hidden");
->>>>>>> 4a4b2cc56d6ccbaaf3a6c6878225a3b44643b16f
             }
           }
         } catch (error) {
