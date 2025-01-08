@@ -10,7 +10,7 @@ import {
 } from "../services/movieService";
 
 
-const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, setShowFirstModal, setShowSecondModal }) => {
+const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, setShowNavModal, setShowFirstModal, setShowSecondModal }) => {
   const content = useContext(UserContext);
   const location = useLocation();
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -316,9 +316,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
             document
               .getElementById("img-notification")
               ?.classList.add("hidden");
-            document
-              .getElementById("my_modal_nav")
-              ?.classList.remove("modal-open");
+              setShowNavModal(0);
             document
               .getElementById("genre-notification")
               ?.classList.add("hidden");

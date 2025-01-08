@@ -22,4 +22,7 @@ export interface DetailsModalsProps {
     setReviewTxt: React.Dispatch<React.SetStateAction<string>>;
     dataObj: Movie | null;
     setRefresh: React.Dispatch<React.SetStateAction<number>>;
+    rr_id: number;
+    showModal: boolean;
+    setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   }

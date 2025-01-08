@@ -11,6 +11,8 @@ const Details = () => {
   const location = useLocation();
   const [dataObj, setDataObj] = useState<Movie | null>(null);
   const [rating, setRating] = useState(0);
+  const [rr_id, setRr_id] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [reviewTxt, setReviewTxt] = useState('');
   useEffect(() => {
@@ -99,14 +101,16 @@ const Details = () => {
             setReviewTxt(x.review);
             document.getElementById('my_modal_2')?.classList.add('modal-open');
           }} type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2 me-2"><i className="fa-regular fa-pen-to-square"></i></button>
-            <button type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2"><i className="fa-solid fa-trash"></i></button>
+            <button type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2"
+            onClick={() => {setRr_id(x.rr_id); setShowModal(true);}}
+            ><i className="fa-solid fa-trash"></i></button>
           </div>}
         </article>))}
       </div>
       <DetailsModals
         handleSubmit={handleSubmit} reviewTxt={reviewTxt}
         rating={rating} setRating={setRating} setReviewTxt={setReviewTxt} dataObj={dataObj}
-        setRefresh={setRefresh}
+        setRefresh={setRefresh} rr_id={rr_id} showModal={showModal} setShowModal={setShowModal}
       />
     </section>
 

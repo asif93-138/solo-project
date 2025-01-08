@@ -122,7 +122,7 @@ function App() {
 
       <h4 id='sh' className='text-white text-2xl text-center mb-6 hidden'>Search Results!</h4>
       <p id='nrf' className='text-white text-center hidden'>No results found..</p>
-      <MovieCards dataObj={data} />
+      {data.length > 0 && <MovieCards dataObj={data} />}
     </section>
   );
 }

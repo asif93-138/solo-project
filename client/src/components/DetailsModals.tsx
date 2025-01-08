@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Rating } from '@smastrom/react-rating';
 import MUForm from './EditMovie';
 import { useNavigate } from 'react-router';
 import { DetailsModalsProps } from '../interfaces/details';
-import { deleteMovie } from '../services/movieService';
+import { deleteMovie, deleteRatingAndReview } from '../services/movieService';
 
-const DetailsModals: React.FC<DetailsModalsProps> = ({handleSubmit, rating, setRating, reviewTxt, setReviewTxt, dataObj, setRefresh}) => {
-    const navigate = useNavigate(); 
+const DetailsModals: React.FC<DetailsModalsProps> = ({handleSubmit, rating, setRating, reviewTxt, setReviewTxt, dataObj, setRefresh, rr_id, showModal, setShowModal}) => {
+  const [showModalP1, setShowModalP1] = useState(true);  
+  const navigate = useNavigate(); 
     function closeModal_1() {
         document.getElementById('my_modal_2')?.classList.remove('modal-open');
         document.getElementById('updateForm')?.classList.remove('hidden');
@@ -88,6 +89,25 @@ const DetailsModals: React.FC<DetailsModalsProps> = ({handleSubmit, rating, setR
               </div>
             </div>
           </dialog>
+          <dialog id="my_modal_6" className={showModal? "modal modal-open" : "modal"}>
+        <div className="modal-box text-center">
+            {showModalP1? 
+            <>
+                      <h4 className="text-black text-2xl mb-4">Delete your rating and review?</h4>
+                      <button type="button" className="btn text-red-500" onClick={async() => {
+                        const response = await deleteRatingAndReview(rr_id);
+                          if (response.deleted) {
+                            setShowModalP1(false);
+                          }
+                      }}>Confirm</button> &nbsp; &nbsp; <button type="button" className="btn" onClick={() => setShowModal(false)}>Cancel</button>
+            </>
+            : 
+            <><h4 className="text-black text-2xl mb-4">Deleted!</h4>
+            <button type='button' className='btn' onClick={() => {
+              setShowModalP1(true); setShowModal(false); setRefresh((prev) => prev + 1);
+            }}>Close</button></>}
+        </div>
+      </dialog>
         </>
     );
 };

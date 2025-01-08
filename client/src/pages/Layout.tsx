@@ -4,14 +4,14 @@ import { UserContext } from "../contexts/UserContext";
 import MovieForm from "../components/CreateMovie";
 
 const Layout = () => {
-    const [showNavModal, setShowNavModal] = useState(false);
+    const [showNavModal, setShowNavModal] = useState(0);
     const [showFirstModal, setShowFirstModal] = useState(false);
     const [showSecondModal, setShowSecondModal] = useState(true);
     const context = useContext(UserContext);
     const location = useLocation();
     const navigate = useNavigate();
     function showModal() {
-        setShowNavModal(true);
+        setShowNavModal(1);
     }
     return (
         <>
@@ -68,19 +68,19 @@ const Layout = () => {
                         </div></Link>
                     </nav>
             }
-            <dialog id="my_modal_nav" className={showNavModal? "modal text-black modal-open" : "modal text-black"}>
+            <dialog id="my_modal_nav" className={(showNavModal === 1) ? "modal text-black modal-open" : "modal text-black"}>
                 <div className="modal-box">
                     <section className={showFirstModal? "text-center" : "hidden text-center"}>
                         <p className="py-4">Successfully inserted a new movie!</p>
                         <button type="button" className="btn" onClick={() => {
-                            setShowNavModal(false);
+                            setShowNavModal(0);
                             setShowFirstModal(false);
                             setShowSecondModal(true);
                             if (location.pathname != '/' && location.pathname != '/user') { navigate('/user'); }
                         }}>Close</button>
                     </section>
                     <section className={showSecondModal? "" : "hidden"}>
-                        {context && <MovieForm setHomeRefresh={context.setHomeRefresh} setListRefresh={context.setListRefresh} setShowFirstModal={setShowFirstModal} setShowSecondModal={setShowSecondModal} />}
+                        {context && <MovieForm setHomeRefresh={context.setHomeRefresh} setListRefresh={context.setListRefresh} setShowFirstModal={setShowFirstModal} setShowSecondModal={setShowSecondModal} setShowNavModal={setShowNavModal} />}
                     </section>
 
                 </div>

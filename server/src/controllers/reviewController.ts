@@ -35,3 +35,20 @@ export const updateReviewById = async (req: Request, res: Response) => {
     }
 }
 
+export const deleteReviewById = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        const rr = await RR.destroy({
+            where: {
+              rr_id: id
+            }
+          });
+
+        res.status(200).json({ deleted: true });
+    } catch (error) {
+        console.error("Error deleting review:", error);
+        res.status(500).json({ error: "Failed to delete review" });
+    }
+}
+
