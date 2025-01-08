@@ -2,19 +2,16 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link } from "react-router";
 import { Movie } from "../interfaces/home";
+import { getMyList } from "../services/movieService";
 
 const Mylist = () => {
   const context = useContext(UserContext);
   const [data, setData] = useState<Movie[]>([]);
   useEffect(() => {
     if (context?.user) {
-      // fetch("http://localhost:3000/moviesFromUser/" + context?.user?.user_id)
-      fetch("http://localhost:3000/api/movie/user/" + context?.user?.user_id)
-        .then((res) => res.json())
-        .then((data: Movie[]) => setData(data));
+      getMyList(context?.user?.user_id, setData);
     }
   }, [context?.listRefresh, context?.user]);
-  // console.log();
 
   return (
     <div className="bg-black text-white py-4 min-h-screen">
