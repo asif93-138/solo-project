@@ -4,10 +4,6 @@ export async function getAllMovies() {
     .then((res) => res.json())
     .then((data) => data);
   return movies;
-  const movies = await fetch('http://localhost:3000/api/movie')
-    .then((res) => res.json())
-    .then((data) => data);
-  return movies;
 }
 
 export async function getAllGenres() {
@@ -31,8 +27,6 @@ export async function searchMovies(searchType: any, value: any) {
   return results;
 }
 
-export function getMyList(user_id: any, setData: any) {
-  fetch("http://localhost:3000/moviesFromUser/" + user_id)
 export function getMyList(user_id: any, setData: any) {
   fetch("http://localhost:3000/api/movie/user/" + user_id)
     .then((res) => res.json())
