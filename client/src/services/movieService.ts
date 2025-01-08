@@ -4,6 +4,10 @@ export async function getAllMovies() {
     .then((res) => res.json())
     .then((data) => data);
   return movies;
+  const movies = await fetch('http://localhost:3000/api/movie')
+    .then((res) => res.json())
+    .then((data) => data);
+  return movies;
 }
 
 export async function getAllGenres() {
@@ -29,6 +33,8 @@ export async function searchMovies(searchType: any, value: any) {
 
 export function getMyList(user_id: any, setData: any) {
   fetch("http://localhost:3000/moviesFromUser/" + user_id)
+export function getMyList(user_id: any, setData: any) {
+  fetch("http://localhost:3000/api/movie/user/" + user_id)
     .then((res) => res.json())
     .then((data) => setData(data));
 }
@@ -64,7 +70,6 @@ export async function updateRatingAndReview(id: any, data: any) {
 }
 
 export async function createMovie(data: any) {
-  console.log("in srvice:", data);
   const movieResponse = await fetch("http://localhost:3000/api/movie/", {
     method: "POST",
     headers: {
@@ -72,9 +77,7 @@ export async function createMovie(data: any) {
     },
     body: JSON.stringify(data),
   });
-  // console.log("inside fetch:", movieResponse);
   const movieData = await movieResponse.json();
-  console.log("inside fetch:", movieData);
   return movieData.movie;
 }
 

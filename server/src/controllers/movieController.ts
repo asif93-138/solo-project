@@ -137,6 +137,47 @@ export const getMovieById: RequestHandler = async (
   }
 };
 
+export const getMovieByUserId: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const movies = await Movie.findAll({
+      where: { user_id: req.params.id },
+      attributes: {
+        include: [
+          // Add the average rating as a computed field
+          [
+            Sequelize.fn("AVG", Sequelize.col("ratingsReviews.rating")),
+            "averageRating",
+          ],
+        ],
+      },
+      include: [
+        {
+          model: RR,
+          as: "ratingsReviews", // Match the alias defined in the associations
+          attributes: [], // Do not include all RR fields in the response
+        },
+        {
+          model: Genre,
+          as: "genres", // Match the alias for the many-to-many association
+          attributes: ["genre"], // Include only the genre name
+          through: { attributes: [] }, // Exclude junction table fields
+        },
+      ],
+      group: ["Movie.movie_id", "genres.genre_id"], // Group by movie ID and genre ID
+      order: [["movie_id", "DESC"]], // Sort by movie_id in ascending order
+    });
+    res.status(200).json(movies);
+  } catch (error) {
+    console.error("Error fetching movies with genres and ratings:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to fetch movies with genres and ratings" });
+  }
+};
+
 export const editMovie: RequestHandler = async (
   req: Request,
   res: Response

@@ -9,7 +9,7 @@ const Mylist = () => {
   const [data, setData] = useState<Movie[]>([]);
   useEffect(() => {
     if (context?.user) {
-        getMyList(context?.user?.user_id, setData);
+      getMyList(context?.user?.user_id, setData);
     }
   }, [context?.listRefresh, context?.user]);
 
