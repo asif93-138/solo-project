@@ -3,10 +3,21 @@ import { useLocation } from "react-router";
 import { UserContext } from "../contexts/UserContext";
 import { Genre } from "../interfaces/home";
 import { MovieData, MovieFormProps } from "../interfaces/movieForm";
-import { createMovie, createNewGenre, getAllGenres } from "../services/movieService";
+import {
+  createMovie,
+  createNewGenre,
+  getAllGenres,
+} from "../services/movieService";
 
+<<<<<<< HEAD
 
 const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, setShowFirstModal, setShowSecondModal }) => {
+=======
+const MovieForm: React.FC<MovieFormProps> = ({
+  setHomeRefresh,
+  setListRefresh,
+}) => {
+>>>>>>> 4a4b2cc56d6ccbaaf3a6c6878225a3b44643b16f
   const content = useContext(UserContext);
   const location = useLocation();
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -32,7 +43,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
   }
   useEffect(() => {
     getGenres();
-  }, [genreReloader])
+  }, [genreReloader]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -43,14 +54,14 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
 
   const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    if (!selectedGenres.includes(value) && value != 'Select a genre') {
-      document.getElementById('genre-notification')?.classList.add('hidden');
-      setSelectedGenres(prev => [...prev, value]);
+    if (!selectedGenres.includes(value) && value != "Select a genre") {
+      document.getElementById("genre-notification")?.classList.add("hidden");
+      setSelectedGenres((prev) => [...prev, value]);
     }
   };
 
   const handleRemoveGenre = (genre: string) => {
-    setSelectedGenres(prev => prev.filter(g => g !== genre));
+    setSelectedGenres((prev) => prev.filter((g) => g !== genre));
   };
 
   const handleAddNewGenre = async () => {
@@ -80,10 +91,10 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
     e.preventDefault();
 
     if (imageFile) {
-      document.getElementById('img-notification')?.classList.add('hidden');
+      document.getElementById("img-notification")?.classList.add("hidden");
 
       if (selectedGenres.length > 0) {
-        document.getElementById('genre-notification')?.classList.add('hidden');
+        document.getElementById("genre-notification")?.classList.add("hidden");
         // Upload image first
         const formDataImage = new FormData();
         formDataImage.append("image", imageFile);
@@ -98,10 +109,17 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
 
           if (imageData.filePath) {
             // Update form data with image URL and selected genres
-            const updatedFormData = { ...formData, img: imageData.filePath, genre: selectedGenres };
+            const updatedFormData = {
+              ...formData,
+              img: imageData.filePath,
+              genre: selectedGenres,
+            };
             // console.log(JSON.stringify({ user_id: content?.user?.user_id, ...updatedFormData }));
             // Submit movie data
-            const movie = await createMovie({ user_id: content?.user?.user_id, ...updatedFormData });
+            const movie = await createMovie({
+              user_id: content?.user?.user_id,
+              ...updatedFormData,
+            });
             if (movie.movie_id) {
               setFormData({
                 title: "",
@@ -116,24 +134,34 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
               setImageFile(null);
               setImagePreview(null);
               setSelectedGenres([]);
-              if (location.pathname == '/') {
+              if (location.pathname == "/") {
                 setHomeRefresh((prev) => prev + 1);
-              }
-              else if (location.pathname == '/user') {
+              } else if (location.pathname == "/user") {
                 setListRefresh((prev) => prev + 1);
               }
+<<<<<<< HEAD
               setShowSecondModal(false);
               setShowFirstModal(true);
+=======
+              document
+                .getElementsByTagName("section")[1]
+                .classList.add("hidden");
+              document
+                .getElementsByTagName("section")[0]
+                .classList.remove("hidden");
+>>>>>>> 4a4b2cc56d6ccbaaf3a6c6878225a3b44643b16f
             }
           }
         } catch (error) {
           console.error("Error during upload:", error);
         }
       } else {
-        document.getElementById('genre-notification')?.classList.remove('hidden');
+        document
+          .getElementById("genre-notification")
+          ?.classList.remove("hidden");
       }
     } else {
-      document.getElementById('img-notification')?.classList.remove('hidden');
+      document.getElementById("img-notification")?.classList.remove("hidden");
     }
   };
 
@@ -166,7 +194,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           onChange={handleInputChange}
           placeholder="Release Year"
           className="input input-bordered w-full"
-          required max="9999"
+          required
+          max="9999"
         />
 
         <input
@@ -184,7 +213,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           value={formData.length}
           onChange={handleInputChange}
           placeholder="Length (minutes)"
-          className="input input-bordered w-full" required
+          className="input input-bordered w-full"
+          required
         />
 
         <input
@@ -197,18 +227,26 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
         />
 
         <div className="space-y-2">
-          {genres.length > 0 && <select
-            onChange={handleGenreChange}
-            className="select select-bordered w-full">
-            <option>Select a genre</option>
-            {genres.map((genre) => (
-              <option key={genre.genre_id} value={genre.genre}>
-                {genre.genre}
-              </option>
-            ))}
-          </select>}
+          {genres.length > 0 && (
+            <select
+              onChange={handleGenreChange}
+              className="select select-bordered w-full"
+            >
+              <option>Select a genre</option>
+              {genres.map((genre) => (
+                <option key={genre.genre_id} value={genre.genre}>
+                  {genre.genre}
+                </option>
+              ))}
+            </select>
+          )}
 
-          <p id="genre-notification" className="text-red-500 text-center hidden"><b>Genre must be added!</b></p>
+          <p
+            id="genre-notification"
+            className="text-red-500 text-center hidden"
+          >
+            <b>Genre must be added!</b>
+          </p>
           <div className="flex flex-wrap gap-2">
             {selectedGenres.map((genre) => (
               <div key={genre} className="badge badge-ghost gap-1">
@@ -233,11 +271,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
             placeholder="Add new genre"
             className="input input-bordered flex-1"
           />
-          <button
-            type="button"
-            onClick={handleAddNewGenre}
-            className="btn"
-          >
+          <button type="button" onClick={handleAddNewGenre} className="btn">
             Add
           </button>
         </div>
@@ -254,7 +288,12 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
                 accept="image/*"
               />
             </label>
-            <p id="img-notification" className="text-red-500 text-center hidden"><b>Image is required!!</b></p>
+            <p
+              id="img-notification"
+              className="text-red-500 text-center hidden"
+            >
+              <b>Image is required!!</b>
+            </p>
           </>
         )}
 
@@ -262,7 +301,11 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
         {imagePreview && (
           <div className="card w-96 bg-base-100 shadow-xl">
             <figure>
-              <img src={imagePreview} alt="Preview" className="rounded-t-lg max-h-60 object-cover" />
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="rounded-t-lg max-h-60 object-cover"
+              />
             </figure>
             <div className="card-body">
               <h2 className="card-title">Image Preview</h2>
@@ -282,15 +325,26 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
         <button type="submit" className="btn w-full">
           Submit
         </button>
-        <button type="button" className="btn btn-block" onClick={() => {
-          document.getElementById('img-notification')?.classList.add('hidden');
-          document.getElementById('my_modal_nav')?.classList.remove('modal-open');
-          document.getElementById('genre-notification')?.classList.add('hidden');
-        }}>Cancel</button>
+        <button
+          type="button"
+          className="btn btn-block"
+          onClick={() => {
+            document
+              .getElementById("img-notification")
+              ?.classList.add("hidden");
+            document
+              .getElementById("my_modal_nav")
+              ?.classList.remove("modal-open");
+            document
+              .getElementById("genre-notification")
+              ?.classList.add("hidden");
+          }}
+        >
+          Cancel
+        </button>
       </form>
     </div>
   );
 };
 
 export default MovieForm;
-

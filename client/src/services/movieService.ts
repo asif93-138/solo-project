@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function getAllMovies() {
-  const movies = await fetch('http://localhost:3000/api/movie')
+  const movies = await fetch("http://localhost:3000/api/movie")
     .then((res) => res.json())
     .then((data) => data);
   return movies;
 }
 
 export async function getAllGenres() {
-  const genres = await fetch('http://localhost:3000/api/genre/')
+  const genres = await fetch("http://localhost:3000/api/genre/")
     .then((res) => res.json())
     .then((data) => data);
   return genres;
@@ -15,12 +15,12 @@ export async function getAllGenres() {
 
 export async function searchMovies(searchType: any, value: any) {
   let results;
-  if (searchType == 'title') {
-    results = await fetch('http://localhost:3000/api/movie/?title=' + value)
+  if (searchType == "title") {
+    results = await fetch("http://localhost:3000/api/movie/?title=" + value)
       .then((res) => res.json())
       .then((data) => data);
   } else {
-    results = await fetch('http://localhost:3000/api/movie/?genre=' + value)
+    results = await fetch("http://localhost:3000/api/movie/?genre=" + value)
       .then((res) => res.json())
       .then((data) => data);
   }
@@ -89,7 +89,7 @@ export async function createNewGenre(data: any) {
 
 export async function deleteMovie(id: any) {
   const response = await fetch("http://localhost:3000/api/movie/" + id, {
-    method: "DELETE"
+    method: "DELETE",
   });
   const result = await response.json();
   return result;
