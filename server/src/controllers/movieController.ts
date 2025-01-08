@@ -48,18 +48,15 @@ export const createMovie: RequestHandler = async (
         )
       );
 
-      // Mapping through the genreInstances and using genreInstance correctly
-      await Promise.all(
-        genreInstances.map(async ([genreInstance]) =>
-          MovieGenre.create(
-            {
-              movie_id: movie.dataValues.movie_id,
-              genre_id: genreInstance.genre_id,
-            },
-            { transaction }
-          )
-        )
-      );
+      // Prepare data for MovieGenre association
+      const movieGenreAssociations = genreInstances.map(([genreInstance]) => ({
+        movie_id: movie.dataValues.movie_id,
+        genre_id: genreInstance.genre_id,
+      }));
+
+
+      // Bulk insert genre associations
+      await MovieGenre.bulkCreate(movieGenreAssociations, { transaction });
 
       await transaction.commit();
       res.status(201).json({ message: "Movie created successfully", movie });
