@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../contexts/UserContext";
 import { useContext } from "react";
 
 const Login = () => {

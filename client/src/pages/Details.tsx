@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { Rating } from '@smastrom/react-rating';
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../contexts/UserContext";
 import { Movie } from "../interfaces/details";
 import DetailsModals from "../components/DetailsModals";
 
@@ -114,15 +114,15 @@ const Details = () => {
           </div>
           <p className="text-justify mb-3">{x.review}</p>
           {x.user_id == context?.user?.user_id && <div className="flex justify-end"><button onClick={() => {
-              setRating(x?.rating);
-              setReviewTxt(x.review);
-              document.getElementById('my_modal_2')?.classList.add('modal-open');
-            }} type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2 me-2"><i className="fa-regular fa-pen-to-square"></i></button>
+            setRating(x?.rating);
+            setReviewTxt(x.review);
+            document.getElementById('my_modal_2')?.classList.add('modal-open');
+          }} type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2 me-2"><i className="fa-regular fa-pen-to-square"></i></button>
             <button type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2"><i className="fa-solid fa-trash"></i></button>
-            </div>}
+          </div>}
         </article>))}
       </div>
-      <DetailsModals 
+      <DetailsModals
         handleSubmit={handleSubmit} reviewTxt={reviewTxt}
         rating={rating} setRating={setRating} setReviewTxt={setReviewTxt} dataObj={dataObj}
         setRefresh={setRefresh}
