@@ -4,6 +4,7 @@ import { Rating } from '@smastrom/react-rating';
 import { UserContext } from "../contexts/UserContext";
 import { Movie } from "../interfaces/details";
 import DetailsModals from "../components/DetailsModals";
+import { createRatingAndReview, getMovieDetails, updateRatingAndReview } from "../services/movieService";
 
 const Details = () => {
   const context = useContext(UserContext);
@@ -13,49 +14,29 @@ const Details = () => {
   const [refresh, setRefresh] = useState(0);
   const [reviewTxt, setReviewTxt] = useState('');
   useEffect(() => {
-    fetch('http://localhost:3000/api/movie/' + location.pathname.slice(9))
-      .then(res => res.json())
-      .then((data: Movie) => setDataObj(data))
+    getMovieDetails(location.pathname.slice(9), setDataObj);
   }, [refresh])
-  function handleSubmit(event: {
+  async function handleSubmit(event: {
     target: any; preventDefault: () => void;
   }) {
     event.preventDefault();
     const checkerValue = dataObj?.rr.find(x => x.user_id == context?.user?.user_id);
     if (checkerValue) {
-      fetch('http://localhost:3000/api/review/' + checkerValue.rr_id, {
-        method: 'PUT',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({ rating: rating, review: event.target.review.value })
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.rr_id) {
-            setRating(0); event.target.review.value = '';
-            setRefresh(refresh + 1);
-            document.getElementById('updateForm')?.classList.add('hidden');
-            document.getElementById('updateFormClose')?.classList.remove('hidden');
-          }
-        })
-    } else {
-      fetch('http://localhost:3000/api/review/', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({ movie_id: dataObj?.movie_id, user_id: context?.user?.user_id, rating: rating, review: event.target.review.value })
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.rr_id) {
-            setRating(0); event.target.review.value = '';
-            document.getElementById('my_modal_1')?.classList.add('modal-open');
-            setRefresh(refresh + 1);
-          }
-        })
-    }
+        const response = await updateRatingAndReview(checkerValue.rr_id, { rating: rating, review: event.target.review.value });
+        if (response.rr_id) {
+          setRating(0); event.target.review.value = '';
+          setRefresh(refresh + 1);
+          document.getElementById('updateForm')?.classList.add('hidden');
+          document.getElementById('updateFormClose')?.classList.remove('hidden');
+        }
+      } else {
+        const response = await createRatingAndReview({ movie_id: dataObj?.movie_id, user_id: context?.user?.user_id, rating: rating, review: event.target.review.value });
+        if (response.rr_id) {
+          setRating(0); event.target.review.value = '';
+          document.getElementById('my_modal_1')?.classList.add('modal-open');
+          setRefresh(refresh + 1);
+        }
+      }
   }
   function handleUpdate() {
     document.getElementById('my_modal_4')?.classList.add('modal-open');

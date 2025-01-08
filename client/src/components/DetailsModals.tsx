@@ -3,6 +3,7 @@ import { Rating } from '@smastrom/react-rating';
 import MUForm from './EditMovie';
 import { useNavigate } from 'react-router';
 import { DetailsModalsProps } from '../interfaces/details';
+import { deleteMovie } from '../services/movieService';
 
 const DetailsModals: React.FC<DetailsModalsProps> = ({handleSubmit, rating, setRating, reviewTxt, setReviewTxt, dataObj, setRefresh}) => {
     const navigate = useNavigate(); 
@@ -15,17 +16,12 @@ const DetailsModals: React.FC<DetailsModalsProps> = ({handleSubmit, rating, setR
         document.getElementById('my_modal_3')?.classList.remove('modal-open');
         navigate('/user');
     }
-    function handleDelete() {
+    async function handleDelete() {
         document.getElementById('my_modal_5')?.classList.remove('modal-open');
-        fetch('http://localhost:3000/api/movie/' + dataObj?.movie_id, {
-          method: 'DELETE'
-        })
-          .then(res => res.json())
-          .then(data => {
-            if (data.deleted) {
-              document.getElementById('my_modal_3')?.classList.add('modal-open');
-            }
-          })
+        const response = await deleteMovie(dataObj?.movie_id);
+        if (response.deleted) {
+          document.getElementById('my_modal_3')?.classList.add('modal-open');
+        }
       }
       function closeModal() {
         document.getElementById('my_modal_1')?.classList.remove('modal-open');
