@@ -1,16 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function getAllMovies() {
-<<<<<<< HEAD
     const movies = await fetch('http://localhost:3000/api/movie')
       .then((res) => res.json())
       .then((data) => data);
     return movies;
-=======
-  const movies = await fetch('http://localhost:3000/api/movie/')
-    .then((res) => res.json())
-    .then((data) => data)
-  return movies;
->>>>>>> 626a4a0c8ee6257dfc7efceeb0acbe54a84aabb4
 }
 
 export async function getAllGenres() {
@@ -34,7 +27,6 @@ export async function searchMovies(searchType: any, value: any) {
   return results;
 }
 
-<<<<<<< HEAD
 export function getMyList(user_id:any, setData:any) {
   fetch("http://localhost:3000/moviesFromUser/" + user_id)
     .then((res) => res.json())
@@ -49,16 +41,10 @@ export function getMovieDetails(movie_id:any, setDataObj:any) {
 
 export async function createRatingAndReview(data: any) {
   const response = await fetch("http://localhost:3000/api/review/", {
-=======
-export async function createMovie(x: any) {
-  try {
-    const movieResponse = await fetch("http://localhost:3000/api/movie/", {
->>>>>>> 626a4a0c8ee6257dfc7efceeb0acbe54a84aabb4
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-<<<<<<< HEAD
       body: JSON.stringify(data),
     });
     const result = await response.json();
@@ -88,17 +74,6 @@ export async function createMovie(data: any) {
           const movieData = await movieResponse.json();
           return movieData.movie;
 }
-=======
-      body: JSON.stringify(x),
-    });
-
-    const movieData = await movieResponse.json();
-
-    return movieData.movie;
-  } catch (error) {
-    console.log(error);
-  }
->>>>>>> 626a4a0c8ee6257dfc7efceeb0acbe54a84aabb4
 
 export async function createNewGenre(data: any) {
   const response = await fetch("http://localhost:3000/api/genre/", {
