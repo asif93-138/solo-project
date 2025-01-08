@@ -4,8 +4,6 @@ import { User, UserContextType, ContextProviderProps } from '../interfaces/conte
 // Create the context with a default value
 export const UserContext = createContext<UserContextType | null>(null);
 
-
-
 const ContextProvider = ({ children }: ContextProviderProps) => {
   const [user, setUser] = useState<User | null>(null); // Initialize user as null
   const [homeRefresh, setHomeRefresh] = useState(0);
@@ -13,7 +11,7 @@ const ContextProvider = ({ children }: ContextProviderProps) => {
   useEffect(() => {
     // You can set an initial user or fetch data here if needed
     if (localStorage.length > 0) {
-      setUser({user_id: Number(localStorage.getItem('user_id')), name: localStorage.getItem('name') || '', email: localStorage.getItem('email') || ''});
+      setUser({ user_id: Number(localStorage.getItem('user_id')), name: localStorage.getItem('name') || '', email: localStorage.getItem('email') || '' });
     }
   }, []);
 
