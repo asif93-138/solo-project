@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export async function getAllMovies() {
-  const movies = await fetch('http://localhost:3000/api/movie')
+  const movies = await fetch('http://localhost:3000/api/movie/')
     .then((res) => res.json())
     .then((data) => data)
   return movies;

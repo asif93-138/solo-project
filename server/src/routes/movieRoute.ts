@@ -10,7 +10,6 @@ import {
 const router = Router();
 
 router.get("/", getAllMovies);
-
 router.post("/", createMovie);
 router.get("/:id", getMovieById);
 router.put("/:id", editMovie);
