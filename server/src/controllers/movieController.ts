@@ -1,13 +1,20 @@
-import Movie from "../models/Movies";
-import Genre from "../models/Genre";
+// @ts-nocheck
 import { RequestHandler } from "express";
 import { Request, Response } from "express";
 import sequelize from "../models/sequelize";
-import MovieGenre from "../models/MovieGenre";
 import User from "../models/Users";
-import RR from "../models/Ratings&Reviews";
-import MG from "../models/MovieGenre";
+// import Movie from "../models/Movies";
+// import Genre from "../models/Genre";
+// import MovieGenre from "../models/MovieGenre";
+// import MG from "../models/MovieGenre";
+// import RR from "../models/Ratings&Reviews";
+import db from "../models";
 import { Op, Sequelize } from "sequelize";
+
+const Movie = db.Movie;
+const Genre = db.Genre;
+const MG = db.MG;
+const RR = db.RR;
 
 export const createMovie: RequestHandler = async (
   req: Request,
@@ -48,18 +55,15 @@ export const createMovie: RequestHandler = async (
         )
       );
 
-      // Mapping through the genreInstances and using genreInstance correctly
-      await Promise.all(
-        genreInstances.map(async ([genreInstance]) =>
-          MovieGenre.create(
-            {
-              movie_id: movie.dataValues.movie_id,
-              genre_id: genreInstance.genre_id,
-            },
-            { transaction }
-          )
-        )
-      );
+      // Prepare data for MovieGenre association
+      const movieGenreAssociations = genreInstances.map(([genreInstance]) => ({
+        movie_id: movie.dataValues.movie_id,
+        genre_id: genreInstance.genre_id,
+      }));
+
+
+      // Bulk insert genre associations
+      await MG.bulkCreate(movieGenreAssociations, { transaction });
 
       await transaction.commit();
       res.status(201).json({ message: "Movie created successfully", movie });
@@ -79,6 +83,7 @@ export const getMovieById: RequestHandler = async (
 ) => {
   try {
     const movie = await Movie.findByPk(req.params.id);
+    console.log("movie", movie);
     if (!movie) {
       res.status(404).json({ error: "Movie not found" });
       return;
