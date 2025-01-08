@@ -33,6 +33,7 @@ export const createMovie: RequestHandler = async (
     genre,
   } = req.body;
 
+  console.log("received req.body", req.body);
   try {
     const transaction = await sequelize.transaction();
 
@@ -41,6 +42,8 @@ export const createMovie: RequestHandler = async (
         { user_id, title, img, desc, release_yr, director, length, producer },
         { transaction }
       );
+
+      console.log("sending", movie);
 
       // console.log("Created movie:", movie);
       // console.log("Movie ID:", movie.dataValues.movie_id);
@@ -61,11 +64,10 @@ export const createMovie: RequestHandler = async (
         genre_id: genreInstance.genre_id,
       }));
 
-
       // Bulk insert genre associations
       await MG.bulkCreate(movieGenreAssociations, { transaction });
-
       await transaction.commit();
+
       res.status(201).json({ message: "Movie created successfully", movie });
     } catch (error) {
       await transaction.rollback();
