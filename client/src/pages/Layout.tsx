@@ -1,14 +1,17 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
 import { UserContext } from "../contexts/UserContext";
 import MovieForm from "../components/CreateMovie";
 
 const Layout = () => {
+    const [showNavModal, setShowNavModal] = useState(false);
+    const [showFirstModal, setShowFirstModal] = useState(false);
+    const [showSecondModal, setShowSecondModal] = useState(true);
     const context = useContext(UserContext);
     const location = useLocation();
     const navigate = useNavigate();
     function showModal() {
-        document.getElementById('my_modal_nav')?.classList.add('modal-open');
+        setShowNavModal(true);
     }
     return (
         <>
@@ -65,19 +68,19 @@ const Layout = () => {
                         </div></Link>
                     </nav>
             }
-            <dialog id="my_modal_nav" className="modal text-black">
+            <dialog id="my_modal_nav" className={showNavModal? "modal text-black modal-open" : "modal text-black"}>
                 <div className="modal-box">
-                    <section className="hidden text-center">
+                    <section className={showFirstModal? "text-center" : "hidden text-center"}>
                         <p className="py-4">Successfully inserted a new movie!</p>
                         <button type="button" className="btn" onClick={() => {
-                            document.getElementById('my_modal_nav')?.classList.remove('modal-open');
-                            document.getElementsByTagName('section')[0].classList.add('hidden');
-                            document.getElementsByTagName('section')[1].classList.remove('hidden');
+                            setShowNavModal(false);
+                            setShowFirstModal(false);
+                            setShowSecondModal(true);
                             if (location.pathname != '/' && location.pathname != '/user') { navigate('/user'); }
                         }}>Close</button>
                     </section>
-                    <section className="">
-                        {context && <MovieForm setHomeRefresh={context.setHomeRefresh} setListRefresh={context.setListRefresh} />}
+                    <section className={showSecondModal? "" : "hidden"}>
+                        {context && <MovieForm setHomeRefresh={context.setHomeRefresh} setListRefresh={context.setListRefresh} setShowFirstModal={setShowFirstModal} setShowSecondModal={setShowSecondModal} />}
                     </section>
 
                 </div>

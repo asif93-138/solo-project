@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router";
 import { UserContext } from "../contexts/UserContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { userLogin } from "../services/userServices";
 
 const Login = () => {
+    const [showFirstModal, setShowFirstModal] = useState(false);
+    const [showSecondModal, setShowSecondModal] = useState(false);
   const context = useContext(UserContext);
   const navigate = useNavigate();
   async function handleSubmit(event: {
@@ -15,9 +17,9 @@ const Login = () => {
       if (response.password == formName.pass.value) {
         formName.email.value = '';
         formName.pass.value = '';
-        document.getElementById('my_modal_2')?.classList.add('modal-open');
+        setShowSecondModal(true);
         setTimeout(() => {
-          document.getElementById('my_modal_2')?.classList.remove('modal-open');
+          setShowSecondModal(false);
           localStorage.clear();
           localStorage.setItem('user_id', response.user_id);
           localStorage.setItem('name', response.name);
@@ -26,11 +28,11 @@ const Login = () => {
           navigate('/');
         }, 1000);
       } else {
-        document.getElementById('my_modal_1')?.classList.add('modal-open');
+        setShowFirstModal(true);
       }
   }
   function closeModal() {
-    document.getElementById('my_modal_1')?.classList.remove('modal-open');
+    setShowFirstModal(false);
   }
   return (
     <div className="p-8">
@@ -45,7 +47,7 @@ const Login = () => {
         <hr />
         <Link to='/register'><button type="button" className="btn mt-4 w-full">Create your account</button></Link>
       </form>
-      <dialog id="my_modal_1" className="modal">
+      <dialog id="my_modal_1" className={showFirstModal? "modal modal-open" : "modal"}>
         <div className="modal-box">
           <p className="py-4 text-red-500 font-medium text-center">Email or Password didn't match!</p>
           <div className="">
@@ -55,7 +57,7 @@ const Login = () => {
           </div>
         </div>
       </dialog>
-      <dialog id="my_modal_2" className="modal">
+      <dialog id="my_modal_2" className={showSecondModal? "modal modal-open" : "modal"}>
         <div className="modal-box">
           <p className="py-4 font-medium text-center">Login successful!</p>
 

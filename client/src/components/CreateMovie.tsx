@@ -6,7 +6,7 @@ import { MovieData, MovieFormProps } from "../interfaces/movieForm";
 import { createMovie, createNewGenre, getAllGenres } from "../services/movieService";
 
 
-const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh }) => {
+const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, setShowFirstModal, setShowSecondModal }) => {
   const content = useContext(UserContext);
   const location = useLocation();
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -122,8 +122,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
               else if (location.pathname == '/user') {
                 setListRefresh((prev) => prev + 1);
               }
-              document.getElementsByTagName('section')[1].classList.add('hidden');
-              document.getElementsByTagName('section')[0].classList.remove('hidden');
+              setShowSecondModal(false);
+              setShowFirstModal(true);
             }
           }
         } catch (error) {
