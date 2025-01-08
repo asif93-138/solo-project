@@ -11,17 +11,16 @@ import userRoute from "./routes/userRoute";
 import movieRoute from "./routes/movieRoute";
 import reviewRoute from "./routes/reviewRoute";
 import genreRoute from "./routes/genreRoute";
+import uploadRoute from "./routes/uploadRoute";
 import { ParamsDictionary } from "express-serve-static-core";
 import express, { Express, Request, Response } from "express";
 
+const app: Express = express();
+const port = 3000;
 const Movie = db.Movie;
 const RR = db.RR;
 const Genre = db.Genre;
 const MG = db.MG;
-
-const app: Express = express();
-// const port = 5000;
-const port = 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -30,6 +29,8 @@ app.use("/api/user", userRoute);
 app.use("/api/movie", movieRoute);
 app.use("/api/review", reviewRoute);
 app.use("/api/genre", genreRoute);
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/upload", uploadRoute)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("DB testing!");
@@ -38,34 +39,6 @@ app.get("/", (req: Request, res: Response) => {
 app.post("/", (req: Request, res: Response) => {
   console.log(req.body);
   res.send("Got a POST request");
-});
-
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
-
-// Configure Multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "../uploads");
-    cb(null, uploadPath); // Directory to save the files
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname)); // Unique filename
-  },
-});
-
-const upload = multer({ storage });
-
-// Endpoint to upload image
-app.post("/upload", upload.single("image"), (req, res) => {
-  if (!req.file) {
-    res.status(400).send("No file uploaded.");
-  } else {
-    res.status(200).json({
-      message: "File uploaded successfully!",
-      filePath: `/uploads/${req.file.filename}`,
-    });
-  }
 });
 
 // Route: Insert a single user
