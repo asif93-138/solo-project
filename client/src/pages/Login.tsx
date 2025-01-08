@@ -1,43 +1,33 @@
 import { Link, useNavigate } from "react-router";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../contexts/UserContext";
 import { useContext } from "react";
+import { userLogin } from "../services/userServices";
 
 const Login = () => {
   const context = useContext(UserContext);
   const navigate = useNavigate();
-  // console.log(context?.user);
-  function handleSubmit(event: {
+  async function handleSubmit(event: {
     target: any; preventDefault: any;
   }) {
     event.preventDefault();
     const formName = event.target;
-    // console.log(formName.email.value, formName.pass.value); formName.email.value
-    fetch('http://localhost:3000/api/user/', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({ email: formName.email.value, password: formName.pass.value })
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.password == formName.pass.value) {
-          formName.email.value = '';
-          formName.pass.value = '';
-          document.getElementById('my_modal_2')?.classList.add('modal-open');
-          setTimeout(() => {
-            document.getElementById('my_modal_2')?.classList.remove('modal-open');
-            localStorage.clear();
-            localStorage.setItem('user_id', data.user_id);
-            localStorage.setItem('name', data.name);
-            localStorage.setItem('email', data.email);
-            context?.setUser({ user_id: data.user_id, name: data.name, email: data.email });
-            navigate('/');
-          }, 1000);
-        } else {
-          document.getElementById('my_modal_1')?.classList.add('modal-open');
-        }
-      })
+      const response = await userLogin({ email: formName.email.value, password: formName.pass.value });
+      if (response.password == formName.pass.value) {
+        formName.email.value = '';
+        formName.pass.value = '';
+        document.getElementById('my_modal_2')?.classList.add('modal-open');
+        setTimeout(() => {
+          document.getElementById('my_modal_2')?.classList.remove('modal-open');
+          localStorage.clear();
+          localStorage.setItem('user_id', response.user_id);
+          localStorage.setItem('name', response.name);
+          localStorage.setItem('email', response.email);
+          context?.setUser({ user_id: response.user_id, name: response.name, email: response.email });
+          navigate('/');
+        }, 1000);
+      } else {
+        document.getElementById('my_modal_1')?.classList.add('modal-open');
+      }
   }
   function closeModal() {
     document.getElementById('my_modal_1')?.classList.remove('modal-open');

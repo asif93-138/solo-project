@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../contexts/UserContext";
 import { Genre } from "../interfaces/home";
 import { MovieData, MovieFormProps } from "../interfaces/movieForm";
-import { createMovie } from "../services/movieService";
+import { createMovie, createNewGenre, getAllGenres } from "../services/movieService";
 
 
 const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh }) => {
@@ -26,11 +26,12 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
   const [newGenre, setNewGenre] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-
+  async function getGenres() {
+    const res = await getAllGenres();
+    setGenres(res);
+  }
   useEffect(() => {
-    fetch('http://localhost:3000/api/genre/')
-      .then((res) => res.json())
-      .then((data: Genre[]) => setGenres(data))
+    getGenres();
   }, [genreReloader])
 
   const handleInputChange = (
@@ -52,22 +53,13 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh })
     setSelectedGenres(prev => prev.filter(g => g !== genre));
   };
 
-  const handleAddNewGenre = () => {
+  const handleAddNewGenre = async () => {
     if (newGenre.trim() && !genres.find((x) => x.genre === newGenre)) {
-      fetch("http://localhost:3000/api/genre/", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ genre: newGenre }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.genre_id) {
-            setNewGenre("");
-            setGenreReloader(genreReloader + 1);
-          }
-        });
+      const response = await createNewGenre({ genre: newGenre });
+      if (response.genre_id) {
+        setNewGenre("");
+        setGenreReloader(genreReloader + 1);
+      }
     }
   };
 

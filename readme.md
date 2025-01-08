@@ -67,7 +67,7 @@ Users can browse movies, read and post reviews, and rate films. The goal is to c
    npm run dev
    ```
 
-   The backend will run on `http://localhost:3000` and the frontend on `http://localhost:5173`.
+   The backend will run on `http://localhost:3000`
 
 ---
 

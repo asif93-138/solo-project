@@ -1,43 +1,34 @@
 import { Link, useNavigate } from "react-router";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../contexts/UserContext";
 import { useContext } from "react";
+import { userRegistration } from "../services/userServices";
 
 const Registration = () => {
   const context = useContext(UserContext);
   const navigate = useNavigate();
-  function handleSubmit(event: {
+  async function handleSubmit(event: {
     target: any; preventDefault: any;
   }) {
     event.preventDefault();
     const formName = event.target;
-    // console.log(formName.pass.value.length > 7);
     if (formName.pass.value.length > 7) {
       document.getElementById('passWarn')?.classList.add('hidden');
-      fetch('http://localhost:3000/api/user/signup', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({ name: formName.name.value, email: formName.email.value, password: formName.pass.value })
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.user_id) {
-            document.getElementById('my_modal_2')?.classList.add('modal-open');
-            setTimeout(() => {
-              localStorage.clear();
-              localStorage.setItem('user_id', data.user_id);
-              localStorage.setItem('name', data.name);
-              localStorage.setItem('email', data.email);
-              context?.setUser({ user_id: data.user_id, name: data.name, email: data.email });
-              document.getElementById('my_modal_2')?.classList.remove('modal-open');
-              navigate('/');
-            }, 1000)
-          } else {
-            document.getElementById('my_modal_1')?.classList.add('modal-open');
-          }
-        })
-    } else {
+        const response = await userRegistration({ name: formName.name.value, email: formName.email.value, password: formName.pass.value });
+        if (response.user_id) {
+          document.getElementById('my_modal_2')?.classList.add('modal-open');
+          setTimeout(() => {
+            localStorage.clear();
+            localStorage.setItem('user_id', response.user_id);
+            localStorage.setItem('name', response.name);
+            localStorage.setItem('email', response.email);
+            context?.setUser({ user_id: response.user_id, name: response.name, email: response.email });
+            document.getElementById('my_modal_2')?.classList.remove('modal-open');
+            navigate('/');
+          }, 1000)
+        } else {
+          document.getElementById('my_modal_1')?.classList.add('modal-open');
+        }
+      } else {
       document.getElementById('passWarn')?.classList.remove('hidden');
     }
   }
@@ -60,7 +51,6 @@ const Registration = () => {
         <hr />
         <Link to='/login'><button type="button" className="btn mt-4 w-full">Login</button></Link>
       </form>
-      {/* Open the modal using document.getElementById('ID').showModal() method */}
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box">
           <p className="py-4 text-red-500 font-medium text-center">An error occurred!</p>

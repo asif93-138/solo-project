@@ -1,5 +1,8 @@
-import RR from "../models/Ratings&Reviews";
+// import RR from "../models/Ratings&Reviews";
 import { Request, Response } from "express";
+import db from "../models";
+
+const RR = db.RR;
 
 export const addReview = async (req: Request, res: Response) => {
     try {

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../contexts/UserContext";
 import MovieForm from "../components/CreateMovie";
 
 const Layout = () => {
@@ -77,7 +77,7 @@ const Layout = () => {
                         }}>Close</button>
                     </section>
                     <section className="">
-                        {context &&  <MovieForm setHomeRefresh={context.setHomeRefresh} setListRefresh={context.setListRefresh} />}
+                        {context && <MovieForm setHomeRefresh={context.setHomeRefresh} setListRefresh={context.setListRefresh} />}
                     </section>
 
                 </div>
