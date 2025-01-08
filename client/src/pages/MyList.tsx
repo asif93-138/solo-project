@@ -8,7 +8,8 @@ const Mylist = () => {
   const [data, setData] = useState<Movie[]>([]);
   useEffect(() => {
     if (context?.user) {
-      fetch("http://localhost:3000/moviesFromUser/" + context?.user?.user_id)
+      // fetch("http://localhost:3000/moviesFromUser/" + context?.user?.user_id)
+      fetch("http://localhost:3000/api/movie/user/" + context?.user?.user_id)
         .then((res) => res.json())
         .then((data: Movie[]) => setData(data));
     }
