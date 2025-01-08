@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../contexts/UserContext";
 import '../index.css';
 import { Movie, Genre } from '../interfaces/home';
 import MovieCards from '../components/MovieCards';
