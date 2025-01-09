@@ -15,7 +15,14 @@ const Mylist = () => {
 
   return (
     <div className="bg-black text-white py-4 min-h-screen">
-      <h4 className="text-2xl txt-outline-c text-center mb-6">Your Movies</h4>
+      {context?.user ? 
+        <h4 className="text-2xl txt-outline-c text-center mb-6">Your Movies</h4>
+      :
+        <h4 className="text-2xl txt-outline-c text-center mt-20">
+          Please login/register to see Your Movies!
+        </h4>
+      }
+      
       <div className="grid grid-cols-4 gap-6 w-9-10 mx-auto">
         {data.map((x) => (
           <Link to={`/details/${x.movie_id}`} key={x.movie_id}>

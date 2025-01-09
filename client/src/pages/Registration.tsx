@@ -4,8 +4,8 @@ import { useContext, useState } from "react";
 import { userRegistration } from "../services/userServices";
 
 const Registration = () => {
-  const [showFirstModal, setShowFirstModal] = useState(false);
-  const [showSecondModal, setShowSecondModal] = useState(false);
+  const [showFirstToast, setShowFirstToast] = useState(false);
+  const [showSecondToast, setShowSecondToast] = useState(false);
   const [showPassWarn, setShowPassWarn] = useState(false);
   const context = useContext(UserContext);
   const navigate = useNavigate();
@@ -18,25 +18,25 @@ const Registration = () => {
       setShowPassWarn(false);
         const response = await userRegistration({ name: formName.name.value, email: formName.email.value, password: formName.pass.value });
         if (response.user_id) {
-          setShowSecondModal(true);
+          setShowSecondToast(true);
           setTimeout(() => {
             localStorage.clear();
             localStorage.setItem('user_id', response.user_id);
             localStorage.setItem('name', response.name);
             localStorage.setItem('email', response.email);
             context?.setUser({ user_id: response.user_id, name: response.name, email: response.email });
-            setShowSecondModal(false);
+            setShowSecondToast(false);
             navigate('/');
           }, 1000)
         } else {
-          setShowFirstModal(true);
+          setShowFirstToast(true);
+          setTimeout(() => {
+            setShowFirstToast(false);
+          }, 2000);
         }
       } else {
       setShowPassWarn(true);
     }
-  }
-  function closeModal() {
-    setShowFirstModal(false);
   }
   return (
     <div className="p-8">
@@ -54,21 +54,14 @@ const Registration = () => {
         <hr />
         <Link to='/login'><button type="button" className="btn mt-4 w-full">Login</button></Link>
       </form>
-      <dialog id="my_modal_1" className={showFirstModal? "modal modal-open" : "modal"}>
-        <div className="modal-box">
-          <p className="py-4 text-red-500 font-medium text-center">An error occurred!</p>
-          <div className="">
-            <form method="dialog" className="text-center">
-              <button className="btn" onClick={closeModal}>Close</button>
-            </form>
-          </div>
-        </div>
-      </dialog>
-      <dialog id="my_modal_2" className={showSecondModal? "modal modal-open" : "modal"}>
-        <div className="modal-box">
-          <p className="py-4 font-medium text-center">Registration successful!</p>
-        </div>
-      </dialog>
+  <div className="toast toast-top toast-end">
+  <div className={showSecondToast? "alert alert-success" : "alert alert-success hidden"}>
+    <span className="text-lg text-white p-1">Registration successful!</span>
+  </div>
+  <div className={showFirstToast? "alert alert-error" : "alert alert-error hidden"}>
+    <span className="text-lg text-white p-1">An error occurred!</span>
+  </div>
+</div>
     </div>
   );
 };
