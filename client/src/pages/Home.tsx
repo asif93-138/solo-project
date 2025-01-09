@@ -11,6 +11,9 @@ function App() {
   const [searchType, setSearchType] = useState<'title' | 'genre'>('title');
   const [searchValue, setSearchValue] = useState('');
   const [genres, setGenres] = useState<Genre[]>([]);
+  const [showNRF, setShowNRF] = useState(false);
+  const [showSH, setShowSH] = useState(false);
+  const [showSCB, setShowSCB] = useState(false);
   const context = useContext(UserContext);
   async function fetchingMovies() {
     const results = await getAllMovies();
@@ -33,13 +36,13 @@ function App() {
           const searchData: Movie[] = await searchMovies(searchType, searchValue.trim());
           if (Array.isArray(searchData)) {
             setData(searchData);
-            document.getElementById('nrf')?.classList.add('hidden');
+            setShowNRF(false);
           } else {
             setData([]);
-            document.getElementById('nrf')?.classList.remove('hidden');
+            setShowNRF(true);
           }
-          document.getElementById('sh')?.classList.remove('hidden');
-          document.getElementById('scb')?.classList.remove('hidden');
+          setShowSH(true);
+          setShowSCB(true);
         } catch (err) {
           console.error("Error fetching data:", err);
           setData([]);
@@ -49,13 +52,13 @@ function App() {
           const searchData: Movie[] = await searchMovies(searchType, searchValue.trim());
           if (Array.isArray(searchData)) {
             setData(searchData);
-            document.getElementById('nrf')?.classList.add('hidden');
+            setShowNRF(false);
           } else {
             setData([]);
-            document.getElementById('nrf')?.classList.remove('hidden');
+            setShowNRF(true);
           }
-          document.getElementById('sh')?.classList.remove('hidden');
-          document.getElementById('scb')?.classList.remove('hidden');
+          setShowSH(true);
+          setShowSCB(true);
         } catch (err) {
           console.error("Error fetching data:", err);
           setData([]);
@@ -63,9 +66,9 @@ function App() {
       }
     } else {
       setData(initialResults);
-      document.getElementById('sh')?.classList.add('hidden');
-      document.getElementById('nrf')?.classList.add('hidden');
-      document.getElementById('scb')?.classList.add('hidden');
+      setShowSH(false);
+      setShowNRF(false);
+      setShowSCB(false);
     }
   };
 
@@ -111,17 +114,17 @@ function App() {
             ))}
           </select>
         )}
-        <button id='scb' type='button' className='btn ms-10 hidden' onClick={() => {
+        <button id='scb' type='button' className={showSCB ? 'btn ms-10' : 'btn ms-10 hidden'} onClick={() => {
           setSearchValue('');
           setData(initialResults);
-          document.getElementById('sh')?.classList.add('hidden');
-          document.getElementById('nrf')?.classList.add('hidden');
-          document.getElementById('scb')?.classList.add('hidden');
+          setShowSH(false);
+          setShowNRF(false);
+          setShowSCB(false);
         }}>Return</button>
       </div>
 
-      <h4 id='sh' className='text-white text-2xl text-center mb-6 hidden'>Search Results!</h4>
-      <p id='nrf' className='text-white text-center hidden'>No results found..</p>
+      <h4 id='sh' className={showSH ? 'text-white text-2xl text-center mb-6' : 'text-white text-2xl text-center mb-6 hidden'}>Search Results!</h4>
+      <p id='nrf' className={showNRF ? 'text-white text-center' : 'text-white text-center hidden'}>No results found..</p>
       {data.length > 0 && <MovieCards dataObj={data} />}
     </section>
   );
