@@ -20,7 +20,6 @@ export const createMovie: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  //console.log("api/movie: ", req.body);
   const {
     user_id,
     title,
@@ -33,20 +32,13 @@ export const createMovie: RequestHandler = async (
     genre,
   } = req.body;
 
-  console.log("received req.body", req.body);
   try {
     const transaction = await sequelize.transaction();
-
     try {
       const movie = await Movie.create(
         { user_id, title, img, desc, release_yr, director, length, producer },
         { transaction }
       );
-
-      console.log("sending", movie);
-
-      // console.log("Created movie:", movie);
-      // console.log("Movie ID:", movie.dataValues.movie_id);
 
       if (!movie.dataValues.movie_id) {
         throw new Error("Movie ID is null after creation");
@@ -58,13 +50,11 @@ export const createMovie: RequestHandler = async (
         )
       );
 
-      // Prepare data for MovieGenre association
       const movieGenreAssociations = genreInstances.map(([genreInstance]) => ({
         movie_id: movie.dataValues.movie_id,
         genre_id: genreInstance.genre_id,
       }));
 
-      // Bulk insert genre associations
       await MG.bulkCreate(movieGenreAssociations, { transaction });
       await transaction.commit();
 
@@ -85,13 +75,11 @@ export const getMovieById: RequestHandler = async (
 ) => {
   try {
     const movie = await Movie.findByPk(req.params.id);
-    console.log("movie", movie);
     if (!movie) {
       res.status(404).json({ error: "Movie not found" });
       return;
     }
 
-    // Fetch all ratings for the movie
     const ratings = await RR.findAll({
       where: { movie_id: movie.dataValues.movie_id },
     });
@@ -102,7 +90,7 @@ export const getMovieById: RequestHandler = async (
 
     const averageRating =
       ratings.reduce((sum, item) => sum + item.dataValues.rating, 0) /
-      (ratings.length || 1); // Avoid division by zero
+      (ratings.length || 1);
 
     const genres = await MG.findAll({
       where: { movie_id: movie.dataValues.movie_id },
@@ -126,9 +114,9 @@ export const getMovieById: RequestHandler = async (
 
     res.status(200).json({
       ...movie.dataValues,
-      rating: averageRating || null, // Handle no ratings gracefully
+      rating: averageRating || null,
       genres: genres.map((x) => x.dataValues.Genre?.genre || "Unknown Genre"),
-      user: user?.dataValues.name || "Unknown User", // Handle missing user gracefully
+      user: user?.dataValues.name || "Unknown User",
       rr,
     });
   } catch (error) {
@@ -146,7 +134,6 @@ export const getMovieByUserId: RequestHandler = async (
       where: { user_id: req.params.id },
       attributes: {
         include: [
-          // Add the average rating as a computed field
           [
             Sequelize.fn("AVG", Sequelize.col("ratingsReviews.rating")),
             "averageRating",
@@ -156,18 +143,18 @@ export const getMovieByUserId: RequestHandler = async (
       include: [
         {
           model: RR,
-          as: "ratingsReviews", // Match the alias defined in the associations
-          attributes: [], // Do not include all RR fields in the response
+          as: "ratingsReviews",
+          attributes: [],
         },
         {
           model: Genre,
-          as: "genres", // Match the alias for the many-to-many association
-          attributes: ["genre"], // Include only the genre name
-          through: { attributes: [] }, // Exclude junction table fields
+          as: "genres",
+          attributes: ["genre"],
+          through: { attributes: [] },
         },
       ],
-      group: ["Movie.movie_id", "genres.genre_id"], // Group by movie ID and genre ID
-      order: [["movie_id", "DESC"]], // Sort by movie_id in ascending order
+      group: ["Movie.movie_id", "genres.genre_id"],
+      order: [["movie_id", "DESC"]],
     });
     res.status(200).json(movies);
   } catch (error) {
@@ -183,10 +170,9 @@ export const editMovie: RequestHandler = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { id } = req.params; // Get movie ID from URL
-    const updatedData = req.body; // Get new data from request body
+    const { id } = req.params;
+    const updatedData = req.body;
 
-    // Find the movie by ID
     const movie = await Movie.findByPk(id);
 
     if (!movie) {
@@ -208,9 +194,8 @@ export const deleteMovie: RequestHandler = async (
   res: Response
 ) => {
   try {
-    const { id } = req.params; // Get movie ID from URL
+    const { id } = req.params;
 
-    // Delete the movie by ID
     const movie = await Movie.destroy({
       where: {
         movie_id: id,
@@ -243,13 +228,12 @@ export const getAllMovies: RequestHandler = async (
   try {
     const { title, genre } = req.query;
 
-    // Define the base query options
     const queryOptions: any = {
       attributes: {
         include: [
           [
             Sequelize.fn("AVG", Sequelize.col("ratingsReviews.rating")),
-            "averageRating", // Compute average rating
+            "averageRating",
           ],
         ],
       },
@@ -257,34 +241,32 @@ export const getAllMovies: RequestHandler = async (
         {
           model: RR,
           as: "ratingsReviews",
-          attributes: [], // Exclude individual review details
+          attributes: [],
         },
         {
           model: Genre,
           as: "genres",
           attributes: ["genre"],
-          through: { attributes: [] }, // Exclude junction table fields
+          through: { attributes: [] },
         },
       ],
-      group: ["Movie.movie_id", "genres.genre_id"], // Group by movie and genre
-      order: [["movie_id", "DESC"]], // Sort by movie_id in descending order
+      group: ["Movie.movie_id", "genres.genre_id"],
+      order: [["movie_id", "DESC"]],
     };
 
-    // Add conditions based on query parameters
     if (title) {
       queryOptions.where = {
         ...queryOptions.where,
         title: {
-          [Op.iLike]: `%${title}%`, // Partial match for title
+          [Op.iLike]: `%${title}%`,
         },
       };
     }
 
     if (genre) {
-      queryOptions.include[1].where = { genre }; // Filter by genre
+      queryOptions.include[1].where = { genre };
     }
 
-    // Fetch movies based on query options
     const movies = await Movie.findAll(queryOptions);
 
     if (movies.length === 0) {
