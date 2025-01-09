@@ -10,16 +10,6 @@ describe('DetailsModals Component', () => {
   const mockRating = 4;
   const mockReviewTxt = 'Great movie!';
 
-  jest.mock('@smastrom/react-rating', () => ({
-    Rating: ({ value, onChange }: any) => (
-      <input
-        type="number"
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-      />
-    ),
-  }));
-
   beforeEach(() => {
     render(
       <Router>
