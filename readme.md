@@ -76,8 +76,17 @@ Users can browse movies, read and post reviews, and rate films. The goal is to c
 ```
 /movie-review-app
 ├── client (React Frontend)
-│   ├── src
-│   └── public
+│   ├── public
+│   └── src
+│       ├── assets
+│       ├── components
+│       ├── contexts
+|       ├── interfaces
+|       ├── pages
+|       ├── services
+|       ├── tests
+|       ├── main.tsx
+│       └── index.css
 ├── server (Node/Express Backend)
 │   └── src
 │       ├── controllers
