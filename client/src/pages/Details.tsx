@@ -13,6 +13,14 @@ const Details = () => {
   const [rating, setRating] = useState(0);
   const [rr_id, setRr_id] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [showModal_1, setShowModal_1] = useState(false);
+  const [showModal_4, setShowModal_4] = useState(false);
+  const [showModal_4A1, setShowModal_4A1] = useState(true);
+  const [showModal_4A2, setShowModal_4A2] = useState(false);
+  const [showModal_5, setShowModal_5] = useState(false);
+  const [showModal_2, setShowModal_2] = useState(false);
+  const [showUF, setShowUF] = useState(true);
+  const [showUFC, setShowUFC] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [reviewTxt, setReviewTxt] = useState('');
   useEffect(() => {
@@ -28,20 +36,20 @@ const Details = () => {
         if (response.rr_id) {
           setRating(0); event.target.review.value = '';
           setRefresh(refresh + 1);
-          document.getElementById('updateForm')?.classList.add('hidden');
-          document.getElementById('updateFormClose')?.classList.remove('hidden');
+          setShowUF(false);
+          setShowUFC(true);
         }
       } else {
         const response = await createRatingAndReview({ movie_id: dataObj?.movie_id, user_id: context?.user?.user_id, rating: rating, review: event.target.review.value });
         if (response.rr_id) {
           setRating(0); event.target.review.value = '';
-          document.getElementById('my_modal_1')?.classList.add('modal-open');
+          setShowModal_1(true);
           setRefresh(refresh + 1);
         }
       }
   }
   function handleUpdate() {
-    document.getElementById('my_modal_4')?.classList.add('modal-open');
+    setShowModal_4(true);
   }
   return (
     <section className="bg-black text-white py-10">
@@ -64,7 +72,7 @@ const Details = () => {
           <p className="text-lg my-1"><span className='font-bold me-1'>Producer</span> <span className="text-blue-300">{dataObj?.producer}</span></p>
           <p className="text-lg mb-6"><span className='font-bold me-1'>Added By</span> <span className="text-blue-300">{dataObj?.user}</span></p>
           <p className="mb-6">{dataObj?.desc}</p>
-          {dataObj?.user_id == context?.user?.user_id && <span><button onClick={handleUpdate} className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-regular fa-pen-to-square"></i> Edit</button> &nbsp; <button onClick={() => document.getElementById('my_modal_5')?.classList.add('modal-open')} className="btn btn-d-del btn-error text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-solid fa-trash"></i> Delete</button></span>}
+          {dataObj?.user_id == context?.user?.user_id && <span><button onClick={handleUpdate} className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-regular fa-pen-to-square"></i> Edit</button> &nbsp; <button onClick={() => setShowModal_5(true)} className="btn btn-d-del btn-error text-white min-h-0 h-auto py-3 rounded-full" type="button"><i className="fa-solid fa-trash"></i> Delete</button></span>}
 
 
         </div>
@@ -99,7 +107,7 @@ const Details = () => {
           {x.user_id == context?.user?.user_id && <div className="flex justify-end"><button onClick={() => {
             setRating(x?.rating);
             setReviewTxt(x.review);
-            document.getElementById('my_modal_2')?.classList.add('modal-open');
+            setShowModal_2(true);
           }} type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2 me-2"><i className="fa-regular fa-pen-to-square"></i></button>
             <button type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2"
             onClick={() => {setRr_id(x.rr_id); setShowModal(true);}}
@@ -109,8 +117,13 @@ const Details = () => {
       </div>
       <DetailsModals
         handleSubmit={handleSubmit} reviewTxt={reviewTxt}
-        rating={rating} setRating={setRating} setReviewTxt={setReviewTxt} dataObj={dataObj}
+        rating={rating} setRating={setRating} setReviewTxt={setReviewTxt} dataObj={dataObj} showUF={showUF}
         setRefresh={setRefresh} rr_id={rr_id} showModal={showModal} setShowModal={setShowModal}
+        setShowUF={setShowUF} showUFC={showUFC} setShowUFC={setShowUFC} showModal_1={showModal_1}
+        setShowModal_1={setShowModal_1} showModal_4={showModal_4} setShowModal_4={setShowModal_4}
+        showModal_5={showModal_5} setShowModal_5={setShowModal_5} showModal_2={showModal_2}
+        setShowModal_2={setShowModal_2} showModal_4A1={showModal_4A1} showModal_4A2={showModal_4A2}
+        setShowModal_4A1={setShowModal_4A1} setShowModal_4A2={setShowModal_4A2}
       />
     </section>
 
