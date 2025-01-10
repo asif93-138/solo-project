@@ -7,6 +7,7 @@ import { deleteMovie, deleteRatingAndReview } from '../services/movieService';
 
 export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rating, setRating, reviewTxt, setReviewTxt, dataObj, setRefresh, rr_id, showModal, setShowModal, showUF, setShowUF, showUFC, setShowUFC, showModal_1, setShowModal_1, showModal_4, setShowModal_4, showModal_5, setShowModal_5, showModal_2, setShowModal_2, showModal_4A1, showModal_4A2, setShowModal_4A1, setShowModal_4A2 }) => {
   const [showModalP1, setShowModalP1] = useState(true);
+  const [showModal_3, setShowModal_3] = useState(false);
   const navigate = useNavigate();
   function closeModal_1() {
     setShowModal_2(false);
@@ -14,14 +15,14 @@ export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rati
     setShowUFC(false);
   }
   function closeModal_3() {
-    document.getElementById('my_modal_3')?.classList.remove('modal-open');
+    setShowModal_3(false);
     navigate('/user');
   }
   async function handleDelete() {
     setShowModal_5(false);
     const response = await deleteMovie(dataObj?.movie_id);
     if (response.deleted) {
-      document.getElementById('my_modal_3')?.classList.add('modal-open');
+      setShowModal_3(true);
     }
   }
   function closeModal() {
@@ -54,7 +55,7 @@ export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rati
         </div>
       </dialog>
 
-      <dialog id="my_modal_3" className="modal">
+      <dialog id="my_modal_3" className={showModal_3? "modal modal-open" : "modal"}>
         <div className="modal-box text-center">
           <h4 className="text-red-500 text-2xl my-4">Deleted!</h4>
           <button type="button" className="btn" onClick={closeModal_3}>Close</button>
