@@ -64,6 +64,11 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
           setShowModal_4A1(false);
           setShowModal_4A2(true);
           setRefresh((prev) => prev + 1);
+          setShowModal_4(false);
+          setTimeout(() => {
+            setShowModal_4A2(false);
+              setShowModal_4A1(true);
+          }, 1500);
         }
       }
     } else {
@@ -73,6 +78,11 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
           setShowModal_4A1(false);
           setShowModal_4A2(true);
           setRefresh((prev) => prev + 1);
+          setShowModal_4(false);
+          setTimeout(() => {
+            setShowModal_4A2(false);
+              setShowModal_4A1(true);
+          }, 1500);
         }
     }
 

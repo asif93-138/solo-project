@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../contexts/UserContext";
 import { Genre } from "../interfaces/home";
 import { MovieData, MovieFormProps } from "../interfaces/movieForm";
@@ -10,9 +10,10 @@ import {
 } from "../services/movieService";
 
 
-const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, setShowNavModal, setShowFirstModal, setShowSecondModal }) => {
+const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, setShowNavModal, setShowFirstModal }) => {
   const content = useContext(UserContext);
   const location = useLocation();
+  const navigate = useNavigate();
   const [genres, setGenres] = useState<Genre[]>([]);
   const [genreReloader, setGenreReloader] = useState(0);
   const [showIN, setShowIN] = useState(false);
@@ -134,8 +135,12 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
               } else if (location.pathname == "/user") {
                 setListRefresh((prev) => prev + 1);
               }
-              setShowSecondModal(false);
+              setShowNavModal(0);
               setShowFirstModal(true);
+              setTimeout(() => {
+                setShowFirstModal(false);
+                if (location.pathname != '/' && location.pathname != '/user') { navigate('/user'); }
+              }, 1500);
             }
           }
         } catch (error) {

@@ -19,7 +19,6 @@ const Details = () => {
   const [showModal_4A2, setShowModal_4A2] = useState(false);
   const [showModal_5, setShowModal_5] = useState(false);
   const [showModal_2, setShowModal_2] = useState(false);
-  const [showUF, setShowUF] = useState(true);
   const [showUFC, setShowUFC] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [reviewTxt, setReviewTxt] = useState('');
@@ -36,8 +35,11 @@ const Details = () => {
         if (response.rr_id) {
           setRating(0); event.target.review.value = '';
           setRefresh(refresh + 1);
-          setShowUF(false);
+          setShowModal_2(false);
           setShowUFC(true);
+          setTimeout(() => {
+            setShowUFC(false);
+          }, 1500);
         }
       } else {
         const response = await createRatingAndReview({ movie_id: dataObj?.movie_id, user_id: context?.user?.user_id, rating: rating, review: event.target.review.value });
@@ -45,6 +47,9 @@ const Details = () => {
           setRating(0); event.target.review.value = '';
           setShowModal_1(true);
           setRefresh(refresh + 1);
+          setTimeout(() => {
+            setShowModal_1(false);
+          }, 1500);
         }
       }
   }
@@ -117,10 +122,10 @@ const Details = () => {
       </div>
       <DetailsModals
         handleSubmit={handleSubmit} reviewTxt={reviewTxt}
-        rating={rating} setRating={setRating} setReviewTxt={setReviewTxt} dataObj={dataObj} showUF={showUF}
+        rating={rating} setRating={setRating} setReviewTxt={setReviewTxt} dataObj={dataObj}
         setRefresh={setRefresh} rr_id={rr_id} showModal={showModal} setShowModal={setShowModal}
-        setShowUF={setShowUF} showUFC={showUFC} setShowUFC={setShowUFC} showModal_1={showModal_1}
-        setShowModal_1={setShowModal_1} showModal_4={showModal_4} setShowModal_4={setShowModal_4}
+        showUFC={showUFC} showModal_1={showModal_1}
+        showModal_4={showModal_4} setShowModal_4={setShowModal_4}
         showModal_5={showModal_5} setShowModal_5={setShowModal_5} showModal_2={showModal_2}
         setShowModal_2={setShowModal_2} showModal_4A1={showModal_4A1} showModal_4A2={showModal_4A2}
         setShowModal_4A1={setShowModal_4A1} setShowModal_4A2={setShowModal_4A2}
