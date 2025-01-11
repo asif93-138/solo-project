@@ -3,11 +3,8 @@ import { useLocation } from "react-router";
 import { UserContext } from "../contexts/UserContext";
 import { Genre } from "../interfaces/home";
 import { MovieData, MovieFormProps } from "../interfaces/movieForm";
-import {
-  createMovie,
-  createNewGenre,
-  getAllGenres,
-} from "../services/movieService";
+import { getAllGenres, createNewGenre } from "../services/genreService";
+import { createMovie } from "../services/movieService";
 
 
 const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, setShowNavModal, setShowFirstModal, setShowSecondModal }) => {
@@ -316,7 +313,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
             document
               .getElementById("img-notification")
               ?.classList.add("hidden");
-              setShowNavModal(0);
+            setShowNavModal(0);
             document
               .getElementById("genre-notification")
               ?.classList.add("hidden");

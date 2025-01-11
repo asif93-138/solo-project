@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { Rating } from '@smastrom/react-rating';
 import { UserContext } from "../contexts/UserContext";
 import { Movie } from "../interfaces/details";
 import DetailsModals from "../components/DetailsModals";
-import { createRatingAndReview, getMovieDetails, updateRatingAndReview } from "../services/movieService";
+import { createRatingAndReview, updateRatingAndReview } from "../services/reviewService";
+import { getMovieDetails } from "../services/movieService";
 
 const Details = () => {
   const context = useContext(UserContext);
@@ -24,21 +26,21 @@ const Details = () => {
     event.preventDefault();
     const checkerValue = dataObj?.rr.find(x => x.user_id == context?.user?.user_id);
     if (checkerValue) {
-        const response = await updateRatingAndReview(checkerValue.rr_id, { rating: rating, review: event.target.review.value });
-        if (response.rr_id) {
-          setRating(0); event.target.review.value = '';
-          setRefresh(refresh + 1);
-          document.getElementById('updateForm')?.classList.add('hidden');
-          document.getElementById('updateFormClose')?.classList.remove('hidden');
-        }
-      } else {
-        const response = await createRatingAndReview({ movie_id: dataObj?.movie_id, user_id: context?.user?.user_id, rating: rating, review: event.target.review.value });
-        if (response.rr_id) {
-          setRating(0); event.target.review.value = '';
-          document.getElementById('my_modal_1')?.classList.add('modal-open');
-          setRefresh(refresh + 1);
-        }
+      const response = await updateRatingAndReview(checkerValue.rr_id, { rating: rating, review: event.target.review.value });
+      if (response.rr_id) {
+        setRating(0); event.target.review.value = '';
+        setRefresh(refresh + 1);
+        document.getElementById('updateForm')?.classList.add('hidden');
+        document.getElementById('updateFormClose')?.classList.remove('hidden');
       }
+    } else {
+      const response = await createRatingAndReview({ movie_id: dataObj?.movie_id, user_id: context?.user?.user_id, rating: rating, review: event.target.review.value });
+      if (response.rr_id) {
+        setRating(0); event.target.review.value = '';
+        document.getElementById('my_modal_1')?.classList.add('modal-open');
+        setRefresh(refresh + 1);
+      }
+    }
   }
   function handleUpdate() {
     document.getElementById('my_modal_4')?.classList.add('modal-open');
@@ -102,7 +104,7 @@ const Details = () => {
             document.getElementById('my_modal_2')?.classList.add('modal-open');
           }} type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2 me-2"><i className="fa-regular fa-pen-to-square"></i></button>
             <button type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2"
-            onClick={() => {setRr_id(x.rr_id); setShowModal(true);}}
+              onClick={() => { setRr_id(x.rr_id); setShowModal(true); }}
             ><i className="fa-solid fa-trash"></i></button>
           </div>}
         </article>))}

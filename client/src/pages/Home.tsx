@@ -3,7 +3,8 @@ import { UserContext } from "../contexts/UserContext";
 import '../index.css';
 import { Movie, Genre } from '../interfaces/home';
 import MovieCards from '../components/MovieCards';
-import { getAllGenres, getAllMovies, searchMovies } from '../services/movieService';
+import { getAllGenres } from '../services/genreService';
+import { getAllMovies, searchMovies } from '../services/movieService';
 
 function App() {
   const [data, setData] = useState<Movie[]>([]);
