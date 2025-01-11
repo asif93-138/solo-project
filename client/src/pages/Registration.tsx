@@ -8,6 +8,7 @@ const Registration = () => {
   const [showFirstToast, setShowFirstToast] = useState(false);
   const [showSecondToast, setShowSecondToast] = useState(false);
   const [showPassWarn, setShowPassWarn] = useState(false);
+  const [showUniqueEmailWarn, setShowUniqueEmailWarn] = useState(false);
   const context = useContext(UserContext);
   const navigate = useNavigate();
   async function handleSubmit(event: {
@@ -19,6 +20,7 @@ const Registration = () => {
       setShowPassWarn(false);
       const response = await userRegistration({ name: formName.name.value, email: formName.email.value, password: formName.pass.value });
       if (response.user_id) {
+        setShowUniqueEmailWarn(false);
         setShowSecondToast(true);
         setTimeout(() => {
           localStorage.clear();
@@ -29,7 +31,10 @@ const Registration = () => {
           setShowSecondToast(false);
           navigate('/');
         }, 1000)
+      } else if (response.error == 'Email is already in use') {
+        setShowUniqueEmailWarn(true);
       } else {
+        setShowUniqueEmailWarn(false);
         setShowFirstToast(true);
         setTimeout(() => {
           setShowFirstToast(false);
@@ -47,6 +52,7 @@ const Registration = () => {
         <input type="text" id="name" name="name" className="border border-gray-400 rounded text-sm p-1 w-full" required /><br />
         <label htmlFor="email" className="font-medium">Email</label><br />
         <input type="email" id="email" name="email" className="border border-gray-400 rounded text-sm p-1 w-full" required /><br />
+        {showUniqueEmailWarn && <p className="text-red-600">This email is already used!</p>}
         <label htmlFor="pass" className="font-medium">Password</label><br />
         <input type="password" id="pass" name="pass" className="border border-gray-400 rounded text-sm p-1 w-full" required /><br />
         <p id="passWarn" className={showPassWarn ? "text-red-600" : "text-red-600 hidden"}>Password must be at least 8 characters long!</p>
@@ -56,10 +62,10 @@ const Registration = () => {
         <Link to='/login'><button type="button" className="btn mt-4 w-full">Login</button></Link>
       </form>
       <div className="toast toast-top toast-end">
-        <div className={showSecondToast ? "alert alert-success" : "alert alert-success hidden"}>
+        <div className={showSecondToast ? "alert alert-success block" : "alert alert-success hidden"}>
           <span className="text-lg text-white p-1">Registration successful!</span>
         </div>
-        <div className={showFirstToast ? "alert alert-error" : "alert alert-error hidden"}>
+        <div className={showFirstToast ? "alert alert-error block" : "alert alert-error hidden"}>
           <span className="text-lg text-white p-1">An error occurred!</span>
         </div>
       </div>

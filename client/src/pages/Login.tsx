@@ -55,7 +55,7 @@ const Login = () => {
         <Link to='/register'><button type="button" className="btn mt-4 w-full">Create your account</button></Link>
       </form>
       <div className="toast toast-top toast-end">
-  <div className={showAlert? "alert alert-success" : "alert alert-success hidden"}>
+  <div className={showAlert? "alert alert-success block" : "alert alert-success hidden"}>
     <span className="text-lg text-white p-1">Login successful!</span>
   </div>
 </div>
