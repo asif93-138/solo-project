@@ -24,9 +24,11 @@ const Details = () => {
   const [showUFC, setShowUFC] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [reviewTxt, setReviewTxt] = useState('');
+
   useEffect(() => {
     getMovieDetails(location.pathname.slice(9), setDataObj);
   }, [refresh])
+
   async function handleSubmit(event: {
     target: any; preventDefault: () => void;
   }) {

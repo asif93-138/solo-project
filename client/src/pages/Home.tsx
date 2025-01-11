@@ -78,6 +78,7 @@ function App() {
       handleSearch();
     }
   }, [searchValue, searchType]);
+
   return (
     <section className="bg-black py-10 min-h-screen">
       <div className="items-center mb-10 flex w-3/4 mx-auto justify-center">
