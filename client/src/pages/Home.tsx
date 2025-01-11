@@ -85,12 +85,26 @@ function App() {
   };
 
   return (
-    <section className="bg-black py-10 min-h-screen">
-      <div className="items-center mb-10 flex w-3/4 mx-auto justify-center">
-      <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 p-4 bg-base-200 rounded-lg shadow-md">
-      <div className="form-control flex-grow">
+    <section className="bg-black pt-5 pb-10 min-h-screen">
+      {/* Open the modal using document.getElementById('ID').showModal() method */}
+<button className="btn hidden" onClick={()=>document.getElementById('my_modal_x')?.classList.add('modal-open')}>open modal</button>
+<dialog id="my_modal_x" className="modal">
+  <div className="modal-box">
+    <h3 className="font-bold text-lg">Hello!</h3>
+    <p className="py-4">Press ESC key or click the button below to close</p>
+    <div className="modal-action">
+      <form method="dialog">
+        {/* if there is a button in form, it will close the modal */}
+        <button className="btn" onClick={()=>document.getElementById('my_modal_x')?.classList.remove('modal-open')}>Close</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+      <div className="items-end mb-10 flex w-3/4 mx-auto justify-center">
+      <form onSubmit={handleSearch} className="flex gap-4 rounded-lg">
+      <div className="">
         <label htmlFor="title" className="label">
-          <span className="label-text">Movie Title</span>
+          <span className="label-text text-white">Movie Title</span>
         </label>
         <input
           type="text"
@@ -101,9 +115,9 @@ function App() {
           onChange={e => setSearchTitle(e.target.value)}
         />
       </div>
-      <div className="form-control flex-grow">
+      <div className="">
         <label htmlFor="genre" className="label">
-          <span className="label-text">Genre</span>
+          <span className="label-text text-white">Genre</span>
         </label>
         <select
           id="genre"
@@ -120,7 +134,7 @@ function App() {
         </select>
       </div>
       <div className="form-control sm:self-end">
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn">
           Search
         </button>
       </div>
