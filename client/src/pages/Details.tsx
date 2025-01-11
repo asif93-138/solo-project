@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { Rating } from '@smastrom/react-rating';
 import { UserContext } from "../contexts/UserContext";
 import { Movie } from "../interfaces/details";
 import DetailsModals from "../components/DetailsModals";
-import { createRatingAndReview, getMovieDetails, updateRatingAndReview } from "../services/movieService";
+import { getMovieDetails } from "../services/movieService";
+import { createRatingAndReview, updateRatingAndReview } from "../services/reviewService";
 
 const Details = () => {
   const context = useContext(UserContext);
@@ -22,36 +24,38 @@ const Details = () => {
   const [showUFC, setShowUFC] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [reviewTxt, setReviewTxt] = useState('');
+
   useEffect(() => {
     getMovieDetails(location.pathname.slice(9), setDataObj);
   }, [refresh])
+
   async function handleSubmit(event: {
     target: any; preventDefault: () => void;
   }) {
     event.preventDefault();
     const checkerValue = dataObj?.rr.find(x => x.user_id == context?.user?.user_id);
     if (checkerValue) {
-        const response = await updateRatingAndReview(checkerValue.rr_id, { rating: rating, review: event.target.review.value });
-        if (response.rr_id) {
-          setRating(0); event.target.review.value = '';
-          setRefresh(refresh + 1);
-          setShowModal_2(false);
-          setShowUFC(true);
-          setTimeout(() => {
-            setShowUFC(false);
-          }, 1500);
-        }
-      } else {
-        const response = await createRatingAndReview({ movie_id: dataObj?.movie_id, user_id: context?.user?.user_id, rating: rating, review: event.target.review.value });
-        if (response.rr_id) {
-          setRating(0); event.target.review.value = '';
-          setShowModal_1(true);
-          setRefresh(refresh + 1);
-          setTimeout(() => {
-            setShowModal_1(false);
-          }, 1500);
-        }
+      const response = await updateRatingAndReview(checkerValue.rr_id, { rating: rating, review: event.target.review.value });
+      if (response.rr_id) {
+        setRating(0); event.target.review.value = '';
+        setRefresh(refresh + 1);
+        setShowModal_2(false);
+        setShowUFC(true);
+        setTimeout(() => {
+          setShowUFC(false);
+        }, 1500);
       }
+    } else {
+      const response = await createRatingAndReview({ movie_id: dataObj?.movie_id, user_id: context?.user?.user_id, rating: rating, review: event.target.review.value });
+      if (response.rr_id) {
+        setRating(0); event.target.review.value = '';
+        setShowModal_1(true);
+        setRefresh(refresh + 1);
+        setTimeout(() => {
+          setShowModal_1(false);
+        }, 1500);
+      }
+    }
   }
   function handleUpdate() {
     setShowModal_4(true);
@@ -115,7 +119,7 @@ const Details = () => {
             setShowModal_2(true);
           }} type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2 me-2"><i className="fa-regular fa-pen-to-square"></i></button>
             <button type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto p-1 px-2"
-            onClick={() => {setRr_id(x.rr_id); setShowModal(true);}}
+              onClick={() => { setRr_id(x.rr_id); setShowModal(true); }}
             ><i className="fa-solid fa-trash"></i></button>
           </div>}
         </article>))}

@@ -3,7 +3,8 @@ import { Rating } from '@smastrom/react-rating';
 import MUForm from './EditMovie';
 import { useNavigate } from 'react-router';
 import { DetailsModalsProps } from '../interfaces/details';
-import { deleteMovie, deleteRatingAndReview } from '../services/movieService';
+import { deleteMovie } from '../services/movieService';
+import { deleteRatingAndReview } from '../services/reviewService';
 
 export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rating, setRating, reviewTxt, setReviewTxt, dataObj, setRefresh, rr_id, showModal, setShowModal, showUFC, showModal_1, showModal_4, setShowModal_4, showModal_5, setShowModal_5, showModal_2, setShowModal_2, showModal_4A1, showModal_4A2, setShowModal_4A1, setShowModal_4A2 }) => {
   const [showModalP1, setShowModalP1] = useState(true);

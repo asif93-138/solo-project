@@ -3,11 +3,8 @@ import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../contexts/UserContext";
 import { Genre } from "../interfaces/home";
 import { MovieData, MovieFormProps } from "../interfaces/movieForm";
-import {
-  createMovie,
-  createNewGenre,
-  getAllGenres,
-} from "../services/movieService";
+import { getAllGenres, createNewGenre } from "../services/genreService";
+import { createMovie } from "../services/movieService";
 
 
 const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, setShowNavModal, setShowFirstModal }) => {
@@ -290,7 +287,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
             </label>
             <p
               id="img-notification"
-              className={showIN? "text-red-500 text-center" : "text-red-500 text-center hidden"}
+              className={showIN ? "text-red-500 text-center" : "text-red-500 text-center hidden"}
             >
               <b>Image is required!!</b>
             </p>
@@ -329,8 +326,15 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           type="button"
           className="btn btn-block"
           onClick={() => {
+            document
+              .getElementById("img-notification")
+              ?.classList.add("hidden");
+            setShowNavModal(0);
+            document
+              .getElementById("genre-notification")
+              ?.classList.add("hidden");
             setShowIN(false);
-              setShowNavModal(0);
+            setShowNavModal(0);
             setShowGN(false);
           }}
         >

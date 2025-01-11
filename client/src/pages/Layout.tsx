@@ -17,7 +17,7 @@ const Layout = () => {
             {
                 !(location.pathname == '/login' || location.pathname == '/register')
                     ?
-                    <nav className="navbar bg-slate-900 bg-neutral text-neutral-content px-8">
+                    <nav className="navbar bg-slate-900 text-neutral-content px-8">
                         <div className="flex-1">
                             <Link to="/" className="m-2">      <div className="text-2xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
                                 <span className="bg-yellow-500 text-black px-2 py-1 rounded">FILM</span>
@@ -69,14 +69,14 @@ const Layout = () => {
             }
             <dialog id="my_modal_nav" className={(showNavModal === 1) ? "modal text-black modal-open" : "modal text-black"}>
                 <div className="modal-box">
-                        {context && <MovieForm setHomeRefresh={context.setHomeRefresh} setListRefresh={context.setListRefresh} setShowFirstModal={setShowFirstModal} setShowNavModal={setShowNavModal} />}
+                    {context && <MovieForm setHomeRefresh={context.setHomeRefresh} setListRefresh={context.setListRefresh} setShowFirstModal={setShowFirstModal} setShowNavModal={setShowNavModal} />}
                 </div>
             </dialog>
-            <div className={showFirstModal? "toast toast-top toast-center" : "toast toast-top toast-center hidden"}>
-  <div className="alert alert-warning block">
-    <span>Successfully inserted a new movie!</span>
-  </div>
-</div>
+            <div className={showFirstModal ? "toast toast-top toast-center" : "toast toast-top toast-center hidden"}>
+                <div className="alert alert-warning block">
+                    <span>Successfully inserted a new movie!</span>
+                </div>
+            </div>
             <Outlet />
         </>
     )

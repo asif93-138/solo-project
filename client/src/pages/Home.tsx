@@ -1,9 +1,10 @@
+import '../index.css';
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from "../contexts/UserContext";
-import '../index.css';
 import { Movie, Genre } from '../interfaces/home';
 import MovieCards from '../components/MovieCards';
-import { getAllGenres, getAllMovies, searchMovies } from '../services/movieService';
+import { getAllGenres } from '../services/genreService';
+import { getAllMovies, searchMovies } from '../services/movieService';
 
 function App() {
   const [data, setData] = useState<Movie[]>([]);
@@ -77,6 +78,7 @@ function App() {
       handleSearch();
     }
   }, [searchValue, searchType]);
+
   return (
     <section className="bg-black py-10 min-h-screen">
       <div className="items-center mb-10 flex w-3/4 mx-auto justify-center">
