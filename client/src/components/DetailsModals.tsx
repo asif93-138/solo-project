@@ -6,32 +6,25 @@ import { DetailsModalsProps } from '../interfaces/details';
 import { deleteMovie } from '../services/movieService';
 import { deleteRatingAndReview } from '../services/reviewService';
 
-export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rating, setRating, reviewTxt, setReviewTxt, dataObj, setRefresh, rr_id, showModal, setShowModal }) => {
+export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rating, setRating, reviewTxt, setReviewTxt, dataObj, setRefresh, rr_id, showModal, setShowModal, showUFC, showModal_1, showModal_4, setShowModal_4, showModal_5, setShowModal_5, showModal_2, setShowModal_2, showModal_4A1, showModal_4A2, setShowModal_4A1, setShowModal_4A2 }) => {
   const [showModalP1, setShowModalP1] = useState(true);
+  const [showModal_3, setShowModal_3] = useState(false);
   const navigate = useNavigate();
-  function closeModal_1() {
-    document.getElementById('my_modal_2')?.classList.remove('modal-open');
-    document.getElementById('updateForm')?.classList.remove('hidden');
-    document.getElementById('updateFormClose')?.classList.add('hidden');
-  }
-  function closeModal_3() {
-    document.getElementById('my_modal_3')?.classList.remove('modal-open');
-    navigate('/user');
-  }
   async function handleDelete() {
-    document.getElementById('my_modal_5')?.classList.remove('modal-open');
+    setShowModal_5(false);
     const response = await deleteMovie(dataObj?.movie_id);
     if (response.deleted) {
-      document.getElementById('my_modal_3')?.classList.add('modal-open');
+      setShowModal_3(true);
+      setTimeout(() => {
+    setShowModal_3(false);
+    navigate('/user');
+      }, 1500);
     }
-  }
-  function closeModal() {
-    document.getElementById('my_modal_1')?.classList.remove('modal-open');
   }
   return (
     <>
 
-      <dialog id="my_modal_2" className="modal">
+      <dialog id="my_modal_2" className={showModal_2? "modal modal-open" : "modal"}>
         <div className="modal-box">
           <form name="rr" method="dialog" className="text-center" onSubmit={handleSubmit}>
             <section id="updateForm">
@@ -44,71 +37,51 @@ export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rati
                 placeholder="Write your review" name="review"
                 className="textarea textarea-bordered textarea-md w-full max-w-xs text-black my-2"></textarea><br />
               <button type="submit" className="btn">Submit</button> <button type="button" onClick={() => {
-                document.getElementById('my_modal_2')?.classList.remove('modal-open');
+                setShowModal_2(false);
               }} className="btn">Cancel</button>
-            </section>
-            <section className="hidden" id="updateFormClose">
-              <h4 className="text-center text-black text-2xl my-4">Updated!</h4>
-              <button type="button" className="btn" onClick={closeModal_1}>Close</button>
             </section>
           </form>
         </div>
       </dialog>
-
-      <dialog id="my_modal_3" className="modal">
-        <div className="modal-box text-center">
-          <h4 className="text-red-500 text-2xl my-4">Deleted!</h4>
-          <button type="button" className="btn" onClick={closeModal_3}>Close</button>
-        </div>
-      </dialog>
-      <dialog id="my_modal_5" className="modal">
+      <div className="toast toast-top toast-center">
+  <div className={showUFC || showModal_4A2? "alert alert-warning block" : "alert alert-warning hidden"}>
+    <span>Updated!</span>
+  </div>
+  <div className={showModal_3 || !showModalP1? "alert alert-error text-white block" : "alert alert-error text-white hidden"}>
+    <span>Deleted!</span>
+  </div>
+  <div className={showModal_1? "alert alert-warning block" : "alert alert-warning hidden"}>
+    <span>Rating and review posted!</span>
+  </div>
+</div>
+      <dialog id="my_modal_5" className={showModal_5 ? "modal modal-open" : "modal"}>
         <div className="modal-box text-center">
           <h4 className="text-black text-2xl mb-4">Delete this item?</h4>
-          <button type="button" className="btn text-red-500" onClick={handleDelete}>Confirm</button> &nbsp; &nbsp; <button type="button" className="btn" onClick={() => document.getElementById('my_modal_5')?.classList.remove('modal-open')}>Cancel</button>
+          <button type="button" className="btn text-red-500" onClick={handleDelete}>Confirm</button> &nbsp; &nbsp; <button type="button" className="btn" onClick={() => setShowModal_5(false)}>Cancel</button>
         </div>
       </dialog>
-      <dialog id="my_modal_4" className="modal">
+      <dialog id="my_modal_4" className={showModal_4? "modal modal-open" : "modal"}>
         <div className="modal-box text-black">
-          <article id="my_modal_4A1" className="">
-            {dataObj && <MUForm setRefresh={setRefresh} dataObj={dataObj} />}
+          <article id="my_modal_4A1" className={showModal_4A1? "" : "hidden"}>
+            {dataObj && <MUForm setRefresh={setRefresh} dataObj={dataObj} setShowModal_4A1={setShowModal_4A1} setShowModal_4A2={setShowModal_4A2} setShowModal_4={setShowModal_4} />}
           </article>
-          <article id="my_modal_4A2" className="hidden text-center">
-            <h4 className="text-black text-2xl my-4">Updated!</h4>
-            <button type="button" className="btn" onClick={() => {
-              document.getElementById('my_modal_4')?.classList.remove('modal-open');
-              document.getElementById('my_modal_4A2')?.classList.add('hidden');
-              document.getElementById('my_modal_4A1')?.classList.remove('hidden');
-            }}>Close</button>
-          </article>
-        </div>
-      </dialog>
-      <dialog id="my_modal_1" className="modal">
-        <div className="modal-box">
-          <p className="py-4 text-black font-medium text-center">Rating and review posted!</p>
-          <div className="">
-            <form method="dialog" className="text-center">
-              <button className="btn" onClick={closeModal}>Close</button>
-            </form>
-          </div>
         </div>
       </dialog>
       <dialog id="my_modal_6" className={showModal ? "modal modal-open" : "modal"}>
         <div className="modal-box text-center">
-          {showModalP1 ?
+          {showModalP1 &&
             <>
               <h4 className="text-black text-2xl mb-4">Delete your rating and review?</h4>
               <button type="button" className="btn text-red-500" onClick={async () => {
                 const response = await deleteRatingAndReview(rr_id);
                 if (response.deleted) {
-                  setShowModalP1(false);
+                  setShowModalP1(false); setShowModal(false);
+                  setTimeout(() => {
+                    setShowModalP1(true); setRefresh((prev) => prev + 1);
+                  }, 1500);
                 }
               }}>Confirm</button> &nbsp; &nbsp; <button type="button" className="btn" onClick={() => setShowModal(false)}>Cancel</button>
-            </>
-            :
-            <><h4 className="text-black text-2xl mb-4">Deleted!</h4>
-              <button type='button' className='btn' onClick={() => {
-                setShowModalP1(true); setShowModal(false); setRefresh((prev) => prev + 1);
-              }}>Close</button></>}
+            </>}
         </div>
       </dialog>
     </>

@@ -14,5 +14,4 @@ export interface MovieFormProps {
     setListRefresh: React.Dispatch<React.SetStateAction<number>>;
     setShowNavModal: React.Dispatch<React.SetStateAction<number>>;
     setShowFirstModal: React.Dispatch<React.SetStateAction<boolean>>;
-    setShowSecondModal: React.Dispatch<React.SetStateAction<boolean>>;
   }

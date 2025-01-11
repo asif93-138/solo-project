@@ -25,4 +25,16 @@ export interface DetailsModalsProps {
     rr_id: number;
     showModal: boolean;
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+    showUFC: boolean;
+    showModal_1: boolean;
+    showModal_4: boolean;
+    setShowModal_4: React.Dispatch<React.SetStateAction<boolean>>;
+    showModal_5: boolean;
+    setShowModal_5: React.Dispatch<React.SetStateAction<boolean>>;
+    showModal_2: boolean;
+    setShowModal_2: React.Dispatch<React.SetStateAction<boolean>>;
+    showModal_4A1: boolean;
+    showModal_4A2: boolean;
+    setShowModal_4A1: React.Dispatch<React.SetStateAction<boolean>>;
+    setShowModal_4A2: React.Dispatch<React.SetStateAction<boolean>>;
   }

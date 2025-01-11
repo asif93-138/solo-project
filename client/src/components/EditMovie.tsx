@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MovieData, MUFormProps } from "../interfaces/MUForm";
 import { updateMovie } from "../services/movieService";
 
-const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj }) => {
+const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, setShowModal_4A2, setShowModal_4 }) => {
   const [formData, setFormData] = useState<Partial<MovieData>>({});
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -61,18 +61,28 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj }) => {
         const response = await updateMovie(dataObj.movie_id, filteredData);
         if (response.movie_id) {
           setFormData({}); // Clear form fields
-          document.getElementById('my_modal_4A1')?.classList.add('hidden');
-          document.getElementById('my_modal_4A2')?.classList.remove('hidden');
+          setShowModal_4A1(false);
+          setShowModal_4A2(true);
           setRefresh((prev) => prev + 1);
+          setShowModal_4(false);
+          setTimeout(() => {
+            setShowModal_4A2(false);
+              setShowModal_4A1(true);
+          }, 1500);
         }
       }
     } else {
         const response = await updateMovie(dataObj.movie_id, filteredData);
         if (response.movie_id) {
           setFormData({}); // Clear form fields
-          document.getElementById('my_modal_4A1')?.classList.add('hidden');
-          document.getElementById('my_modal_4A2')?.classList.remove('hidden');
+          setShowModal_4A1(false);
+          setShowModal_4A2(true);
           setRefresh((prev) => prev + 1);
+          setShowModal_4(false);
+          setTimeout(() => {
+            setShowModal_4A2(false);
+              setShowModal_4A1(true);
+          }, 1500);
         }
     }
 
@@ -80,7 +90,7 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj }) => {
 
   const handleCancel = () => {
     setFormData(dataObj); // Reset form fields to initial values
-    document.getElementById('my_modal_4')?.classList.remove('modal-open');
+    setShowModal_4(false);
   };
 
   return (

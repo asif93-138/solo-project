@@ -12,4 +12,7 @@ export interface MovieData {
 export interface MUFormProps {
   setRefresh: React.Dispatch<React.SetStateAction<number>>;
   dataObj: MovieData;
+  setShowModal_4A1: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowModal_4A2: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowModal_4: React.Dispatch<React.SetStateAction<boolean>>;
 }

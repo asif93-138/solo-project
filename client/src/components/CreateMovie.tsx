@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { UserContext } from "../contexts/UserContext";
 import { Genre } from "../interfaces/home";
 import { MovieData, MovieFormProps } from "../interfaces/movieForm";
@@ -7,11 +7,14 @@ import { getAllGenres, createNewGenre } from "../services/genreService";
 import { createMovie } from "../services/movieService";
 
 
-const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, setShowNavModal, setShowFirstModal, setShowSecondModal }) => {
+const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, setShowNavModal, setShowFirstModal }) => {
   const content = useContext(UserContext);
   const location = useLocation();
+  const navigate = useNavigate();
   const [genres, setGenres] = useState<Genre[]>([]);
   const [genreReloader, setGenreReloader] = useState(0);
+  const [showIN, setShowIN] = useState(false);
+  const [showGN, setShowGN] = useState(false);
   const [formData, setFormData] = useState<MovieData>({
     title: "",
     img: "",
@@ -45,7 +48,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
   const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     if (!selectedGenres.includes(value) && value != "Select a genre") {
-      document.getElementById("genre-notification")?.classList.add("hidden");
+      setShowGN(false);
       setSelectedGenres((prev) => [...prev, value]);
     }
   };
@@ -81,10 +84,10 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
     e.preventDefault();
 
     if (imageFile) {
-      document.getElementById("img-notification")?.classList.add("hidden");
+      setShowIN(false);
 
       if (selectedGenres.length > 0) {
-        document.getElementById("genre-notification")?.classList.add("hidden");
+        setShowGN(false);
         // Upload image first
         const formDataImage = new FormData();
         formDataImage.append("image", imageFile);
@@ -129,20 +132,22 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
               } else if (location.pathname == "/user") {
                 setListRefresh((prev) => prev + 1);
               }
-              setShowSecondModal(false);
+              setShowNavModal(0);
               setShowFirstModal(true);
+              setTimeout(() => {
+                setShowFirstModal(false);
+                if (location.pathname != '/' && location.pathname != '/user') { navigate('/user'); }
+              }, 1500);
             }
           }
         } catch (error) {
           console.error("Error during upload:", error);
         }
       } else {
-        document
-          .getElementById("genre-notification")
-          ?.classList.remove("hidden");
+        setShowGN(true);
       }
     } else {
-      document.getElementById("img-notification")?.classList.remove("hidden");
+      setShowIN(true);
     }
   };
 
@@ -224,7 +229,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
 
           <p
             id="genre-notification"
-            className="text-red-500 text-center hidden"
+            className={showGN ? "text-red-500 text-center" : "text-red-500 text-center hidden"}
           >
             <b>Genre must be added!</b>
           </p>
@@ -271,7 +276,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
             </label>
             <p
               id="img-notification"
-              className="text-red-500 text-center hidden"
+              className={showIN ? "text-red-500 text-center" : "text-red-500 text-center hidden"}
             >
               <b>Image is required!!</b>
             </p>
@@ -317,6 +322,9 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
             document
               .getElementById("genre-notification")
               ?.classList.add("hidden");
+            setShowIN(false);
+            setShowNavModal(0);
+            setShowGN(false);
           }}
         >
           Cancel
