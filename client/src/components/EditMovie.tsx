@@ -6,6 +6,7 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
   const [formData, setFormData] = useState<Partial<MovieData>>({});
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uniqueTitleError, setUniqueTitleError] = useState(false);
 
   // Populate formData with dataObj values when the component mounts or dataObj changes
   useEffect(() => {
@@ -21,6 +22,7 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
         name === "release_yr" || name === "length" ? Number(value) : value;
       return { ...prev, [name]: updatedValue };
     });
+    setUniqueTitleError(false);
   };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,6 +71,8 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
             setShowModal_4A2(false);
               setShowModal_4A1(true);
           }, 1500);
+        } else {
+          setUniqueTitleError(true);
         }
       }
     } else {
@@ -83,6 +87,8 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
             setShowModal_4A2(false);
               setShowModal_4A1(true);
           }, 1500);
+        } else {
+          setUniqueTitleError(true);
         }
     }
 
@@ -97,6 +103,7 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
     <div className="p-6 max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Edit this entry</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
+      {uniqueTitleError && <p className="text-red-600 text-center">This title already exists!</p>}
       <input
           type="text"
           name="title"

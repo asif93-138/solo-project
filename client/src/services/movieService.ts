@@ -72,7 +72,7 @@ export async function createMovie(data: any) {
     body: JSON.stringify(data),
   });
   const movieData = await movieResponse.json();
-  return movieData.movie;
+  return movieData;
 }
 
 export async function createNewGenre(data: any) {

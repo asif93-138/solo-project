@@ -64,8 +64,13 @@ export const createMovie: RequestHandler = async (
       throw error;
     }
   } catch (error) {
-    console.error("Error during movie creation:", error);
-    res.status(500).json({ error: "Failed to create movie" });
+    if (error.errors[0].message == 'title must be unique') {
+      console.error("Error during movie creation:", error);
+      res.status(500).json({ error: "title must be unique" });
+    } else {
+      console.error("Error during movie creation:", error);
+      res.status(500).json({ error: "Failed to create movie" });
+    }
   }
 };
 
@@ -184,8 +189,13 @@ export const editMovie: RequestHandler = async (
 
     res.status(200).json(movie);
   } catch (error) {
-    console.error("Error updating movie:", error);
-    res.status(500).json({ error: "Failed to update movie" });
+    if (error.errors[0].message == 'title must be unique') {
+      console.error("Error updating movie:", error.errors[0].message);
+      res.status(500).json({ error: "title must be unique" });
+    } else {
+      console.error("Error updating movie:", error);
+      res.status(500).json({ error: "Failed to update movie" });
+    }
   }
 };
 

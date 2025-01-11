@@ -33,6 +33,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
   const [newGenre, setNewGenre] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uniqueTitleError, setUniqueTitleError] = useState(false);
   async function getGenres() {
     const res = await getAllGenres();
     setGenres(res);
@@ -46,6 +47,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setUniqueTitleError(false);
   };
 
   const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -116,7 +118,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
               user_id: content?.user?.user_id,
               ...updatedFormData,
             });
-            if (movie.movie_id) {
+            // console.log(movie);
+            if (movie.movie?.movie_id) {
               setFormData({
                 title: "",
                 img: "",
@@ -141,6 +144,13 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
                 setShowFirstModal(false);
                 if (location.pathname != '/' && location.pathname != '/user') { navigate('/user'); }
               }, 1500);
+            } else {
+              if (movie.error == 'title must be unique') {
+                setUniqueTitleError(true);
+                console.log(movie.error)
+              } else {
+                console.log(movie)
+              }
             }
           }
         } catch (error) {
@@ -156,15 +166,16 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
 
   return (
     <div className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Create New Movie Entry</h1>
+      <h1 className="text-2xl font-bold mb-5">Create New Movie Entry</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
+        {uniqueTitleError && <p className="text-red-600 text-center">This title already exists!</p>}
         <input
           type="text"
           name="title"
           value={formData.title}
           onChange={handleInputChange}
           placeholder="Movie Title"
-          className="input input-bordered w-full"
+          className="input input-bordered w-full" style={{marginTop: uniqueTitleError? '10px' : 'auto'}}
           required
         />
 
