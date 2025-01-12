@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize';
 import sequelize from './sequelize';
 import { DB } from '../interfaces/DBinterface';
 import Movie from "./Movies";
-import RR from "./Ratings&Reviews";
+import RR from "./Reviews";
 import Genre from "./Genre";
 import MG from "./MovieGenre";
 
