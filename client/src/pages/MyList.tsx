@@ -23,17 +23,18 @@ const Mylist = () => {
         </h4>
       }
       
-      <div className="grid grid-cols-4 gap-6 w-9-10 mx-auto">
+      <div className="grid grid-cols-4 gap-12 w-9-10 mx-auto">
         {data.map((x) => (
           <Link to={`/details/${x.movie_id}`} key={x.movie_id}>
             <div className="card shadow-xl">
-              <figure>
-                <img
-                  className="poster-img"
+            <img
+                  className="poster-img rounded-3xl"
                   src={"http://localhost:3000" + x.img}
                   alt="poster"
                 />
-              </figure>
+              {/* <figure>
+
+              </figure> */}
               <div className="">
                 <h2 className="card-title block text-white">{x.title}</h2>
                 <article className="flex justify-between">

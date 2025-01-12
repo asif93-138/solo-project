@@ -100,7 +100,7 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
+    <div className="p-6 mx-auto">
       <h1 className="text-2xl font-bold mb-4">Edit this entry</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
       {uniqueTitleError && <p className="text-red-600 text-center">This title already exists!</p>}
@@ -110,30 +110,23 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
           value={formData.title || ''}
           onChange={handleInputChange}
           placeholder="Movie Title"
-          className="input input-bordered w-full"
+          className="input input-bordered w-full h-full py-1"
         />
         <textarea
           name="desc"
           value={formData.desc || ""}
           onChange={handleInputChange}
           placeholder="Description"
-          className="textarea textarea-bordered w-full"
+          className="textarea textarea-bordered w-full h-full py-1"
         />
+        <div className="flex justify-between">
         <input
           type="number"
           name="release_yr"
           value={formData.release_yr || ""}
           onChange={handleInputChange}
           placeholder="Release Year"
-          className="input input-bordered w-full"
-        />
-        <input
-          type="text"
-          name="director"
-          value={formData.director || ""}
-          onChange={handleInputChange}
-          placeholder="Director"
-          className="input input-bordered w-full"
+          className="input input-bordered h-full py-1" style={{width: '49%'}}
         />
         <input
           type="number"
@@ -141,7 +134,17 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
           value={formData.length || ""}
           onChange={handleInputChange}
           placeholder="Length (minutes)"
-          className="input input-bordered w-full"
+          className="input input-bordered h-full py-1" style={{width: '49%'}}
+        />
+        </div>
+        <div className="flex justify-between">
+        <input
+          type="text"
+          name="director"
+          value={formData.director || ""}
+          onChange={handleInputChange}
+          placeholder="Director"
+          className="input input-bordered h-full py-1" style={{width: '49%'}}
         />
         <input
           type="text"
@@ -149,10 +152,11 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
           value={formData.producer || ""}
           onChange={handleInputChange}
           placeholder="Producer"
-          className="input input-bordered w-full"
+          className="input input-bordered h-full py-1" style={{width: '49%'}}
         />
-                {/* Image Upload Section */}
-                {!imageFile && (
+        </div>
+          {/* Image Upload Section */}
+          {!imageFile && (
           <>
                     <label className="btn btn-block">
             Select Image
@@ -169,7 +173,7 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
 
         {/* Preview Section */}
         {imagePreview && (
-          <div className="card w-96 bg-base-100 shadow-xl">
+          <div className="card w-96 bg-base-100 shadow-xl mx-auto">
             <figure>
               <img src={imagePreview} alt="Preview" className="rounded-t-lg max-h-60 object-cover" />
             </figure>
@@ -187,16 +191,19 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
             </div>
           </div>
         )}
-        <button type="submit" className="btn w-full">
+        <div className="flex justify-between">
+        <button type="submit" className="btn" style={{width: '49%'}}>
           Submit
         </button>
         <button
           type="button"
-          className="btn btn-block"
+          className="btn" style={{width: '49%'}}
           onClick={handleCancel}
         >
           Cancel
         </button>
+        </div>
+
       </form>
     </div>
   );

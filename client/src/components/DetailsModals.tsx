@@ -61,7 +61,7 @@ export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rati
         </div>
       </dialog>
       <dialog id="my_modal_4" className={showModal_4? "modal modal-open" : "modal"}>
-        <div className="modal-box text-black">
+        <div className="modal-box text-black max-w-full w-1/2">
           <article id="my_modal_4A1" className={showModal_4A1? "" : "hidden"}>
             {dataObj && <MUForm setRefresh={setRefresh} dataObj={dataObj} setShowModal_4A1={setShowModal_4A1} setShowModal_4A2={setShowModal_4A2} setShowModal_4={setShowModal_4} />}
           </article>
