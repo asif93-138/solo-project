@@ -68,7 +68,7 @@ const Layout = () => {
                     </nav>
             }
             <dialog id="my_modal_nav" className={(showNavModal === 1) ? "modal text-black modal-open" : "modal text-black"}>
-                <div className="modal-box">
+                <div className="modal-box max-w-full w-1/2">
                     {context && <MovieForm setHomeRefresh={context.setHomeRefresh} setListRefresh={context.setListRefresh} setShowFirstModal={setShowFirstModal} setShowNavModal={setShowNavModal} />}
                 </div>
             </dialog>

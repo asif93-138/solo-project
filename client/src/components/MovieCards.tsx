@@ -8,9 +8,10 @@ const MovieCards: React.FC<MovieCardsProps> = ({ dataObj }) => {
       {dataObj.map((x) => (
         <Link to={`/details/${x.movie_id}`} key={x.movie_id}>
           <div className="card shadow-xl relative">
-            <figure className='rounded-3xl'>
-              <img className='poster-img' src={'http://localhost:3000' + x.img} alt="poster" />
-            </figure>
+          <img className='poster-img rounded-3xl' src={'http://localhost:3000' + x.img} alt="poster" />
+            {/* <figure className=''>
+              
+            </figure> */}
             <div className="absolute bottom-0 w-full pb-1 p-2" style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
               <h2 title={x.title} className="card-title block text-white">{x.title.length > 22 ? x.title.slice(0, 22) + '...' : x.title}</h2>
               <article className='flex justify-between'>

@@ -88,7 +88,7 @@ const Details = () => {
         <img src={'http://localhost:3000' + dataObj?.img} alt="poster" className="poster-img-1 rounded-xl" />
       </div>
       <div className="bg-slate-900 mt-20 px-4 py-10 rounded-3xl mx-28">
-        <h3 className="text-3xl text-center">User Reviews</h3>
+        <h3 className="text-3xl text-center">Reviews</h3>
         {context?.user && !dataObj?.rr.find(x => x.user_id == context?.user?.user_id) && <>
           <h4 className="text-2xl my-3 ml-32">Rate and Review</h4>
           <form name="rr" className="mb-10" onSubmit={handleSubmit}>

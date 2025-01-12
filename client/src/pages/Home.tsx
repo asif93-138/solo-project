@@ -100,9 +100,9 @@ function App() {
     </div>
   </div>
 </dialog>
-      <div className="items-end mb-10 flex w-3/4 mx-auto justify-center">
-      <form onSubmit={handleSearch} className="flex gap-4 rounded-lg">
-      <div className="">
+      <div className="items-end mb-10 flex w-3/5 mx-auto justify-start gap-6 items-end">
+      <form onSubmit={handleSearch} className="flex gap-6 items-end rounded-lg w-9-10">
+      <div className="w-1/2">
         <label htmlFor="title" className="label">
           <span className="label-text text-white">Movie Title</span>
         </label>
@@ -115,7 +115,7 @@ function App() {
           onChange={e => setSearchTitle(e.target.value)}
         />
       </div>
-      <div className="">
+      <div className="w-1/2">
         <label htmlFor="genre" className="label">
           <span className="label-text text-white">Genre</span>
         </label>
@@ -133,13 +133,11 @@ function App() {
           ))}
         </select>
       </div>
-      <div className="form-control sm:self-end">
-        <button type="submit" className="btn">
+      <button type="submit" className="btn">
           Search
         </button>
-      </div>
     </form>
-        <button id='scb' type='button' className={showSCB ? 'btn ms-10' : 'btn ms-10 hidden'} onClick={() => {
+        <button id='scb' type='button' className={showSCB ? 'btn' : 'btn hidden'} onClick={() => {
           setSearchTitle('');
           setSearchGenre('');
           setData(initialResults);

@@ -162,7 +162,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
+    <div className="p-6 mx-auto">
       <h1 className="text-2xl font-bold mb-5">Create New Movie Entry</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         {uniqueTitleError && <p className="text-red-600 text-center">This title already exists!</p>}
@@ -172,7 +172,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           value={formData.title}
           onChange={handleInputChange}
           placeholder="Movie Title"
-          className="input input-bordered w-full" style={{marginTop: uniqueTitleError? '10px' : 'auto'}}
+          className="input input-bordered w-full h-full py-1" style={{marginTop: uniqueTitleError? '10px' : 'auto'}}
           required
         />
 
@@ -183,25 +183,16 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           placeholder="Description"
           className="textarea textarea-bordered w-full"
         />
-
+        <div className="flex justify-between">
         <input
           type="number"
           name="release_yr"
           value={formData.release_yr}
           onChange={handleInputChange}
           placeholder="Release Year"
-          className="input input-bordered w-full"
-          required
+          className="input input-bordered h-full py-1"
+          required style={{width: '49%'}}
           max="9999"
-        />
-
-        <input
-          type="text"
-          name="director"
-          value={formData.director}
-          onChange={handleInputChange}
-          placeholder="Director"
-          className="input input-bordered w-full"
         />
 
         <input
@@ -210,8 +201,19 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           value={formData.length}
           onChange={handleInputChange}
           placeholder="Length (minutes)"
-          className="input input-bordered w-full"
-          required
+          className="input input-bordered h-full py-1"
+          required style={{width: '49%'}}
+        />
+        </div>
+
+        <input
+          type="text"
+          name="director"
+          value={formData.director}
+          onChange={handleInputChange}
+          placeholder="Director"
+          className="input input-bordered me-2 h-full py-1"
+          style={{width: '49%'}}
         />
 
         <input
@@ -220,14 +222,16 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           value={formData.producer}
           onChange={handleInputChange}
           placeholder="Producer"
-          className="input input-bordered w-full"
+          className="input input-bordered h-full py-1"
+          style={{width: '49%'}}
         />
 
-        <div className="space-y-2">
+        <section className="flex justify-between items-start">
+        <div className="space-y-2" style={{width: '49%'}}>
           {genres.length > 0 && (
             <select
               onChange={handleGenreChange}
-              className="select select-bordered w-full"
+              className="select select-bordered w-full h-full min-h-0"
             >
               <option>Select a genre</option>
               {genres.map((genre) => (
@@ -266,12 +270,13 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
             value={newGenre}
             onChange={(e) => setNewGenre(e.target.value)}
             placeholder="Add new genre"
-            className="input input-bordered flex-1"
+            className="input input-bordered flex-1 h-full py-1"
           />
-          <button type="button" onClick={handleAddNewGenre} className="btn">
+          <button type="button" onClick={handleAddNewGenre} className="btn h-full py-2 min-h-0">
             Add
           </button>
         </div>
+        </section>
 
         {/* Image Upload Section */}
         {!imageFile && (
@@ -296,7 +301,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
 
         {/* Preview Section */}
         {imagePreview && (
-          <div className="card w-96 bg-base-100 shadow-xl">
+          <div className="card w-96 bg-base-100 shadow-xl mx-auto">
             <figure>
               <img
                 src={imagePreview}
@@ -318,13 +323,13 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
             </div>
           </div>
         )}
-
-        <button type="submit" className="btn w-full">
+      <div className="flex justify-between">
+      <button type="submit" className="btn" style={{width: '49%'}}>
           Submit
         </button>
         <button
           type="button"
-          className="btn btn-block"
+          className="btn" style={{width: '49%'}}
           onClick={() => {
             document
               .getElementById("img-notification")
@@ -340,6 +345,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
         >
           Cancel
         </button>
+      </div>
       </form>
     </div>
   );
