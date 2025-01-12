@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     # Custom
     'movies',
     'users',
+    'genres',
+    'reviews'
 
 ]
 
