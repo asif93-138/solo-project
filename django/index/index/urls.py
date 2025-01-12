@@ -17,7 +17,8 @@ Including another URLconf
 from . import views 
 from django.contrib import admin
 from django.urls import path, include
-from movies.views import Signup, Login
+# from movies.views import Signup, Login
+from users.views import Signup, Login
 
 urlpatterns = [
     path('', views.home, name='home'),

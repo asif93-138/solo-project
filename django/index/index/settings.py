@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
 
-    # Default auth
+    # Default  Authentication
     # 'rest_framework.authtoken',  # Required for dj-rest-auth
     # 'dj_rest_auth',
     # 'allauth',
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
     # Custom
     'movies',
+    'users',
 
 ]
 
