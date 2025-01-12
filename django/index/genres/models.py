@@ -5,9 +5,9 @@ class Genre(models.Model):
     genre = models.CharField(max_length=10, unique=True, null=False) 
 
     class Meta:
-        managed = False
-        db_table = 'genre' 
+        db_table = 'genre'
+        managed = False 
         
     def __str__(self):
-        return self.genre 
+        return f"Genre {self.genre} has been added" 
 
