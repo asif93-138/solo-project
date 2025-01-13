@@ -1,5 +1,5 @@
-from .models import Review
-from .serializers import ReviewSerializer
+from reviews.models import Review
+from reviews.serializers import ReviewSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404

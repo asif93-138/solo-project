@@ -280,7 +280,7 @@ export const getAllMovies: RequestHandler = async (
     const movies = await Movie.findAll(queryOptions);
 
     if (movies.length === 0) {
-      res.status(404).json({ message: "No movies found" });
+      res.status(200).json({ message: "No movies found" });
     } else {
       res.status(200).json(movies);
     }
