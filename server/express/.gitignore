@@ -39,10 +39,10 @@ desktop.ini
 coverage/
 
 # Configuration files
-# src/config/dbConfig.ts
+src/config/dbConfig.ts
 
 # Uploads directory
-uploads/
+uploads/*
 
 # Personal files
 src/old_index.ts
