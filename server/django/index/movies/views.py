@@ -4,6 +4,7 @@ from genres.models import Genre
 from reviews.models import Review
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.db import transaction, IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -89,6 +90,56 @@ class MovieView(APIView):
             return Response(movie_list, status=200)
         except Exception as error:
             return Response({"error": str(error)}, status=500)
+    
+    def post(self, request):
+        data = request.data
+        required_fields = [
+            "user_id", "title", "img", "desc", "release_yr", 
+            "director", "length", "producer", "genre"
+        ]
+        
+        unpacked_data = {field: data.get(field) for field in required_fields}
+        genres = unpacked_data.pop("genre", [])
+
+        try:
+            with transaction.atomic():
+                movie = Movie.objects.create(**unpacked_data)
+                if not movie.movie_id:
+                    raise ValidationError("Movie ID is null after creation")
+                
+                movie.genres.add(*[Genre.objects.get_or_create(genre=g)[0] for g in genres])
+                return Response({"message": "Movie created successfully", "movie": movie.movie_id}, status=201)
+
+        except IntegrityError as error:
+            return Response({"error": "Title must be unique" if "unique constraint" in str(error).lower() else "Failed to create movie"}, status=400 if "unique constraint" in str(e).lower() else 500)
+        except Exception as error:
+            return Response({"error": str(error)}, status=500)
+
+    def put(self, request, id):
+        try:
+            movie = get_object_or_404(Movie, pk=id)
+            updated_data = request.data
+
+            for field, value in updated_data.items():
+                    setattr(movie, field, value)
+
+            movie.save()
+
+            genres = updated_data.get("genre", [])
+            if genres:
+                genre_instances = [Genre.objects.get_or_create(genre=g)[0] for g in genres]
+                movie.genres.set(genre_instances) 
+
+            return Response({"message": "Movie updated successfully", "movie": movie.movie_id}, status=200)
+        except IntegrityError as error:
+            if "unique constraint" in str(error).lower():
+                return Response({"error": "Title must be unique"}, status=400)
+            return Response({"error": "Failed to update movie"}, status=500)
+        except Exception as error:
+            return Response({"error": str(error)}, status=500)
+
+    def delete(self, request):
+        return None
 
 class MovieUserView(APIView):
     def get(self, request, user_id):
