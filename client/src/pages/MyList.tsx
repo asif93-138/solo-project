@@ -53,7 +53,7 @@ const Mylist = () => {
                     </svg>
                     <span className="text-slate-300">
                       {" "}
-                      {x.averageRating || 0}
+                      {x.averageRating ? Number(x.averageRating).toFixed(2) : 0}
                     </span>
                   </p>
                 </article>
