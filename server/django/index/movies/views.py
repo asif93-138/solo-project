@@ -2,6 +2,8 @@ from users.models import User
 from movies.models import Movie
 from genres.models import Genre
 from reviews.models import Review
+from movies.helpers import MovieHelper
+from movies.decorators import handle_errors
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.db import transaction, IntegrityError
@@ -9,91 +11,47 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
 
-class MovieHelper:
-    @staticmethod
-    def calculate_average_rating(reviews):
-        return sum(review.rating for review in reviews) / len(reviews) if reviews else None
-
-    @staticmethod
-    def get_genres(movie):
-        return [genre.genre for genre in movie.genres.all()]
-
-    @staticmethod
-    def get_detailed_reviews(reviews):
-        detailed_reviews = []
-        for review in reviews:
-            user = User.objects.filter(user_id=review.user_id).first()
-            detailed_reviews.append({
-                "rr_id": review.rr_id,
-                "user_id": user.user_id if user else None,
-                "user": user.name if user else "Unknown User",
-                "review": review.review,
-                "rating": review.rating,
-            })
-        return detailed_reviews
-
-    @staticmethod
-    def build_movie_data(movie, reviews):
-        user = User.objects.filter(user_id=movie.user_id).first()
-        return {
-            "movie_id": movie.movie_id,
-            "title": movie.title,
-            "img": movie.img,
-            "desc": movie.desc,
-            "release_yr": movie.release_yr,
-            "director": movie.director,
-            "length": movie.length,
-            "producer": movie.producer,
-            "rating": MovieHelper.calculate_average_rating(reviews),
-            "genres": MovieHelper.get_genres(movie),
-            "user": user.name if user else "Unknown User",
-            "rr": MovieHelper.get_detailed_reviews(reviews),
-        }
-
-
 class MovieView(APIView):
+    @handle_errors
     def get(self, request, id=None):
         if id:
             return self.get_movie_by_id(request, id)
         return self.get_all_movies(request)
 
+    @handle_errors
     def get_movie_by_id(self, request, id):
-        try:
-            with transaction.atomic():
-                movie = get_object_or_404(Movie, pk=id)
+        with transaction.atomic():
+            movie = get_object_or_404(Movie, pk=id)
+            reviews = Review.objects.filter(movie_id=movie.movie_id)
+            movie_data = MovieHelper.build_movie_data(movie, reviews)
+            return Response(movie_data, status=200)
+
+    @handle_errors
+    def get_all_movies(self, request):
+        with transaction.atomic():
+            title = request.query_params.get("title", None)
+            genre = request.query_params.get("genre", None)
+
+            filters = Q()
+            if title:
+                filters &= Q(title__icontains=title)
+            if genre:
+                filters &= Q(genres__genre__iexact=genre)
+
+            movies = Movie.objects.filter(filters).order_by("-movie_id")
+
+            if not movies.exists():
+                return Response({"message": "No movies found"}, status=200)
+
+            movie_list = []
+            for movie in movies:
                 reviews = Review.objects.filter(movie_id=movie.movie_id)
                 movie_data = MovieHelper.build_movie_data(movie, reviews)
-                return Response(movie_data, status=200)
-        except Exception as error:
-            return Response({"error": str(error)}, status=500)
+                movie_list.append(movie_data)
 
-    def get_all_movies(self, request):
-        try:
-            with transaction.atomic():
-                title = request.query_params.get("title", None)
-                genre = request.query_params.get("genre", None)
+            return Response(movie_list, status=200)
 
-                filters = Q()
-                if title:
-                    filters &= Q(title__icontains=title)
-                if genre:
-                    filters &= Q(genres__genre__iexact=genre)
-
-                movies = Movie.objects.filter(filters).order_by("-movie_id")
-
-                if not movies.exists():
-                    return Response({"message": "No movies found"}, status=200)
-
-                movie_list = []
-                for movie in movies:
-                    reviews = Review.objects.filter(movie_id=movie.movie_id)
-                    movie_data = MovieHelper.build_movie_data(movie, reviews)
-                    movie_list.append(movie_data)
-
-                return Response(movie_list, status=200)
-        except Exception as error:
-            return Response({"error": str(error)}, status=500)
-
+    @handle_errors
     def post(self, request):
         data = request.data
         required_fields = [
@@ -103,69 +61,54 @@ class MovieView(APIView):
         unpacked_data = {field: data.get(field) for field in required_fields}
         genres = unpacked_data.pop("genre", [])
 
-        try:
-            with transaction.atomic():
-                movie = Movie.objects.create(**unpacked_data)
-                if not movie.movie_id:
-                    raise ValidationError("Movie ID is null after creation")
-                
-                movie.genres.add(*[Genre.objects.get_or_create(genre=g)[0] for g in genres])
-                return Response({"message": "Movie created successfully", "movie": movie.movie_id}, status=201)
-        except IntegrityError as error:
-            return Response({"error": "Title must be unique" if "unique constraint" in str(error).lower() else "Failed to create movie"}, status=400)
-        except Exception as error:
-            return Response({"error": str(error)}, status=500)
+        with transaction.atomic():
+            movie = Movie.objects.create(**unpacked_data)
+            if not movie.movie_id:
+                raise ValidationError("Movie ID is null after creation")
+            
+            movie.genres.add(*[Genre.objects.get_or_create(genre=g)[0] for g in genres])
+            return Response({"message": "Movie created successfully", "movie": movie.movie_id}, status=201)
 
+    @handle_errors
     def put(self, request, id):
-        try:
-            with transaction.atomic():
-                movie = get_object_or_404(Movie, pk=id)
-                updated_data = request.data
+        with transaction.atomic():
+            movie = get_object_or_404(Movie, pk=id)
+            updated_data = request.data
 
-                for field, value in updated_data.items():
-                    setattr(movie, field, value)
+            for field, value in updated_data.items():
+                setattr(movie, field, value)
 
-                movie.save()
+            movie.save()
 
-                genres = updated_data.get("genre", [])
-                if genres:
-                    genre_instances = [Genre.objects.get_or_create(genre=g)[0] for g in genres]
-                    movie.genres.set(genre_instances)
+            genres = updated_data.get("genre", [])
+            if genres:
+                genre_instances = [Genre.objects.get_or_create(genre=g)[0] for g in genres]
+                movie.genres.set(genre_instances)
 
-                return Response({"message": "Movie updated successfully", "movie": movie.movie_id}, status=200)
-        except IntegrityError as error:
-            if "unique constraint" in str(error).lower():
-                return Response({"error": "Title must be unique"}, status=400)
-            return Response({"error": "Failed to update movie"}, status=500)
-        except Exception as error:
-            return Response({"error": str(error)}, status=500)
+            return Response({"message": "Movie updated successfully", "movie": movie.movie_id}, status=200)
 
+    @handle_errors
     def delete(self, request, id):
-        try:
-            with transaction.atomic():
-                movie = Movie.objects.filter(movie_id=id)
-                if not movie.exists():
-                    raise NotFound("Movie not found")
+        with transaction.atomic():
+            movie = Movie.objects.filter(movie_id=id)
+            if not movie.exists():
+                raise NotFound("Movie not found")
 
-                Review.objects.filter(movie_id=id).delete()
-                movie.first().genres.clear()
-                movie.delete()
+            Review.objects.filter(movie_id=id).delete()
+            movie.first().genres.clear()
+            movie.delete()
 
-                return Response({"deleted": True}, status=200)
-        except Exception as error:
-            return Response({"error": str(error)}, status=500)
+            return Response({"deleted": True}, status=200)
 
 
 class MovieUserView(APIView):
+    @handle_errors
     def get(self, request, user_id):
-        try:
-            with transaction.atomic():
-                movies = Movie.objects.filter(user_id=user_id)
-                user = get_object_or_404(User, pk=user_id)
-                movie_list = [
-                    MovieHelper.build_movie_data(movie, Review.objects.filter(movie_id=movie.movie_id))
-                    for movie in movies
-                ]
-                return Response(movie_list, status=200)
-        except Exception as error:
-            return Response({"error": str(error)}, status=500)
+        with transaction.atomic():
+            movies = Movie.objects.filter(user_id=user_id)
+            user = get_object_or_404(User, pk=user_id)
+            movie_list = [
+                MovieHelper.build_movie_data(movie, Review.objects.filter(movie_id=movie.movie_id))
+                for movie in movies
+            ]
+            return Response(movie_list, status=200)
