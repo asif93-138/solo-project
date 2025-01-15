@@ -130,11 +130,34 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',  # Specifies the PostgreSQL backend
         'NAME': 'movieReviewDB',                   # Database name (DB in dbConfig)
         'USER': 'postgres',                        # Database user (USER in dbConfig)
-        'PASSWORD': 'alina',                       # Password (PASSWORD in dbConfig: Remember to change this to fit your DB)
+        'PASSWORD': '12345678',                       # Password (PASSWORD in dbConfig: Remember to change this to fit your DB)
         'HOST': '127.0.0.1',                       # Host (HOST in dbConfig)
         'PORT': '5432',                            # Default PostgreSQL port
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',  # Specifies the PostgreSQL backend
+#         'NAME': 'movieReviewDB',                   # Database name (DB in dbConfig)
+#         'USER': 'postgres',                        # Database user (USER in dbConfig)
+#         'PASSWORD': 'alina',                       # Password (PASSWORD in dbConfig: Remember to change this to fit your DB)
+#         'HOST': '127.0.0.1',                       # Host (HOST in dbConfig)
+#         'PORT': '5432',                            # Default PostgreSQL port
+#     }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',  # Specifies the PostgreSQL backend
+#         'NAME': 'movieReviewDB',                   # Database name (DB in dbConfig)
+#         'USER': 'postgres',                        # Database user (USER in dbConfig)
+#         'PASSWORD': 'admin',                       # Password (PASSWORD in dbConfig: Remember to change this to fit your DB)
+#         'HOST': '127.0.0.1',                       # Host (HOST in dbConfig)
+#         'PORT': '5432',                            # Default PostgreSQL port
+#     }
+# }
+
 
 
 # Password validation
