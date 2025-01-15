@@ -2,8 +2,8 @@ from users.models import User
 from movies.models import Movie
 from genres.models import Genre
 from reviews.models import Review
+from movies.utils import handle_errors
 from movies.helpers import MovieHelper
-from movies.decorators import handle_errors
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.db import transaction, IntegrityError
