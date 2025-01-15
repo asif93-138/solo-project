@@ -1,31 +1,40 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs/internal/Observable";
+import { Movie } from "interfaces/movie";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class MovieService {
+  constructor(private http: HttpClient) {}
 
-  constructor() { }
-
-  async getAllMovies() {
-    const movies = await fetch("http://localhost:3000/api/movie")
-      .then((res) => res.json())
-      .then((data) => data);
-    return movies;
+  // getAllMovies() {
+  //   const url = "http://localhost:3000/api/movie";
+  //   const $obs = this.http.get(url).subscribe({
+  //     next: (val) => {
+  //       console.log(val, "data get from movies api");
+  //     },
+  //   });
+  // }
+  private apiUrl = "http://localhost:3000/api/movie";
+  getAllMovies(): Observable<Movie[]> {
+    const res = this.http.get<Movie[]>(this.apiUrl);
+    return res;
   }
 
   async searchMovies(title: any, genre: any) {
-    if (title != '' && genre != '') {
-      return await fetch(`http://localhost:3000/api/movie/?title=${title}&genre=${genre}`)
+    if (title != "" && genre != "") {
+      return await fetch(
+        `http://localhost:3000/api/movie/?title=${title}&genre=${genre}`
+      )
         .then((res) => res.json())
         .then((data) => data);
-    }
-    else if (title != '') {
+    } else if (title != "") {
       return await fetch(`http://localhost:3000/api/movie/?title=${title}`)
         .then((res) => res.json())
         .then((data) => data);
-    }
-    else if (genre != '') {
+    } else if (genre != "") {
       return await fetch(`http://localhost:3000/api/movie/?genre=${genre}`)
         .then((res) => res.json())
         .then((data) => data);

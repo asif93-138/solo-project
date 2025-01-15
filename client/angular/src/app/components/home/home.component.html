@@ -1,0 +1,47 @@
+<section class="bg-black pt-5 pb-10 min-h-screen">
+  <!-- <div class="mb-10 flex w-3/5 mx-auto justify-start gap-6 items-end">
+    <form (submit)="handleSearch()" class="flex gap-6 items-end rounded-lg w-9-10">
+      <div class="w-1/2">
+        <label for="title" class="label">
+          <span class="label-text text-white">Movie Title</span>
+        </label>
+        <input
+          type="text"
+          id="title"
+          placeholder="Search by title..."
+          class="input input-bordered w-full"
+          [(ngModel)]="searchTitle"
+          name="searchTitle"
+        />
+      </div>
+      <div class="w-1/2">
+        <label for="genre" class="label">
+          <span class="label-text text-white">Genre</span>
+        </label>
+        <select
+          id="genre"
+          class="select select-bordered w-full"
+          [(ngModel)]="searchGenre"
+          name="searchGenre"
+        >
+          <option value="" disabled>All Genres</option>
+          <option *ngFor="let g of genres" [value]="g.genre">{{ g.genre }}</option>
+        </select>
+      </div>
+      <button type="submit" class="btn">Search</button>
+    </form>
+    <button
+      *ngIf="showSCB"
+      type="button"
+      class="btn"
+      (click)="resetSearch()"
+    >
+      Return
+    </button>
+  </div> -->
+
+  <!-- <h4 *ngIf="showSH" class="text-white text-2xl text-center mb-6">Search Results!</h4>
+  <p *ngIf="showNRF" class="text-white text-center">No results found..</p> -->
+
+  <app-movie-card [dataObj]="data"></app-movie-card>
+</section>
