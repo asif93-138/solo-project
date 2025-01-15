@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.db import transaction, IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound, ValidationError
 
 class MovieHelper:
     @staticmethod
@@ -58,46 +59,47 @@ class MovieView(APIView):
 
     def get_movie_by_id(self, request, id):
         try:
-            movie = get_object_or_404(Movie, pk=id)
-            reviews = Review.objects.filter(movie_id=movie.movie_id)
-            movie_data = MovieHelper.build_movie_data(movie, reviews)
-            return Response(movie_data, status=200)
+            with transaction.atomic():
+                movie = get_object_or_404(Movie, pk=id)
+                reviews = Review.objects.filter(movie_id=movie.movie_id)
+                movie_data = MovieHelper.build_movie_data(movie, reviews)
+                return Response(movie_data, status=200)
         except Exception as error:
             return Response({"error": str(error)}, status=500)
 
     def get_all_movies(self, request):
         try:
-            title = request.query_params.get("title", None)
-            genre = request.query_params.get("genre", None)
+            with transaction.atomic():
+                title = request.query_params.get("title", None)
+                genre = request.query_params.get("genre", None)
 
-            filters = Q()
-            if title:
-                filters &= Q(title__icontains=title)
-            if genre:
-                filters &= Q(genres__genre__iexact=genre)
+                filters = Q()
+                if title:
+                    filters &= Q(title__icontains=title)
+                if genre:
+                    filters &= Q(genres__genre__iexact=genre)
 
-            movies = Movie.objects.filter(filters).order_by("-movie_id")
+                movies = Movie.objects.filter(filters).order_by("-movie_id")
 
-            if not movies.exists():
-                return Response({"message": "No movies found"}, status=200)
+                if not movies.exists():
+                    return Response({"message": "No movies found"}, status=200)
 
-            movie_list = []
-            for movie in movies:
-                reviews = Review.objects.filter(movie_id=movie.movie_id)
-                movie_data = MovieHelper.build_movie_data(movie, reviews)
-                movie_list.append(movie_data)
+                movie_list = []
+                for movie in movies:
+                    reviews = Review.objects.filter(movie_id=movie.movie_id)
+                    movie_data = MovieHelper.build_movie_data(movie, reviews)
+                    movie_list.append(movie_data)
 
-            return Response(movie_list, status=200)
+                return Response(movie_list, status=200)
         except Exception as error:
             return Response({"error": str(error)}, status=500)
-    
+
     def post(self, request):
         data = request.data
         required_fields = [
-            "user_id", "title", "img", "desc", "release_yr", 
+            "user_id", "title", "img", "desc", "release_yr",
             "director", "length", "producer", "genre"
         ]
-        
         unpacked_data = {field: data.get(field) for field in required_fields}
         genres = unpacked_data.pop("genre", [])
 
@@ -109,28 +111,28 @@ class MovieView(APIView):
                 
                 movie.genres.add(*[Genre.objects.get_or_create(genre=g)[0] for g in genres])
                 return Response({"message": "Movie created successfully", "movie": movie.movie_id}, status=201)
-
         except IntegrityError as error:
-            return Response({"error": "Title must be unique" if "unique constraint" in str(error).lower() else "Failed to create movie"}, status=400 if "unique constraint" in str(e).lower() else 500)
+            return Response({"error": "Title must be unique" if "unique constraint" in str(error).lower() else "Failed to create movie"}, status=400)
         except Exception as error:
             return Response({"error": str(error)}, status=500)
 
     def put(self, request, id):
         try:
-            movie = get_object_or_404(Movie, pk=id)
-            updated_data = request.data
+            with transaction.atomic():
+                movie = get_object_or_404(Movie, pk=id)
+                updated_data = request.data
 
-            for field, value in updated_data.items():
+                for field, value in updated_data.items():
                     setattr(movie, field, value)
 
-            movie.save()
+                movie.save()
 
-            genres = updated_data.get("genre", [])
-            if genres:
-                genre_instances = [Genre.objects.get_or_create(genre=g)[0] for g in genres]
-                movie.genres.set(genre_instances) 
+                genres = updated_data.get("genre", [])
+                if genres:
+                    genre_instances = [Genre.objects.get_or_create(genre=g)[0] for g in genres]
+                    movie.genres.set(genre_instances)
 
-            return Response({"message": "Movie updated successfully", "movie": movie.movie_id}, status=200)
+                return Response({"message": "Movie updated successfully", "movie": movie.movie_id}, status=200)
         except IntegrityError as error:
             if "unique constraint" in str(error).lower():
                 return Response({"error": "Title must be unique"}, status=400)
@@ -138,18 +140,32 @@ class MovieView(APIView):
         except Exception as error:
             return Response({"error": str(error)}, status=500)
 
-    def delete(self, request):
-        return None
+    def delete(self, request, id):
+        try:
+            with transaction.atomic():
+                movie = Movie.objects.filter(movie_id=id)
+                if not movie.exists():
+                    raise NotFound("Movie not found")
+
+                Review.objects.filter(movie_id=id).delete()
+                movie.first().genres.clear()
+                movie.delete()
+
+                return Response({"deleted": True}, status=200)
+        except Exception as error:
+            return Response({"error": str(error)}, status=500)
+
 
 class MovieUserView(APIView):
     def get(self, request, user_id):
         try:
-            movies = Movie.objects.filter(user_id=user_id)
-            user = get_object_or_404(User, pk=user_id)
-            movie_list = [
-                MovieHelper.build_movie_data(movie, Review.objects.filter(movie_id=movie.movie_id))
-                for movie in movies
-            ]
-            return Response(movie_list, status=200)
+            with transaction.atomic():
+                movies = Movie.objects.filter(user_id=user_id)
+                user = get_object_or_404(User, pk=user_id)
+                movie_list = [
+                    MovieHelper.build_movie_data(movie, Review.objects.filter(movie_id=movie.movie_id))
+                    for movie in movies
+                ]
+                return Response(movie_list, status=200)
         except Exception as error:
             return Response({"error": str(error)}, status=500)
