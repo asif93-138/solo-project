@@ -16,15 +16,14 @@ export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rati
     if (response.deleted) {
       setShowModal_3(true);
       setTimeout(() => {
-    setShowModal_3(false);
-    navigate('/user');
+        setShowModal_3(false);
+        navigate('/user');
       }, 1500);
     }
   }
   return (
     <>
-
-      <dialog id="my_modal_2" className={showModal_2? "modal modal-open" : "modal"}>
+      <dialog id="my_modal_2" className={showModal_2 ? "modal modal-open" : "modal"}>
         <div className="modal-box">
           <form name="rr" method="dialog" className="text-center" onSubmit={handleSubmit}>
             <section id="updateForm">
@@ -44,25 +43,25 @@ export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rati
         </div>
       </dialog>
       <div className="toast toast-top toast-center">
-  <div className={showUFC || showModal_4A2? "alert alert-warning block" : "alert alert-warning hidden"}>
-    <span>Updated!</span>
-  </div>
-  <div className={showModal_3 || !showModalP1? "alert alert-error text-white block" : "alert alert-error text-white hidden"}>
-    <span>Deleted!</span>
-  </div>
-  <div className={showModal_1? "alert alert-warning block" : "alert alert-warning hidden"}>
-    <span>Rating and review posted!</span>
-  </div>
-</div>
+        <div className={showUFC || showModal_4A2 ? "alert alert-warning block" : "alert alert-warning hidden"}>
+          <span>Updated!</span>
+        </div>
+        <div className={showModal_3 || !showModalP1 ? "alert alert-error text-white block" : "alert alert-error text-white hidden"}>
+          <span>Deleted!</span>
+        </div>
+        <div className={showModal_1 ? "alert alert-warning block" : "alert alert-warning hidden"}>
+          <span>Rating and review posted!</span>
+        </div>
+      </div>
       <dialog id="my_modal_5" className={showModal_5 ? "modal modal-open" : "modal"}>
         <div className="modal-box text-center">
           <h4 className="text-black text-2xl mb-4">Delete this item?</h4>
           <button type="button" className="btn text-red-500" onClick={handleDelete}>Confirm</button> &nbsp; &nbsp; <button type="button" className="btn" onClick={() => setShowModal_5(false)}>Cancel</button>
         </div>
       </dialog>
-      <dialog id="my_modal_4" className={showModal_4? "modal modal-open" : "modal"}>
+      <dialog id="my_modal_4" className={showModal_4 ? "modal modal-open" : "modal"}>
         <div className="modal-box text-black max-w-full w-1/2">
-          <article id="my_modal_4A1" className={showModal_4A1? "" : "hidden"}>
+          <article id="my_modal_4A1" className={showModal_4A1 ? "" : "hidden"}>
             {dataObj && <MUForm setRefresh={setRefresh} dataObj={dataObj} setShowModal_4A1={setShowModal_4A1} setShowModal_4A2={setShowModal_4A2} setShowModal_4={setShowModal_4} />}
           </article>
         </div>

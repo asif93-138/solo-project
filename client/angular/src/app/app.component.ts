@@ -9,7 +9,8 @@ import { UserService } from "./services/userServices/user.service";
     <main>
       <header>
         <h1 class="text-3xl font-bold">
-          Login status of user : {{userExists}}
+          <!-- this shows up on every page -->
+          Login status of user : {{userExists}} 
         </h1>
       </header>
       <section>

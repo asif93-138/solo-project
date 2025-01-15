@@ -7,7 +7,7 @@ import { Movie } from "interfaces/movie";
   providedIn: "root",
 })
 export class MovieService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // getAllMovies() {
   //   const url = "http://localhost:3000/api/movie";
@@ -47,11 +47,16 @@ export class MovieService {
       .then((data) => setData(data));
   }
 
-  getMovieDetails(movie_id: any, setDataObj: any) {
-    fetch("http://localhost:3000/api/movie/" + movie_id)
-      .then((res) => res.json())
-      .then((data) => setDataObj(data));
+  getMovieDetails(movie_id: any) {
+    return fetch("http://localhost:3000/api/movie/" + movie_id)
+      .then((res) => res.json());
   }
+
+  // getMovieDetails(movie_id: any, setDataObj: any) {
+  //   fetch("http://localhost:3000/api/movie/" + movie_id)
+  //     .then((res) => res.json())
+  //     .then((data) => setDataObj(data));
+  // }
 
   async createMovie(data: any) {
     const response = await fetch("http://localhost:3000/api/movie/", {
