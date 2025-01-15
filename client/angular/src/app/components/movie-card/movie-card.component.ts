@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-details',
+  selector: 'app-movie-card',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.css']
+  templateUrl: './movie-card.component.html',
+  styleUrls: ['./movie-card.component.css']
 })
-export class DetailsComponent {
+export class MovieCardComponent {
 
 }
