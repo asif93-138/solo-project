@@ -2,8 +2,8 @@ import { Component, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Movie } from "src/app/interfaces/movie";
 import { Genre } from "src/app/interfaces/genre";
-import { GenreService } from "src/app/services/genre.service";
-import { MovieService } from "src/app/services/movie.service";
+import { GenreService } from "src/app/services/genreServices/genre.service";
+import { MovieService } from "src/app/services/movieServices/movie.service";
 
 @Component({
   selector: "app-home",
@@ -20,7 +20,7 @@ export class HomeComponent {
   movieService: MovieService = inject(MovieService);
 
   constructor() {
-    this.genreService.getAllGenre().then((genre: Genre[]) => {
+    this.genreService.getAllGenres().then((genre: Genre[]) => {
       this.genreList = genre;
     });
 
