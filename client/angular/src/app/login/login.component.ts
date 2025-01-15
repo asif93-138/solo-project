@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AuthenticationService } from '../authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -34,26 +35,17 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 export class LoginComponent {
   route: ActivatedRoute = inject(ActivatedRoute);
+  authenticationService = inject(AuthenticationService);
   applyForm = new FormGroup({
     email: new FormControl(''),
     pass: new FormControl(''),
   });
-  submitApplication() {
-    console.log(this.applyForm.value.email, this.applyForm.value.pass);
-    fetch("http://localhost:3000/api/user/", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ email: this.applyForm.value.email, password: this.applyForm.value.pass }),
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.user_id && data.password == this.applyForm.value.pass) {
-        alert('login successful!');
-        // Reset the form fields after submission
-        this.applyForm.reset();
-      }
-    })
+  async submitApplication() {
+    const res = await this.authenticationService.userLogin(this.applyForm.value.email, this.applyForm.value.pass);
+    if (res.user_id && res.password == this.applyForm.value.pass) {
+      alert('login successful!');
+      // Reset the form fields after submission
+      this.applyForm.reset();
+    }
   }
 }
