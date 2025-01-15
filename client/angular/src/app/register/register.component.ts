@@ -47,13 +47,11 @@ export class RegisterComponent {
     pass: new FormControl(''),
   });
   async submitApplication() {
-    console.log(this.applyForm.value.name, this.applyForm.value.email, this.applyForm.value.pass);
-    // const res = await this.authenticationService.userLogin(this.applyForm.value.email, this.applyForm.value.pass);
-    // if (res.user_id && res.password == this.applyForm.value.pass) {
-    //   alert('login successful!');
-    //   // Reset the form fields after submission
-    //   this.applyForm.reset();
-    // }
+    const res = await this.authenticationService.userRegistration({ name: this.applyForm.value.name, email: this.applyForm.value.email, password: this.applyForm.value.pass });
+    if (res.user_id) {
+      alert('registration successful!');
+      // Reset the form fields after submission
+      this.applyForm.reset();
+    }
   }
-
 }

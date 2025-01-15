@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { RouterModule } from "@angular/router";
+import { UserService } from "./services/userServices/user.service";
 
 @Component({
   standalone: true,
@@ -7,7 +8,9 @@ import { RouterModule } from "@angular/router";
   template: `
     <main>
       <header>
-        <h1 class="text-3xl text-blue-500 font-bold underline">Hello world!</h1>
+        <h1 class="text-3xl font-bold">
+          Login status of user : {{userExists}}
+        </h1>
       </header>
       <section>
         <router-outlet></router-outlet>
@@ -18,5 +21,10 @@ import { RouterModule } from "@angular/router";
   imports: [RouterModule],
 })
 export class AppComponent {
-  title = "homes";
+  authenticationService = inject(UserService);
+  userExists = false;
+
+  constructor() {
+    this.userExists = this.authenticationService.checkLoggedInStatus();
+  }
 }

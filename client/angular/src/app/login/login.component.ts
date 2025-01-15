@@ -10,6 +10,7 @@ import { UserService } from '../services/userServices/user.service';
   standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   template: `
+    <p class="text-center">LoggedInStatus(state management test) : {{loggedInStatus}}</p>
     <div class="p-8">
       <form class="border-2 p-6 rounded-lg w-2/5 mx-auto mt-4" [formGroup]="applyForm" (submit)="submitApplication()">
         <p class="text-2xl mb-4 font-medium text-center">Log In</p>
@@ -40,10 +41,12 @@ export class LoginComponent {
     email: new FormControl(''),
     pass: new FormControl(''),
   });
+  loggedInStatus = false;
   async submitApplication() {
     const res = await this.authenticationService.userLogin(this.applyForm.value.email, this.applyForm.value.pass);
     if (res.user_id && res.password == this.applyForm.value.pass) {
       alert('login successful!');
+      this.loggedInStatus = true;
       // Reset the form fields after submission
       this.applyForm.reset();
     }

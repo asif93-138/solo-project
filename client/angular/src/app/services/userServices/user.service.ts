@@ -8,6 +8,10 @@ export class UserService {
 
   constructor() { }
 
+  userExists = false;
+
+  checkLoggedInStatus() {return this.userExists;}
+
   async userLogin(email: any, pass: any) {
     return await fetch("http://localhost:3000/api/user/", {
       method: "POST",
@@ -17,7 +21,13 @@ export class UserService {
       body: JSON.stringify({ email: email, password: pass }),
     })
       .then(res => res.json())
-      .then(data => data);
+      .then(data => {
+        if (data.user_id) {
+          this.userExists = true;
+          // console.log(this.checkLoggedInStatus());
+          return data;
+        }
+      });
   }
 
   async userRegistration(data: any) {
