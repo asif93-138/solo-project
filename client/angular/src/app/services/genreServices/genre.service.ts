@@ -6,6 +6,7 @@ import { Genre } from "interfaces/genre";
 @Injectable({
   providedIn: "root",
 })
+
 export class GenreService {
   constructor(private http: HttpClient) {}
 
