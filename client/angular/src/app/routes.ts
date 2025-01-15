@@ -2,7 +2,7 @@ import { Routes } from "@angular/router";
 import { HomeComponent } from "./components/home/home.component";
 import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
-import { DetailsComponent } from "./components/movie-card/movie-card.component";
+// import { DetailsComponent } from "./components/movie-card/movie-card.component";
 
 
 const routeConfig: Routes = [
@@ -21,11 +21,11 @@ const routeConfig: Routes = [
         component: RegisterComponent,
         title: 'Register Page'
     },
-    {
-        path: 'details/:id',
-        component: DetailsComponent,
-        title: 'Details Page'
-    }
+    // {
+    //     path: 'details/:id',
+    //     component: DetailsComponent,
+    //     title: 'Details Page'
+    // }
 ];
 
 export default routeConfig;
