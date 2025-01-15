@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { AuthenticationService } from '../authentication.service';
+import { UserService } from '../services/userServices/user.service';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +35,7 @@ import { AuthenticationService } from '../authentication.service';
 })
 export class LoginComponent {
   route: ActivatedRoute = inject(ActivatedRoute);
-  authenticationService = inject(AuthenticationService);
+  authenticationService = inject(UserService);
   applyForm = new FormGroup({
     email: new FormControl(''),
     pass: new FormControl(''),
