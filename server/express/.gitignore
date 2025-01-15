@@ -45,4 +45,4 @@ src/config/dbConfig.ts
 uploads/*
 
 # Personal files
-src/old_index.ts
+# src/old_index.ts
