@@ -1,16 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../services/userServices/user.service';
+import { GlobalStateService } from '../services/globalServices/global-state.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   template: `
-    <p class="text-center">LoggedInStatus(state management test) : {{loggedInStatus}}</p>
     <div class="p-8">
       <form class="border-2 p-6 rounded-lg w-2/5 mx-auto mt-4" [formGroup]="applyForm" (submit)="submitApplication()">
         <p class="text-2xl mb-4 font-medium text-center">Log In</p>
@@ -37,16 +36,29 @@ import { UserService } from '../services/userServices/user.service';
 export class LoginComponent {
   route: ActivatedRoute = inject(ActivatedRoute);
   authenticationService = inject(UserService);
+  globalStateService = inject(GlobalStateService);
   applyForm = new FormGroup({
     email: new FormControl(''),
     pass: new FormControl(''),
   });
   loggedInStatus = false;
+  constructor(private stateService: GlobalStateService, private router: Router) {
+    this.stateService.user$.subscribe((user) => {
+      if (user) {
+        this.loggedInStatus = true;
+      }
+    });
+  }
   async submitApplication() {
     const res = await this.authenticationService.userLogin(this.applyForm.value.email, this.applyForm.value.pass);
     if (res.user_id && res.password == this.applyForm.value.pass) {
+      localStorage.clear();
+      localStorage.setItem('user_id', res.user_id);
+      localStorage.setItem('name', res.name);
+      localStorage.setItem('email', res.email);
+      this.globalStateService.setUser(res);
       alert('login successful!');
-      this.loggedInStatus = true;
+      this.router.navigate(['/']);
       // Reset the form fields after submission
       this.applyForm.reset();
     }

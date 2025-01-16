@@ -4,15 +4,14 @@
 
 ## 📽️ Overview
 
-This project is a **Movie Review System** built using the **PERN** stack (PostgreSQL, Express, React, Node.js) with the following technologies:
+This project is a **Movie Review Application** built using TypeScript and Python. The project includes independent Angular and React client-side folders, with a flexible backend using Express (TypeScript) and Django (Python):
 
-- **Frontend**: React
-- **Backend**: Node.js, Express
+- **Frontend**: React, Angular
+- **Backend**: Express, Django
 - **Database**: PostgreSQL
 
 Users can browse movies, read and post reviews, and rate films. The goal is to create a platform where movie enthusiasts can share their thoughts and engage with the community.
 
----
 
 ## 🛠️ Technologies Used
 

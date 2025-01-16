@@ -8,7 +8,7 @@
 
 // export default dbConfig;
 
-// // Jafor Iqbal
+// Jafor Iqbal
 // const dbConfig = {
 //   DB: "GameReview",
 //   USER: "postgres",
