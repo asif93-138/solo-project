@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { Movie } from "interfaces/movie";
 import { MovieService } from "src/app/services/movieServices/movie.service";
+import { GlobalStateService } from "src/app/services/globalServices/global-state.service";
 
 @Component({
   selector: "app-my-movie",
@@ -12,8 +13,11 @@ import { MovieService } from "src/app/services/movieServices/movie.service";
 })
 export class MyMovieComponent {
   myMovie: Movie[] = [];
-  user_id: Number = 0;
-  constructor(private movieService: MovieService) {}
+  user_id: Number | undefined = 0;
+  constructor(
+    private movieService: MovieService,
+    private stateService: GlobalStateService
+  ) {}
 
   // ngOnInit(): void {
   //   this.userService.getUser().subscribe(user => {
@@ -24,7 +28,7 @@ export class MyMovieComponent {
   //   });
   // }
   ngOnInit(): void {
-    this.user_id = 7; /////////////////////////////////////////      Must remove      ///////////
+    this.user_id = this.stateService.getUser()?.user_id;
     this.fetchMyMovies(this.user_id);
   }
 
