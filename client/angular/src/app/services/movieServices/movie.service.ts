@@ -23,6 +23,14 @@ export class MovieService {
     return res;
   }
 
+  private myMovieUrl = "http://localhost:3000/api/movie/user/";
+  getMyList(user_id: Number): Observable<Movie[]> {
+    const res = this.http.get<Movie[]>(this.myMovieUrl + user_id);
+    // `${this.myMovieUrl}${user_id}`
+    // console.log("My2: ", res);
+    return res;
+  }
+
   async searchMovies(title: any, genre: any) {
     if (title != "" && genre != "") {
       return await fetch(
@@ -39,12 +47,6 @@ export class MovieService {
         .then((res) => res.json())
         .then((data) => data);
     }
-  }
-
-  getMyList(user_id: any, setData: any) {
-    fetch("http://localhost:3000/api/movie/user/" + user_id)
-      .then((res) => res.json())
-      .then((data) => setData(data));
   }
 
   getMovieDetails(movie_id: any, setDataObj: any) {
