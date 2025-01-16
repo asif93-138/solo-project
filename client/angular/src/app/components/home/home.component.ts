@@ -41,11 +41,12 @@ import { MovieService } from "../../services/movieServices/movie.service";
 import { GenreService } from "../../services/genreServices/genre.service";
 import { CommonModule } from "@angular/common";
 import { MovieCardComponent } from "../movie-card/movie-card.component";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [MovieCardComponent, CommonModule],
+  imports: [MovieCardComponent, FormsModule, CommonModule],
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"],
 })
@@ -82,29 +83,34 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  // handleSearch(): void {
-  //   this.movieService.searchMovies(this.searchTitle.trim(), this.searchGenre).subscribe((searchData: Movie[]) => {
-  //     if (searchData.length > 0) {
-  //       this.data = searchData;
-  //       this.showNRF = false;
-  //     } else {
-  //       this.data = [];
-  //       this.showNRF = true;
-  //     }
-  //     this.showSH = true;
-  //     this.showSCB = true;
-  //   }, (err: any) => {
-  //     console.error('Error fetching data:', err);
-  //     this.data = [];
-  //   });
-  // }
+  handleSearch(): void {
+    this.movieService
+      .searchMovies(this.searchTitle.trim(), this.searchGenre)
+      .subscribe(
+        (searchData: Movie[]) => {
+          if (searchData.length > 0) {
+            this.data = searchData;
+            this.showNRF = false;
+          } else {
+            this.data = [];
+            this.showNRF = true;
+          }
+          this.showSH = true;
+          this.showSCB = true;
+        },
+        (err: any) => {
+          console.error("Error fetching data:", err);
+          this.data = [];
+        }
+      );
+  }
 
-  // resetSearch(): void {
-  //   this.searchTitle = '';
-  //   this.searchGenre = '';
-  //   this.data = this.initialResults;
-  //   this.showSH = false;
-  //   this.showNRF = false;
-  //   this.showSCB = false;
-  // }
+  resetSearch(): void {
+    this.searchTitle = "";
+    this.searchGenre = "";
+    this.data = this.initialResults;
+    this.showSH = false;
+    this.showNRF = false;
+    this.showSCB = false;
+  }
 }

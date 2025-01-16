@@ -17,9 +17,9 @@ export class MovieService {
   //     },
   //   });
   // }
-  private apiUrl = "http://localhost:3000/api/movie";
+  private movieUrl = "http://localhost:3000/api/movie";
   getAllMovies(): Observable<Movie[]> {
-    const res = this.http.get<Movie[]>(this.apiUrl);
+    const res = this.http.get<Movie[]>(this.movieUrl);
     return res;
   }
 
@@ -31,22 +31,36 @@ export class MovieService {
     return res;
   }
 
-  async searchMovies(title: any, genre: any) {
-    if (title != "" && genre != "") {
-      return await fetch(
-        `http://localhost:3000/api/movie/?title=${title}&genre=${genre}`
-      )
-        .then((res) => res.json())
-        .then((data) => data);
-    } else if (title != "") {
-      return await fetch(`http://localhost:3000/api/movie/?title=${title}`)
-        .then((res) => res.json())
-        .then((data) => data);
-    } else if (genre != "") {
-      return await fetch(`http://localhost:3000/api/movie/?genre=${genre}`)
-        .then((res) => res.json())
-        .then((data) => data);
+  // async searchMovies(title: any, genre: any) {
+  //   if (title != "" && genre != "") {
+  //     return await fetch(
+  //       `http://localhost:3000/api/movie/?title=${title}&genre=${genre}`
+  //     )
+  //       .then((res) => res.json())
+  //       .then((data) => data);
+  //   } else if (title != "") {
+  //     return await fetch(`http://localhost:3000/api/movie/?title=${title}`)
+  //       .then((res) => res.json())
+  //       .then((data) => data);
+  //   } else if (genre != "") {
+  //     return await fetch(`http://localhost:3000/api/movie/?genre=${genre}`)
+  //       .then((res) => res.json())
+  //       .then((data) => data);
+  //   }
+  // }
+
+  searchMovies(title: string, genre: string): Observable<Movie[]> {
+    let queryParams = "";
+
+    if (title && genre) {
+      queryParams = `?title=${title}&genre=${genre}`;
+    } else if (title) {
+      queryParams = `?title=${title}`;
+    } else if (genre) {
+      queryParams = `?genre=${genre}`;
     }
+
+    return this.http.get<Movie[]>(`${this.movieUrl}${queryParams}`);
   }
 
   getMovieDetails(movie_id: any, setDataObj: any) {
