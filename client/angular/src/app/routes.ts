@@ -4,6 +4,7 @@ import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
 import { DetailsComponent } from "./components/details/details.component";
 import { MyMovieComponent } from "./pages/my-movie/my-movie.component";
+import { CreateMovieComponent } from "./pages/create-movie/create-movie.component";
 
 const routeConfig: Routes = [
   {
@@ -30,6 +31,11 @@ const routeConfig: Routes = [
     path: "mymovie",
     component: MyMovieComponent,
     title: "My Movie",
+  },
+  {
+    path: "create",
+    component: CreateMovieComponent,
+    title: "Create Movie",
   },
 ];
 

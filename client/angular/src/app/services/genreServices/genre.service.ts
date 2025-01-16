@@ -6,7 +6,6 @@ import { Genre } from "interfaces/genre";
 @Injectable({
   providedIn: "root",
 })
-
 export class GenreService {
   constructor(private http: HttpClient) {}
 
@@ -21,14 +20,7 @@ export class GenreService {
   //     .then((data) => data);
   // }
 
-  async createNewGenre(data: any) {
-    const response = await fetch("http://localhost:3000/api/genre/", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    return await response.json();
+  createNewGenre(data: any): Observable<any> {
+    return this.http.post("http://localhost:3000/api/genre/", data);
   }
 }
