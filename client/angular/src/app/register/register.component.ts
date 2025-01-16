@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../services/userServices/user.service';
+import { GlobalStateService } from '../services/globalServices/global-state.service';
 
 @Component({
   selector: 'app-register',
@@ -41,15 +41,23 @@ import { UserService } from '../services/userServices/user.service';
 export class RegisterComponent {
   route: ActivatedRoute = inject(ActivatedRoute);
   authenticationService = inject(UserService);
+  globalStateService = inject(GlobalStateService);
   applyForm = new FormGroup({
     name: new FormControl(''),
     email: new FormControl(''),
     pass: new FormControl(''),
   });
+  constructor(private stateService: GlobalStateService, private router: Router) {}
   async submitApplication() {
     const res = await this.authenticationService.userRegistration({ name: this.applyForm.value.name, email: this.applyForm.value.email, password: this.applyForm.value.pass });
     if (res.user_id) {
+      localStorage.clear();
+      localStorage.setItem('user_id', res.user_id);
+      localStorage.setItem('name', res.name);
+      localStorage.setItem('email', res.email);
+      this.globalStateService.setUser(res);
       alert('registration successful!');
+      this.router.navigate(['/']);
       // Reset the form fields after submission
       this.applyForm.reset();
     }

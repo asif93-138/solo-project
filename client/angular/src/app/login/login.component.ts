@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../services/userServices/user.service';
 import { GlobalStateService } from '../services/globalServices/global-state.service';
@@ -43,7 +42,7 @@ export class LoginComponent {
     pass: new FormControl(''),
   });
   loggedInStatus = false;
-  constructor(private stateService: GlobalStateService) {
+  constructor(private stateService: GlobalStateService, private router: Router) {
     this.stateService.user$.subscribe((user) => {
       if (user) {
         this.loggedInStatus = true;
@@ -59,6 +58,7 @@ export class LoginComponent {
       localStorage.setItem('email', res.email);
       this.globalStateService.setUser(res);
       alert('login successful!');
+      this.router.navigate(['/']);
       // Reset the form fields after submission
       this.applyForm.reset();
     }
