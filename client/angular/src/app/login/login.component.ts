@@ -11,7 +11,6 @@ import { GlobalStateService } from '../services/globalServices/global-state.serv
   standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   template: `
-    <p class="text-center">LoggedInStatus(global state management test) : {{loggedInStatus}}</p>
     <div class="p-8">
       <form class="border-2 p-6 rounded-lg w-2/5 mx-auto mt-4" [formGroup]="applyForm" (submit)="submitApplication()">
         <p class="text-2xl mb-4 font-medium text-center">Log In</p>
