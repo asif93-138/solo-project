@@ -1,13 +1,14 @@
-import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { Movie } from "interfaces/movie";
+import { RouterModule } from "@angular/router";
+import { CommonModule } from "@angular/common";
 import { MovieService } from "src/app/services/movieServices/movie.service";
 import { GlobalStateService } from "src/app/services/globalServices/global-state.service";
 
 @Component({
   selector: "app-my-movie",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: "./my-movie.component.html",
   styleUrls: ["./my-movie.component.css"],
 })

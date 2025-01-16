@@ -34,14 +34,14 @@
 //   }
 // }
 
-import { Component, OnInit } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
 import { Movie } from "src/app/interfaces/movie";
 import { Genre } from "src/app/interfaces/genre";
-import { MovieService } from "../../services/movieServices/movie.service";
-import { GenreService } from "../../services/genreServices/genre.service";
-import { CommonModule } from "@angular/common";
+import { Component, OnInit } from "@angular/core";
 import { MovieCardComponent } from "../movie-card/movie-card.component";
-import { FormsModule } from "@angular/forms";
+import { GenreService } from "../../services/genreServices/genre.service";
+import { MovieService } from "../../services/movieServices/movie.service";
 
 @Component({
   selector: "app-home",

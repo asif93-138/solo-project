@@ -1,5 +1,6 @@
 <div class="grid grid-cols-4 gap-12 w-9-10 mx-auto">
   <div *ngFor="let movie of dataObj" class="card shadow-xl relative">
+    <a [routerLink]="'/details/' + movie.movie_id">
     <img
       class="poster-img rounded-3xl"
       [src]="'http://localhost:3000' + movie.img"
@@ -24,6 +25,7 @@
         </p>
       </article>
     </div>
+    </a>
   </div>
 </div>
 

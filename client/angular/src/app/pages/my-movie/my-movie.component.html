@@ -11,7 +11,7 @@
 
   <div class="grid grid-cols-4 gap-12 w-9-10 mx-auto" *ngIf="user_id">
     <div *ngFor="let movie of myMovie" class="card shadow-xl">
-      <!-- <a [routerLink]="'/details/' + movie.movie_id"> -->
+      <a [routerLink]="'/details/' + movie.movie_id">
         <img
           class="poster-img rounded-3xl"
           [src]="'http://localhost:3000' + movie.img"
@@ -45,7 +45,7 @@
             </span>
           </small>
         </div>
-      <!-- </a> -->
+      </a>
     </div>
   </div>
 </div>
