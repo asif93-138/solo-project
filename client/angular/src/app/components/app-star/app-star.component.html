@@ -1,0 +1,11 @@
+<div class="flex items-center gap-2">
+  <mat-icon
+      [ngStyle]="{color: color}"
+      class="cursor-pointer"
+      *ngFor="let star of starsArray"
+      (click)="onClickStar(star)"
+      [svgIcon]="
+          star <= rating ? 'heroicons_solid:star' : 'heroicons_outline:star'
+      "
+  ></mat-icon>
+</div>
