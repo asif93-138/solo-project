@@ -7,6 +7,8 @@ import { MovieService } from 'src/app/services/movieServices/movie.service';
 import { ReviewService } from 'src/app/services/reviewServices/review.service';
 import { DeleteComponent } from "./modals/movieModal/deleteModal/delete/delete.component";
 import { ToastersComponent } from './modals/toasters/toasters.component';
+import { GlobalStateService } from 'src/app/services/globalServices/global-state.service';
+import { User } from 'src/app/interfaces/user';
 
 @Component({
   selector: 'app-details',
@@ -17,6 +19,8 @@ import { ToastersComponent } from './modals/toasters/toasters.component';
 })
 
 export class DetailsComponent implements OnInit {
+  userObj: User | null = null;
+  userExists = false;
   movieDetails: MovieDetails | null = null;
   reviewForm: FormGroup;
   rating = 0;
@@ -35,8 +39,14 @@ export class DetailsComponent implements OnInit {
   private movieService = inject(MovieService);
   private reviewService = inject(ReviewService);
   private router: Router = inject(Router);
+  private stateService: GlobalStateService = inject(GlobalStateService)
 
   constructor() {
+    this.stateService.user$.subscribe((user) => {
+      this.userObj = user;
+      this.userExists = !!user;
+    });
+
     this.reviewForm = this.fb.group({
       review: ['']
     });
@@ -59,15 +69,11 @@ export class DetailsComponent implements OnInit {
 
   async handleDelete() {
     if (this.movieIdToDelete) {
-      // const response = await this.movieService.deleteMovie(this.movieIdToDelete);
-      const response = { deleted: true };
+      const response = await this.movieService.deleteMovie(this.movieIdToDelete);
+      // const response = { deleted: true };
       if (response.deleted) {
         this.showDeleteModal = false;
-        this.showModal3 = true;
-        this.router.navigate(['']); // Redirect after deletion to homepage
-        setTimeout(() => {
-          this.showModal3 = false;
-        }, 5000);
+        this.router.navigate(['']);
       }
     }
   }
@@ -84,14 +90,8 @@ export class DetailsComponent implements OnInit {
 
   async handleSubmit(): Promise<void> {
     const reviewText = this.reviewForm.get('review')?.value;
-
     if (!this.movieDetails || !reviewText) return;
-
     this.resetForm();
-    this.showModal1 = true; // Trigger review toast
-    setTimeout(() => {
-      this.showModal1 = false;
-    }, 2000); // Hide toast after 2 seconds
   }
 
   resetForm(): void {
@@ -99,9 +99,29 @@ export class DetailsComponent implements OnInit {
     this.rating = 0;
   }
 
-  submitReview(): void { // replace this with handleSubmit after setting global state management
-    console.log('Submit review button clicked');
+  async submitReview(): Promise<void> {
+    const reviewData = {
+      movie_id: this.movieDetails?.movie_id,
+      user_id: this.userObj?.user_id,
+      rating: this.rating,
+      review: this.reviewForm.value.review,
+    };
+
+    try {
+      const response = await this.reviewService.createRatingAndReview(reviewData);
+      if (response.success) {
+        this.fetchMovieDetails(this.movieDetails?.movie_id as number); // Refresh reviews
+        this.resetForm();
+        alert('Review submitted successfully!');
+      } else {
+        alert(response.message || 'Failed to submit review.');
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      alert('An error occurred while submitting your review.');
+    }
   }
+
 
   editReview(review: any): void {
     console.log('Edited Review', review)
