@@ -58,10 +58,17 @@
             <!-- Edit/Delete Buttons (make conditionally visible with user context) -->
             <div>
                 <button
-                    class="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full"
-                    (click)="editMovie()">
-                    <i class="fa-regular fa-pen-to-square"></i> Edit
+                class="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full"
+                (click)="openEditForm(movieDetails?.movie_id)">
+                <i class="fa-regular fa-pen-to-square"></i> Edit
                 </button>
+
+                <app-mu-form
+                *ngIf="showEditForm"
+                [movieData]="movieDetails"
+                (formSubmit)="onFormSubmit($event)"
+                (formCancel)="onFormCancel()"
+                ></app-mu-form>
                 &nbsp;
                 <button
                     class="btn btn-d-del btn-error text-white min-h-0 h-auto py-3 rounded-full"

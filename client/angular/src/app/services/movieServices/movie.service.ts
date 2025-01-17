@@ -7,7 +7,7 @@ import { Movie } from "interfaces/movie";
   providedIn: "root",
 })
 export class MovieService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // getAllMovies() {
   //   const url = "http://localhost:3000/api/movie";
@@ -17,7 +17,7 @@ export class MovieService {
   //     },
   //   });
   // }
-  private movieUrl = "http://localhost:3000/api/movie";
+  private movieUrl = "http://localhost:3000/api/movie/";
   getAllMovies(): Observable<Movie[]> {
     const res = this.http.get<Movie[]>(this.movieUrl);
     return res;
@@ -84,8 +84,9 @@ export class MovieService {
   }
 
   getMovieDetails(movie_id: any) {
-    return fetch("http://localhost:3000/api/movie/" + movie_id)
-      .then((res) => res.json());
+    return fetch("http://localhost:3000/api/movie/" + movie_id).then((res) =>
+      res.json()
+    );
   }
 
   async deleteMovie(id: any) {
@@ -95,14 +96,18 @@ export class MovieService {
     return await response.json();
   }
 
-  async updateMovie(id: any, data: any) {
-    const response = await fetch("http://localhost:3000/api/movie/" + id, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    return await response.json();
+  // async updateMovie(id: any, data: any) {
+  //   const response = await fetch("http://localhost:3000/api/movie/" + id, {
+  //     method: "PUT",
+  //     headers: {
+  //       "content-type": "application/json",
+  //     },
+  //     body: JSON.stringify(data),
+  //   });
+  //   return await response.json();
+  // }
+
+  updateMovie(movie_id: number, data: Partial<Movie>): Observable<any> {
+    return this.http.put<any>(`${this.movieUrl}${movie_id}`, data);
   }
 }

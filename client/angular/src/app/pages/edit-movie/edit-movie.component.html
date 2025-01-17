@@ -1,0 +1,86 @@
+<div class="p-6 mx-auto">
+  <h1 class="text-2xl font-bold mb-4">Edit this entry</h1>
+  <form (submit)="handleSubmit($event)" class="space-y-4">
+    <!-- <div *ngIf="uniqueTitleError" class="text-red-600 text-center">This title already exists!</div> -->
+    <input
+      type="text"
+      name="title"
+      [(ngModel)]="formData.title"
+      (input)="handleInputChange($event)"
+      placeholder="Movie Title"
+      class="input input-bordered w-full h-full py-1"
+    />
+    <textarea
+      name="desc"
+      [(ngModel)]="formData.desc"
+      (input)="handleInputChange($event)"
+      placeholder="Description"
+      class="textarea textarea-bordered w-full h-full py-1"
+    ></textarea>
+    <div class="flex justify-between">
+      <input
+        type="number"
+        name="release_yr"
+        [(ngModel)]="formData.release_yr"
+        (input)="handleInputChange($event)"
+        placeholder="Release Year"
+        class="input input-bordered h-full py-1"
+        style="width: 49%;"
+      />
+      <input
+        type="number"
+        name="length"
+        [(ngModel)]="formData.length"
+        (input)="handleInputChange($event)"
+        placeholder="Length (minutes)"
+        class="input input-bordered h-full py-1"
+        style="width: 49%;"
+      />
+    </div>
+    <div class="flex justify-between">
+      <input
+        type="text"
+        name="director"
+        [(ngModel)]="formData.director"
+        (input)="handleInputChange($event)"
+        placeholder="Director"
+        class="input input-bordered h-full py-1"
+        style="width: 49%;"
+      />
+      <input
+        type="text"
+        name="producer"
+        [(ngModel)]="formData.producer"
+        (input)="handleInputChange($event)"
+        placeholder="Producer"
+        class="input input-bordered h-full py-1"
+        style="width: 49%;"
+      />
+    </div>
+    <div *ngIf="!imageFile">
+      <label class="btn btn-block">
+        Select Image
+        <input type="file" class="hidden" (change)="handleImageChange($event)" accept="image/*" />
+      </label>
+      <p id="img-notification" class="text-red-500 text-center hidden">
+        <b>Image is required!!</b>
+      </p>
+    </div>
+    <div *ngIf="imagePreview" class="card w-96 bg-base-100 shadow-xl mx-auto">
+      <figure>
+        <img [src]="imagePreview" alt="Preview" class="rounded-t-lg max-h-60 object-cover" />
+      </figure>
+      <div class="card-body">
+        <h2 class="card-title">Image Preview</h2>
+        <div class="card-actions justify-end gap-2">
+          <button type="button" class="btn btn-error text-white" (click)="handleCancelImage()">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-between">
+      <button type="submit" class="btn" style="width: 49%;">Submit</button>
+      <button type="button" class="btn" style="width: 49%;" (click)="handleCancel()">Cancel</button>
+    </div>
+  </form>
+</div>
+
