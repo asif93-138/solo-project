@@ -63,8 +63,8 @@ export class DetailsComponent implements OnInit {
       const response = { deleted: true };
       if (response.deleted) {
         this.showDeleteModal = false;
-        this.router.navigate(['']); // Redirect after deletion to homepage
         this.showModal3 = true;
+        this.router.navigate(['']); // Redirect after deletion to homepage
         setTimeout(() => {
           this.showModal3 = false;
         }, 5000);

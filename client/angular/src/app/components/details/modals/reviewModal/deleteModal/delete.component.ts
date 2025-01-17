@@ -11,4 +11,12 @@ import { Component } from '@angular/core';
 export class DeleteComponent {
   showModal = false;
   showModalP1 = true;
+
+  onConfirmDelete() {
+    return;
+  };
+
+  onCancel() {
+    return;
+  };
 }
