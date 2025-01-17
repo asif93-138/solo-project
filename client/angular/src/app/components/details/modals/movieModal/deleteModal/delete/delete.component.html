@@ -1,0 +1,8 @@
+<div *ngIf="showModal" class="modal modal-open">
+    <div class="modal-box text-center">
+        <h4 class="text-black text-2xl mb-4">Delete this item?</h4>
+        <button class="btn text-red-500"
+            (click)="confirmDelete()">Confirm</button>
+        <button class="btn" (click)="closeModal()">Cancel</button>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<dialog [id]="'my_modal_2'" [class.modal]="true"
+    [class.modal-open]="showModal_2">
+    <div class="modal-box">
+        <form name="rr" (ngSubmit)="onSubmit()" class="text-center">
+            <section id="updateForm">
+                <h4 class="text-center text-black text-2xl my-4">Update Rating
+                    and Review</h4>
+                <!-- Star rating component -->
+                <rating
+                    [style]="{ maxWidth: '180px', margin: 'auto' }"
+                    [value]="rating"
+                    (change)="setRating($event)"></rating>
+                <!-- Textarea for review input -->
+                <textarea
+                    [(ngModel)]="reviewTxt"
+                    name="review"
+                    class="textarea textarea-bordered textarea-md w-full max-w-xs text-black my-2"
+                    placeholder="Write your review"></textarea><br />
+                <!-- Submit and Cancel buttons -->
+                <button type="submit" class="btn">Submit</button>
+                <button type="button" (click)="setShowModal_2(false)"
+                    class="btn">Cancel</button>
+            </section>
+        </form>
+    </div>
+</dialog>

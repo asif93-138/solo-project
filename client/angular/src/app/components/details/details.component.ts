@@ -1,30 +1,40 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MovieDetails } from 'src/app/interfaces/movie';
 import { MovieService } from 'src/app/services/movieServices/movie.service';
 import { ReviewService } from 'src/app/services/reviewServices/review.service';
+import { DeleteComponent } from "./modals/movieModal/deleteModal/delete/delete.component";
+import { ToastersComponent } from './modals/toasters/toasters.component';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DeleteComponent, ToastersComponent],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css']
 })
 
 export class DetailsComponent implements OnInit {
   movieDetails: MovieDetails | null = null;
-  rating = 0;
   reviewForm: FormGroup;
-  refresh = 0;
+  rating = 0;
+
+  // States for the toaster notifications
   showUFC = false;
+  showModal1 = false;
+  showModal3 = false;
+
+  //Delete Movie Prompt/Modal
+  showDeleteModal: boolean = false;
+  movieIdToDelete: number | null = null;
 
   private route: ActivatedRoute = inject(ActivatedRoute);
   private fb: FormBuilder = inject(FormBuilder);
   private movieService = inject(MovieService);
   private reviewService = inject(ReviewService);
+  private router: Router = inject(Router);
 
   constructor() {
     this.reviewForm = this.fb.group({
@@ -43,13 +53,45 @@ export class DetailsComponent implements OnInit {
     });
   }
 
+  editMovie(): void {
+    console.log('Edit movie:', this.movieDetails);
+  }
+
+  async handleDelete() {
+    if (this.movieIdToDelete) {
+      // const response = await this.movieService.deleteMovie(this.movieIdToDelete);
+      const response = { deleted: true };
+      if (response.deleted) {
+        this.showDeleteModal = false;
+        this.router.navigate(['']); // Redirect after deletion to homepage
+        this.showModal3 = true;
+        setTimeout(() => {
+          this.showModal3 = false;
+        }, 5000);
+      }
+    }
+  }
+
+  openDeleteModal(movieId: any) {
+    this.movieIdToDelete = movieId;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+    this.movieIdToDelete = null;
+  }
+
   async handleSubmit(): Promise<void> {
     const reviewText = this.reviewForm.get('review')?.value;
 
     if (!this.movieDetails || !reviewText) return;
 
     this.resetForm();
-    this.triggerRefresh();
+    this.showModal1 = true; // Trigger review toast
+    setTimeout(() => {
+      this.showModal1 = false;
+    }, 2000); // Hide toast after 2 seconds
   }
 
   resetForm(): void {
@@ -57,28 +99,7 @@ export class DetailsComponent implements OnInit {
     this.rating = 0;
   }
 
-  triggerRefresh(): void {
-    this.refresh++;
-    this.showUFC = true;
-    setTimeout(() => {
-      this.showUFC = false;
-    }, 1500);
-  }
-
-  editMovie(): void {
-    console.log('Edit movie:', this.movieDetails);
-  }
-
-  async deleteMovie(movie_id: any): Promise<void> {
-    const response = await this.movieService.deleteMovie(movie_id);
-    if (response) {
-      console.log('Movie deleted successfully');
-    } else {
-      console.error('Failed to delete the movie');
-    }
-  }
-
-  submitReview(): void {
+  submitReview(): void { // replace this with handleSubmit after setting global state management
     console.log('Submit review button clicked');
   }
 
