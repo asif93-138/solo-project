@@ -7,24 +7,27 @@ import { MovieService } from 'src/app/services/movieServices/movie.service';
 import { ReviewService } from 'src/app/services/reviewServices/review.service';
 import { DeleteComponent } from "./modals/movieModal/deleteModal/delete/delete.component";
 import { ToastersComponent } from './modals/toasters/toasters.component';
+import { EditComponent } from './modals/reviewModal/editModal/edit.component';
 import { GlobalStateService } from 'src/app/services/globalServices/global-state.service';
 import { User } from 'src/app/interfaces/user';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, DeleteComponent, ToastersComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditComponent, DeleteComponent, ToastersComponent],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css']
 })
 
 export class DetailsComponent implements OnInit {
+  reviewTxt: string = '';
   hasReviewed: boolean = false;
   userObj: User | null = null;
   userExists = false;
   movieDetails: MovieDetails | null = null;
   reviewForm: FormGroup;
   rating = 0;
+  rr_id: number | null = null;
 
   // States for the toaster notifications
   showUFC = false;
@@ -34,6 +37,9 @@ export class DetailsComponent implements OnInit {
   //Delete Movie Prompt/Modal
   showDeleteModal: boolean = false;
   movieIdToDelete: number | null = null;
+
+  //Edit Review Modal
+  showEditModal: boolean = false;
 
   private route: ActivatedRoute = inject(ActivatedRoute);
   private fb: FormBuilder = inject(FormBuilder);
@@ -67,8 +73,8 @@ export class DetailsComponent implements OnInit {
     });
   }
 
-  editMovie(): void {
-    console.log('Edit movie:', this.movieDetails);
+  editMovie() {
+    this.router.navigate(["/edit"]);
   }
 
   async handleDelete() {
@@ -126,7 +132,40 @@ export class DetailsComponent implements OnInit {
   }
 
   editReview(review: any): void {
-    console.log('Edited Review', review)
+    console.log("edit review....")
+    this.showEditModal = true;
+    this.reviewTxt = review.review;  // Set the reviewTxt to the current review's text
+    this.rating = review.rating;     // Set the rating to the current review's rating
+    this.rr_id = review.rr_id;
+    this.reviewForm.patchValue({ review: review.review });  // Pre-fill the form with the review text
+    // You could also set up a flag to toggle edit mode if needed
+  }
+
+  async submitEditedReview(event: any): Promise<void> {
+    console.log("Event in submitEditedReview:", event);
+    const updatedReviewData = {
+      movie_id: this.movieDetails?.movie_id,
+      user_id: this.userObj?.user_id,
+      rating: event.rating,
+      review: event.reviewTxt,
+    };
+
+    console.log("Submitting edited review:", updatedReviewData);
+
+    try {
+      await this.reviewService.updateRatingAndReview(this.rr_id, updatedReviewData); // Call a service method to update the review
+      this.showEditModal = false;
+      this.resetPage();
+      this.clearReviewFields();
+      alert('Review updated successfully!');
+    } catch (error) {
+      console.error('Error updating review:', error);
+      alert('An error occurred while updating your review.');
+    }
+  }
+
+  closeEditModal() {
+    this.showEditModal = false;
   }
 
   async deleteReview(rr_id: any): Promise<void> {

@@ -1,24 +1,39 @@
 <dialog [id]="'my_modal_2'" [class.modal]="true"
-    [class.modal-open]="showModal_2">
+    [class.modal-open]="showModal">
     <div class="modal-box">
         <form name="rr" (ngSubmit)="onSubmit()" class="text-center">
             <section id="updateForm">
                 <h4 class="text-center text-black text-2xl my-4">Update Rating
                     and Review</h4>
+
                 <!-- Star rating component -->
-                <rating
-                    [style]="{ maxWidth: '180px', margin: 'auto' }"
-                    [value]="rating"
-                    (change)="setRating($event)"></rating>
+                <div class="flex justify-center mb-4">
+                    <div>
+                        <input
+                            [(ngModel)]="rating"
+                            name="rating"
+                            type="number"
+                            min="0"
+                            max="5"
+                            step="1"
+                            class="rating-input" />
+                    </div>
+                </div>
+
                 <!-- Textarea for review input -->
                 <textarea
+                    type="text"
                     [(ngModel)]="reviewTxt"
                     name="review"
                     class="textarea textarea-bordered textarea-md w-full max-w-xs text-black my-2"
-                    placeholder="Write your review"></textarea><br />
+                    placeholder="Write your review">
+        </textarea>
+
+                <br />
+
                 <!-- Submit and Cancel buttons -->
                 <button type="submit" class="btn">Submit</button>
-                <button type="button" (click)="setShowModal_2(false)"
+                <button type="button" (click)="closeModal()"
                     class="btn">Cancel</button>
             </section>
         </form>

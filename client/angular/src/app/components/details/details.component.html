@@ -160,5 +160,15 @@
                 <i class="fa-solid fa-trash"></i>
             </button>
         </div>
+
+        <!-- Edit Review Modal -->
+        <app-edit
+            [reviewTxt]="reviewTxt"
+            [rating]="rating"
+            [showModal]="showEditModal"
+            (submitReview)="submitEditedReview($event)"
+            (closeModalEvent)="closeEditModal()">
+        </app-edit>
+
     </div>
 </div>
