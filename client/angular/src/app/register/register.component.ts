@@ -49,17 +49,21 @@ export class RegisterComponent {
   });
   constructor(private stateService: GlobalStateService, private router: Router) {}
   async submitApplication() {
-    const res = await this.authenticationService.userRegistration({ name: this.applyForm.value.name, email: this.applyForm.value.email, password: this.applyForm.value.pass });
-    if (res.user_id) {
-      localStorage.clear();
-      localStorage.setItem('user_id', res.user_id);
-      localStorage.setItem('name', res.name);
-      localStorage.setItem('email', res.email);
-      this.globalStateService.setUser(res);
-      alert('registration successful!');
-      this.router.navigate(['/']);
-      // Reset the form fields after submission
-      this.applyForm.reset();
+    if (this.applyForm.value.name && this.applyForm.value.email && this.applyForm.value.pass) {
+      const res = await this.authenticationService.userRegistration({ name: this.applyForm.value.name, email: this.applyForm.value.email, password: this.applyForm.value.pass });
+      if (res.user_id) {
+        localStorage.clear();
+        localStorage.setItem('user_id', res.user_id);
+        localStorage.setItem('name', res.name);
+        localStorage.setItem('email', res.email);
+        this.globalStateService.setUser(res);
+        alert('registration successful!');
+        this.router.navigate(['/']);
+        // Reset the form fields after submission
+        this.applyForm.reset();
+      }
+    } else {
+      alert('All fields are required!!');
     }
   }
 }

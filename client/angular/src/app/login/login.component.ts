@@ -50,17 +50,21 @@ export class LoginComponent {
     });
   }
   async submitApplication() {
-    const res = await this.authenticationService.userLogin(this.applyForm.value.email, this.applyForm.value.pass);
-    if (res.user_id && res.password == this.applyForm.value.pass) {
-      localStorage.clear();
-      localStorage.setItem('user_id', res.user_id);
-      localStorage.setItem('name', res.name);
-      localStorage.setItem('email', res.email);
-      this.globalStateService.setUser(res);
-      alert('login successful!');
-      this.router.navigate(['/']);
-      // Reset the form fields after submission
-      this.applyForm.reset();
+    if (this.applyForm.value.email && this.applyForm.value.pass) {
+      const res = await this.authenticationService.userLogin(this.applyForm.value.email, this.applyForm.value.pass);
+      if (res.user_id && res.password == this.applyForm.value.pass) {
+        localStorage.clear();
+        localStorage.setItem('user_id', res.user_id);
+        localStorage.setItem('name', res.name);
+        localStorage.setItem('email', res.email);
+        this.globalStateService.setUser(res);
+        alert('login successful!');
+        this.router.navigate(['/']);
+        // Reset the form fields after submission
+        this.applyForm.reset();
+      }
+    } else {
+      alert('Email and Password is required!');
     }
   }
 }
