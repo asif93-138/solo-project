@@ -47,7 +47,7 @@ import { User } from './interfaces/user';
                         </div>
                         <div>
                         <div *ngIf="userExists; else loginTemplate" class="flex items-center gap-2">
-                        <button type="button" style="height: fit-content;" class="btn bg-transparent btn-nav-l text-white min-h-0 py-3 rounded-full"><i class="fa-solid fa-plus"></i> New Movie</button>
+                        <a [routerLink]="['/create']"><button type="button" style="height: fit-content;" class="btn bg-transparent btn-nav-l text-white min-h-0 py-3 rounded-full"><i class="fa-solid fa-plus"></i> New Movie</button></a>
                         <details class="dropdown dropdown-end">
                                         <summary tabIndex="0" class="btn p-0 btn-ghost tool-tip">
                                             <img style="height:auto;"
