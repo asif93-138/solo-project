@@ -103,6 +103,7 @@ export class AppComponent implements OnInit {
     localStorage.clear();
     this.globalStateService.setUser(null);
     this.userExists = false;
+    this.router.navigate(['/']);
   }
 
   hideDropdown() {
