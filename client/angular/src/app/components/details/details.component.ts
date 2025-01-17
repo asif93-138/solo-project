@@ -144,7 +144,7 @@ export class DetailsComponent implements OnInit {
   }
 
   async handleSubmit(): Promise<void> {
-    const reviewText = this.reviewForm.get("review")?.value;
+    //const reviewText = this.reviewForm.get("review")?.value;
 
     const reviewText = this.reviewForm.get("review")?.value;
     if (!this.movieDetails || !reviewText) return;
