@@ -20,7 +20,7 @@ import { EditComponent } from './modals/reviewModal/editModal/edit.component';
 @Component({
   selector: "app-details",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, DeleteComponent, ToastersComponent, MUFormComponent,],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DeleteComponent, EditComponent, ToastersComponent, MUFormComponent,],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css']
 })
@@ -165,7 +165,8 @@ export class DetailsComponent implements OnInit {
     try {
       await this.reviewService.createRatingAndReview(reviewData);
       this.resetPage();
-      this.clearReviewFields();
+      this.clearRating;
+      this.reviewForm.reset();
       alert("Review submitted successfully!");
     } catch (error) {
       console.error("Error submitting review:", error);
@@ -173,7 +174,7 @@ export class DetailsComponent implements OnInit {
     }
   }
 
-  clearReviewFields(): void {
+  clearRating(): void {
     this.rating = 0;
   }
 
@@ -202,7 +203,8 @@ export class DetailsComponent implements OnInit {
       await this.reviewService.updateRatingAndReview(this.rr_id, updatedReviewData); // Call a service method to update the review
       this.showEditModal = false;
       this.resetPage();
-      this.clearReviewFields();
+      this.clearRating();
+      this.reviewForm.reset();
       alert('Review updated successfully!');
     } catch (error) {
       console.error('Error updating review:', error);
@@ -215,14 +217,10 @@ export class DetailsComponent implements OnInit {
   }
 
   async deleteReview(rr_id: any): Promise<void> {
-    const response = await this.reviewService.deleteRatingAndReview(rr_id);
-    if (response) {
-      console.log("Review deleted successfully");
-    } else {
-      console.error("Failed to delete the review");
-    }
     await this.reviewService.deleteRatingAndReview(rr_id);
     this.resetPage();
+    this.clearRating();
+    this.reviewForm.reset();
     alert("Review deleted successfully");
   }
 }
