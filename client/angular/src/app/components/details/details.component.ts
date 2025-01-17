@@ -19,6 +19,7 @@ import { User } from 'src/app/interfaces/user';
 })
 
 export class DetailsComponent implements OnInit {
+  hasReviewed: boolean = false;
   userObj: User | null = null;
   userExists = false;
   movieDetails: MovieDetails | null = null;
@@ -60,6 +61,9 @@ export class DetailsComponent implements OnInit {
   fetchMovieDetails(movieId: number): void {
     this.movieService.getMovieDetails(movieId).then((details: MovieDetails) => {
       this.movieDetails = details;
+      this.hasReviewed = this.movieDetails.rr.some(
+        (review: any) => this.userObj && review.user_id === this.userObj.user_id
+      );
     });
   }
 
@@ -70,7 +74,6 @@ export class DetailsComponent implements OnInit {
   async handleDelete() {
     if (this.movieIdToDelete) {
       const response = await this.movieService.deleteMovie(this.movieIdToDelete);
-      // const response = { deleted: true };
       if (response.deleted) {
         this.showDeleteModal = false;
         this.router.navigate(['']);
@@ -91,12 +94,11 @@ export class DetailsComponent implements OnInit {
   async handleSubmit(): Promise<void> {
     const reviewText = this.reviewForm.get('review')?.value;
     if (!this.movieDetails || !reviewText) return;
-    this.resetForm();
+    this.resetPage();
   }
 
-  resetForm(): void {
-    this.reviewForm.reset();
-    this.rating = 0;
+  resetPage(): void {
+    this.fetchMovieDetails(this.movieDetails?.movie_id as number);
   }
 
   async submitReview(): Promise<void> {
@@ -108,32 +110,29 @@ export class DetailsComponent implements OnInit {
     };
 
     try {
-      const response = await this.reviewService.createRatingAndReview(reviewData);
-      if (response.success) {
-        this.fetchMovieDetails(this.movieDetails?.movie_id as number); // Refresh reviews
-        this.resetForm();
-        alert('Review submitted successfully!');
-      } else {
-        alert(response.message || 'Failed to submit review.');
-      }
+      await this.reviewService.createRatingAndReview(reviewData);
+      this.resetPage();
+      this.clearReviewFields();
+      alert('Review submitted successfully!');
     } catch (error) {
       console.error('Error submitting review:', error);
       alert('An error occurred while submitting your review.');
     }
   }
 
+  clearReviewFields(): void {
+    this.rating = 0;
+    this.reviewForm.reset({ review: '' });
+  }
 
   editReview(review: any): void {
     console.log('Edited Review', review)
   }
 
   async deleteReview(rr_id: any): Promise<void> {
-    const response = await this.reviewService.deleteRatingAndReview(rr_id);
-    if (response) {
-      console.log('Review deleted successfully');
-    } else {
-      console.error('Failed to delete the review');
-    }
+    await this.reviewService.deleteRatingAndReview(rr_id);
+    this.resetPage();
+    alert('Review deleted successfully');
   }
 }
 
