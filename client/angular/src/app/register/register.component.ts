@@ -28,6 +28,9 @@ export class RegisterComponent {
   showRegisterToaster = false;
   showErrorToaster = false;
 
+  uniqueEmailWarning = false;
+  passwordWarning = false;
+
   constructor(private stateService: GlobalStateService, private router: Router) { }
 
   openToaster(type: string): void {
@@ -45,7 +48,17 @@ export class RegisterComponent {
 
   async submitApplication() {
     if (this.applyForm.value.name && this.applyForm.value.email && this.applyForm.value.pass) {
-      const res = await this.authenticationService.userRegistration({ name: this.applyForm.value.name, email: this.applyForm.value.email, password: this.applyForm.value.pass });
+      if (this.applyForm.value.pass.length <= 7) {
+        this.passwordWarning = true;
+        return;
+      }
+
+      const res = await this.authenticationService.userRegistration({
+        name: this.applyForm.value.name,
+        email: this.applyForm.value.email,
+        password: this.applyForm.value.pass
+      });
+
       if (res.user_id) {
         localStorage.clear();
         localStorage.setItem('user_id', res.user_id);
@@ -57,9 +70,9 @@ export class RegisterComponent {
           this.router.navigate(['/']);
         }, 3000);
         this.applyForm.reset();
+      } else if (res.error === 'Email is already in use') {
+        this.uniqueEmailWarning = true;
       }
-    } else {
-      this.openToaster('error');
-    }
+    } else this.openToaster('error');
   }
 }
