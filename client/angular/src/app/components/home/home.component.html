@@ -1,7 +1,7 @@
 <section class="bg-black pt-5 pb-10 min-h-screen">
   <div class="mb-10 flex w-3/5 mx-auto justify-start gap-6 items-end">
-    <form (submit)="handleSearch()" class="flex gap-6 items-end rounded-lg w-9-10">
-      <div class="w-1/2">
+    <form (submit)="handleSearch()" class="flex gap-6 items-end rounded-lg w-full">
+      <div class="w-2/3">
         <label for="title" class="label">
           <span class="label-text text-white">Movie Title</span>
         </label>
@@ -9,18 +9,18 @@
           type="text"
           id="title"
           placeholder="Search by title..."
-          class="input input-bordered w-full"
+          class="input input-bordered w-full h-12 text-lg"
           [(ngModel)]="searchTitle"
           name="searchTitle"
         />
       </div>
-      <div class="w-1/2">
+      <div class="w-2/3">
         <label for="genre" class="label">
           <span class="label-text text-white">Genre</span>
         </label>
         <select
           id="genre"
-          class="select select-bordered w-full"
+          class="select select-bordered w-full h-12 flex-grow text-lg"
           [(ngModel)]="searchGenre"
           name="searchGenre"
         >

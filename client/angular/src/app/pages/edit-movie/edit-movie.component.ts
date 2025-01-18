@@ -13,7 +13,6 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
   styleUrls: ["./edit-movie.component.css"],
 })
 export class MUFormComponent implements OnInit {
-  //formData: Movie | null = null;
   formData: Partial<Movie> = {};
   imageFile: File | null = null;
   imagePreview: string | null = null;
@@ -100,6 +99,6 @@ export class MUFormComponent implements OnInit {
   }
 
   handleCancel(): void {
-    // Handle cancel action (e.g., navigate away or reset form)
+    this.router.navigate([`/details/${this.formData.movie_id}`]);
   }
 }
