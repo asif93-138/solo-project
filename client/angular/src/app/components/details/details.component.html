@@ -105,9 +105,9 @@
 
         <!-- Add Review Section -->
         <div *ngIf="this.userObj?.user_id && !hasReviewed">
-            <h4 class="text-2xl my-3 ml-32">Rate and Review</h4>
+            <h4 class="text-2xl my-3 text-white ml-32">Rate and Review</h4>
             <form name="rr" class="mb-10" (ngSubmit)="submitReview()">
-                <div class="rating">
+                <div class="rating ml-32">
                     <input id="star-1" type="radio" name="rating-2"
                         class={{ratingOpacity}} (click)="ratingHandler(1)" />
                     <input id="star-2" type="radio" name="rating-2"
