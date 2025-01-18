@@ -6,6 +6,7 @@ import { DetailsComponent } from "./components/details/details.component";
 import { MyMovieComponent } from "./pages/my-movie/my-movie.component";
 import { CreateMovieComponent } from "./pages/create-movie/create-movie.component";
 import { MUFormComponent } from "./pages/edit-movie/edit-movie.component";
+import { authGuard } from "src/guards/auth.guard";
 
 const routeConfig: Routes = [
   {
@@ -29,19 +30,22 @@ const routeConfig: Routes = [
     title: "Details Page",
   },
   {
-    path: "edit/:id",
-    component: MUFormComponent,
-    title: "Edit Page",
-  },
-  {
     path: "mymovie",
     component: MyMovieComponent,
     title: "My Movie",
+    canActivate: [authGuard],
   },
   {
     path: "create",
     component: CreateMovieComponent,
     title: "Create Movie",
+    canActivate: [authGuard],
+  },
+  {
+    path: "edit/:id",
+    component: MUFormComponent,
+    title: "Edit Page",
+    canActivate: [authGuard],
   },
 ];
 
