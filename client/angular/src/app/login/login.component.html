@@ -12,16 +12,22 @@
         <input type="email" id="email" formControlName="email"
             class="border border-gray-400 rounded text-sm p-1 w-full"
             required /><br />
-        <label for="pass" class="font-medium">Password</label><br />
+        <label for="pass" class="font-medium">Password</label>
+        <br />
         <input type="password" id="pass" formControlName="pass"
             class="border border-gray-400 rounded text-sm p-1 w-full"
-            required /><br />
+            required />
+        <br />
+
+        <!-- Error Messages -->
         <p *ngIf="showMatchError" class="text-center mt-2 text-red-500">
             <b>Email or Password didn't match!</b>
         </p>
+
         <p *ngIf="showRegisterError" class="text-center mt-2 text-red-500">
             <b>User isn't registered!</b>
         </p>
+
         <input type="submit" class="btn btn-warning my-4 w-full"
             value="Login" />
         <p class="text-center mb-2 text-slate-400">New to movie review?</p>

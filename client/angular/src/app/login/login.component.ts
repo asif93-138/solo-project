@@ -52,10 +52,39 @@ export class LoginComponent {
     }, delay);
   }
 
+  // async submitApplication() {
+  //   if (this.applyForm.value.email && this.applyForm.value.pass) {
+  //     const response = await this.authenticationService.userLogin(this.applyForm.value.email, this.applyForm.value.pass);
+  //     if (response.user_id && response.password == this.applyForm.value.pass) {
+  //       localStorage.clear();
+  //       localStorage.setItem('user_id', response.user_id);
+  //       localStorage.setItem('name', response.name);
+  //       localStorage.setItem('email', response.email);
+  //       this.globalStateService.setUser(response);
+  //       this.openToaster('login');
+  //       setTimeout(() => {
+  //         this.router.navigate(['/']);
+  //       }, 3000);
+  //       this.applyForm.reset();
+  //     }
+  //   } else {
+  //     this.openToaster('error');
+  //   }
+  // }
   async submitApplication() {
     if (this.applyForm.value.email && this.applyForm.value.pass) {
       const response = await this.authenticationService.userLogin(this.applyForm.value.email, this.applyForm.value.pass);
-      if (response.user_id && response.password == this.applyForm.value.pass) {
+
+      // Check for user registration errors
+      if (response.error) {
+        this.showRegisterError = true;
+        this.showMatchError = false;
+        this.applyForm.reset(); // Reset form fields on error
+      }
+      // Check if the password matches
+      else if (response.password == this.applyForm.value.pass) {
+        this.showMatchError = false;
+        this.showRegisterError = false;
         localStorage.clear();
         localStorage.setItem('user_id', response.user_id);
         localStorage.setItem('name', response.name);
@@ -66,8 +95,13 @@ export class LoginComponent {
           this.router.navigate(['/']);
         }, 3000);
         this.applyForm.reset();
+      } else {
+        // Password doesn't match
+        this.showMatchError = true;
+        this.showRegisterError = false;
       }
     } else {
+      // If form is invalid or missing data
       this.openToaster('error');
     }
   }
