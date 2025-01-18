@@ -28,6 +28,9 @@ export class LoginComponent {
   showLoginToaster = false;
   showErrorToaster = false;
 
+  showMatchError = false;
+  showRegisterError = false;
+
   constructor(private stateService: GlobalStateService, private router: Router) {
     this.stateService.user$.subscribe((user) => {
       if (user) {

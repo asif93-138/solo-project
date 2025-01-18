@@ -16,10 +16,12 @@
         <input type="password" id="pass" formControlName="pass"
             class="border border-gray-400 rounded text-sm p-1 w-full"
             required /><br />
-        <!-- <p class={showAlert_3? "text-center mt-2 text-red-500" : 
-         "text-center mt-2 text-red-500 hidden"}><b>Email or Password didn't match!</b></p> -->
-        <!-- <p class={showAlert_2? "text-center mt-2 text-red-500" : 
-         "text-center mt-2 text-red-500 hidden"}><b>User isn't registered!</b></p> -->
+        <p *ngIf="showMatchError" class="text-center mt-2 text-red-500">
+            <b>Email or Password didn't match!</b>
+        </p>
+        <p *ngIf="showRegisterError" class="text-center mt-2 text-red-500">
+            <b>User isn't registered!</b>
+        </p>
         <input type="submit" class="btn btn-warning my-4 w-full"
             value="Login" />
         <p class="text-center mb-2 text-slate-400">New to movie review?</p>
