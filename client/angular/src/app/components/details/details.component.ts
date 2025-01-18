@@ -7,14 +7,14 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from "@angular/forms";
-import { Movie, MovieDetails } from "src/app/interfaces/movie";
-import { MovieService } from "src/app/services/movieServices/movie.service";
-import { ReviewService } from "src/app/services/reviewServices/review.service";
 import { DeleteComponent } from "./modals/deleteModal/delete.component";
 import { EditComponent } from './modals/reviewModal/editModal/edit.component';
 import { MUFormComponent } from "src/app/pages/edit-movie/edit-movie.component";
 import { ToastersComponent } from "./toasters/toasters.component";
+import { Movie, MovieDetails } from "src/app/interfaces/movie";
 import { User } from "src/app/interfaces/user";
+import { MovieService } from "src/app/services/movieServices/movie.service";
+import { ReviewService } from "src/app/services/reviewServices/review.service";
 import { GlobalStateService } from "src/app/services/globalServices/global-state.service";
 
 @Component({
@@ -32,6 +32,7 @@ import { GlobalStateService } from "src/app/services/globalServices/global-state
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css']
 })
+
 export class DetailsComponent implements OnInit {
   userObj: User | null = null;
   userExists = false;
