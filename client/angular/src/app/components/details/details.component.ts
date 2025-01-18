@@ -96,18 +96,18 @@ export class DetailsComponent implements OnInit {
     this.fetchMovieDetails(this.movieDetails?.movie_id as number);
   }
 
-  openToaster(event: string | void): void {
-    if (event === 'put') this.showUpdateToaster = true;
-    if (event === 'delete') this.showDeleteToaster = true;
-    if (event === 'post') this.showReviewToaster = true;
-    this.closeToaster(event);
+  openToaster(type: string): void {
+    if (type === 'put') this.showUpdateToaster = true;
+    if (type === 'delete') this.showDeleteToaster = true;
+    if (type === 'post') this.showReviewToaster = true;
+    this.closeToaster(type);
   }
 
-  closeToaster(event: string | void, delay: number = 2500): void {
+  closeToaster(type: string, delay: number = 2500): void {
     setTimeout(() => {
-      if (event === 'put') this.showUpdateToaster = false;
-      if (event === 'delete') this.showDeleteToaster = false;
-      if (event === 'post') this.showReviewToaster = false;
+      if (type === 'put') this.showUpdateToaster = false;
+      if (type === 'delete') this.showDeleteToaster = false;
+      if (type === 'post') this.showReviewToaster = false;
     }, delay);
   }
 

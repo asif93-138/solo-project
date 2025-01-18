@@ -1,0 +1,12 @@
+<div class="toast toast-top toast-center">
+    <div *ngIf="showLoginToaster" class="alert alert-success">
+        <span className="text-lg text-white p-1">Login successful!</span>
+    </div>
+
+    <div *ngIf="showErrorToaster" class="alert alert-warning">
+        <span
+            className="text-lg text-white p-1">Both email and Password are
+            required!
+        </span>
+    </div>
+</div>

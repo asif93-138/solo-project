@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-toasters',
@@ -10,8 +10,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 
 export class ToastersComponent {
-  @Input() showUpdateToaster = false;
-  @Input() showDeleteToaster = false;
-  @Input() showReviewToaster = false;
+  @Input() showLoginToaster = false;
+  @Input() showErrorToaster = false;
   @Output() openToaster = new EventEmitter<void>();
 }

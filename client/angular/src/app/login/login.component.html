@@ -1,0 +1,31 @@
+<div class="p-8">
+    <!-- toasters -->
+    <app-toasters
+        [showLoginToaster]="showLoginToaster"
+        [showErrorToaster]="showErrorToaster">
+    </app-toasters>
+
+    <form class="border-2 p-6 rounded-lg w-2/5 mx-auto mt-4"
+        [formGroup]="applyForm" (submit)="submitApplication()">
+        <p class="text-2xl mb-4 font-medium text-center">Log In</p>
+        <label for="email" class="font-medium">Email</label><br />
+        <input type="email" id="email" formControlName="email"
+            class="border border-gray-400 rounded text-sm p-1 w-full"
+            required /><br />
+        <label for="pass" class="font-medium">Password</label><br />
+        <input type="password" id="pass" formControlName="pass"
+            class="border border-gray-400 rounded text-sm p-1 w-full"
+            required /><br />
+        <!-- <p class={showAlert_3? "text-center mt-2 text-red-500" : 
+         "text-center mt-2 text-red-500 hidden"}><b>Email or Password didn't match!</b></p> -->
+        <!-- <p class={showAlert_2? "text-center mt-2 text-red-500" : 
+         "text-center mt-2 text-red-500 hidden"}><b>User isn't registered!</b></p> -->
+        <input type="submit" class="btn btn-warning my-4 w-full"
+            value="Login" />
+        <p class="text-center mb-2 text-slate-400">New to movie review?</p>
+        <hr />
+        <a [routerLink]="['/register']"><button type="button"
+                class="btn mt-4 w-full">Create your account</button></a>
+    </form>
+    <div class="toast toast-top toast-end">
+    </div>
