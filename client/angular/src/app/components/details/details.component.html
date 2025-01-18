@@ -109,7 +109,14 @@
     <div *ngIf="this.userObj?.user_id && !hasReviewed">
         <h4 class="text-2xl my-3 ml-32">Rate and Review</h4>
         <form name="rr" class="mb-10" (ngSubmit)="submitReview()">
-            <div class="flex justify-center mb-4">
+            <div class="rating">
+                <input id="star-1" type="radio" name="rating-2" class={{ratingOpacity}} (click)="ratingHandler(1)" />
+                <input id="star-2" type="radio" name="rating-2" class={{ratingOpacity}} (click)="ratingHandler(2)" />
+                <input id="star-3" type="radio" name="rating-2" class={{ratingOpacity}} (click)="ratingHandler(3)" />
+                <input id="star-4" type="radio" name="rating-2" class={{ratingOpacity}} (click)="ratingHandler(4)" />
+                <input id="star-5" type="radio" name="rating-2" class={{ratingOpacity}} (click)="ratingHandler(5)" />
+              </div>
+            <!-- <div class="flex justify-center mb-4">
                 <div>
                     <input
                         [(ngModel)]="rating"
@@ -120,7 +127,7 @@
                         step="1"
                         class="rating-input" />
                 </div>
-            </div>
+            </div> -->
             <textarea
                 placeholder="Write your review"
                 name="review"

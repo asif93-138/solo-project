@@ -251,6 +251,15 @@ export class DetailsComponent implements OnInit {
     this.showEditModal = false;
   }
 
+  ratingOpacity = "star-opacity mask mask-star-2 bg-orange-400";
+
+  ratingHandler(id: any) {
+    this.rating = id;
+    // console.log(id);
+    document.getElementById('star-' + id)?.setAttribute('checked', 'checked');
+    this.ratingOpacity = "mask mask-star-2 bg-orange-400";
+  }
+
   clearRating(): void {
     this.rating = 0;
   }

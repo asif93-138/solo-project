@@ -10,9 +10,9 @@
 
 // Jafor Iqbal
 // const dbConfig = {
-//   DB: "GameReview",
+//   DB: "movieReviewDB",
 //   USER: "postgres",
-//   PASSWORD: "admin",
+//   PASSWORD: "alina",
 //   HOST: "127.0.0.1",
 //   dialect: "postgres",
 // };
