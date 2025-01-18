@@ -111,7 +111,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Subscribe to route changes
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd)) // Filter for NavigationEnd events
       .subscribe((event: any) => {

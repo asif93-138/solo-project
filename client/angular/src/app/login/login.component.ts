@@ -4,44 +4,33 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../services/userServices/user.service';
 import { GlobalStateService } from '../services/globalServices/global-state.service';
+import { ToastersComponent } from './toasters/toasters.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
-  template: `
-    <div class="p-8">
-      <form class="border-2 p-6 rounded-lg w-2/5 mx-auto mt-4" [formGroup]="applyForm" (submit)="submitApplication()">
-        <p class="text-2xl mb-4 font-medium text-center">Log In</p>
-        <label for="email" class="font-medium">Email</label><br />
-        <input type="email" id="email" formControlName="email" class="border border-gray-400 rounded text-sm p-1 w-full" required /><br />
-        <label for="pass" class="font-medium">Password</label><br />
-        <input type="password" id="pass" formControlName="pass" class="border border-gray-400 rounded text-sm p-1 w-full" required /><br />
-        <!-- <p class={showAlert_3? "text-center mt-2 text-red-500" : "text-center mt-2 text-red-500 hidden"}><b>Email or Password didn't match!</b></p> -->
-        <!-- <p class={showAlert_2? "text-center mt-2 text-red-500" : "text-center mt-2 text-red-500 hidden"}><b>User isn't registered!</b></p> -->
-        <input type="submit" class="btn btn-warning my-4 w-full" value="Login" />
-        <p class="text-center mb-2 text-slate-400">New to movie review?</p>
-        <hr />
-        <a [routerLink]="['/register']"><button type="button" class="btn mt-4 w-full">Create your account</button></a>
-      </form>
-      <div class="toast toast-top toast-end">
-  <!-- <div class={showAlert? "alert alert-success block" : "alert alert-success hidden"}>
-    <span class="text-lg text-white p-1">Login successful!</span>
-  </div>
-</div> -->
-    </div>
-  `,
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, ToastersComponent],
+  templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent {
   route: ActivatedRoute = inject(ActivatedRoute);
   authenticationService = inject(UserService);
   globalStateService = inject(GlobalStateService);
+
   applyForm = new FormGroup({
     email: new FormControl(''),
     pass: new FormControl(''),
   });
+
   loggedInStatus = false;
+  showLoginToaster = false;
+  showErrorToaster = false;
+
+  showMatchError = false;
+  showRegisterError = false;
+
   constructor(private stateService: GlobalStateService, private router: Router) {
     this.stateService.user$.subscribe((user) => {
       if (user) {
@@ -49,22 +38,71 @@ export class LoginComponent {
       }
     });
   }
+
+  openToaster(type: string): void {
+    if (type === 'login') this.showLoginToaster = true;
+    if (type === 'error') this.showErrorToaster = true;
+    this.closeToaster(type);
+  }
+
+  closeToaster(type: string, delay: number = 2500): void {
+    setTimeout(() => {
+      if (type === 'login') this.showLoginToaster = false;
+      if (type === 'error') this.showErrorToaster = false;
+    }, delay);
+  }
+
+  // async submitApplication() {
+  //   if (this.applyForm.value.email && this.applyForm.value.pass) {
+  //     const response = await this.authenticationService.userLogin(this.applyForm.value.email, this.applyForm.value.pass);
+  //     if (response.user_id && response.password == this.applyForm.value.pass) {
+  //       localStorage.clear();
+  //       localStorage.setItem('user_id', response.user_id);
+  //       localStorage.setItem('name', response.name);
+  //       localStorage.setItem('email', response.email);
+  //       this.globalStateService.setUser(response);
+  //       this.openToaster('login');
+  //       setTimeout(() => {
+  //         this.router.navigate(['/']);
+  //       }, 3000);
+  //       this.applyForm.reset();
+  //     }
+  //   } else {
+  //     this.openToaster('error');
+  //   }
+  // }
   async submitApplication() {
     if (this.applyForm.value.email && this.applyForm.value.pass) {
-      const res = await this.authenticationService.userLogin(this.applyForm.value.email, this.applyForm.value.pass);
-      if (res.user_id && res.password == this.applyForm.value.pass) {
+      const response = await this.authenticationService.userLogin(this.applyForm.value.email, this.applyForm.value.pass);
+
+      // Check for user registration errors
+      if (response.error) {
+        this.showRegisterError = true;
+        this.showMatchError = false;
+        this.applyForm.reset(); // Reset form fields on error
+      }
+      // Check if the password matches
+      else if (response.password == this.applyForm.value.pass) {
+        this.showMatchError = false;
+        this.showRegisterError = false;
         localStorage.clear();
-        localStorage.setItem('user_id', res.user_id);
-        localStorage.setItem('name', res.name);
-        localStorage.setItem('email', res.email);
-        this.globalStateService.setUser(res);
-        alert('login successful!');
-        this.router.navigate(['/']);
-        // Reset the form fields after submission
+        localStorage.setItem('user_id', response.user_id);
+        localStorage.setItem('name', response.name);
+        localStorage.setItem('email', response.email);
+        this.globalStateService.setUser(response);
+        this.openToaster('login');
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 3000);
         this.applyForm.reset();
+      } else {
+        // Password doesn't match
+        this.showMatchError = true;
+        this.showRegisterError = false;
       }
     } else {
-      alert('Email and Password is required!');
+      // If form is invalid or missing data
+      this.openToaster('error');
     }
   }
 }

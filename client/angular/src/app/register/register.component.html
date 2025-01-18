@@ -1,0 +1,37 @@
+<div class="p-8">
+
+    <!-- toasters -->
+    <app-toasters
+        [showRegisterToaster]="showRegisterToaster"
+        [showErrorToaster]="showErrorToaster">
+    </app-toasters>
+
+    <form class="border-2 p-6 rounded-lg w-2/5 mx-auto mt-4"
+        [formGroup]="applyForm" (submit)="submitApplication()">
+        <p class="text-2xl mb-4 font-medium">Register</p>
+        <label for="name" class="font-medium">Name</label><br />
+        <input type="text" id="name" formControlName="name"
+            class="border border-gray-400 rounded text-sm p-1 w-full"
+            required /><br />
+        <label for="email" class="font-medium">Email</label><br />
+        <input type="email" id="email" formControlName="email"
+            class="border border-gray-400 rounded text-sm p-1 w-full"
+            required /><br />
+        <p *ngIf=uniqueEmailWarning class="text-red-600">This email is already
+            used!</p>
+        <label for="pass" class="font-medium">Password</label>
+        <br />
+        <input type="password" id="pass" formControlName="pass"
+            class="border border-gray-400 rounded text-sm p-1 w-full"
+            required />
+        <br />
+        <p *ngIf=passwordWarning class="text-red-600">Password must be at least
+            8 characters long!</p>
+        <input type="submit" class="btn btn-warning my-4 w-full"
+            value="Register" />
+        <p class="text-center mb-2 text-slate-400">Already have an account?</p>
+        <hr />
+        <a [routerLink]="['/login']"><button type="button"
+                class="btn mt-4 w-full">Login</button></a>
+    </form>
+</div>

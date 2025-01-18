@@ -9,7 +9,6 @@ import {
 } from "@angular/forms";
 import { DeleteComponent } from "./modals/deleteModal/delete.component";
 import { EditComponent } from './modals/reviewModal/editModal/edit.component';
-import { MUFormComponent } from "src/app/pages/edit-movie/edit-movie.component";
 import { ToastersComponent } from "./toasters/toasters.component";
 import { Movie, MovieDetails } from "src/app/interfaces/movie";
 import { User } from "src/app/interfaces/user";
@@ -26,8 +25,7 @@ import { GlobalStateService } from "src/app/services/globalServices/global-state
     ReactiveFormsModule,
     DeleteComponent,
     EditComponent,
-    ToastersComponent,
-    MUFormComponent
+    ToastersComponent
   ],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css']
@@ -96,18 +94,18 @@ export class DetailsComponent implements OnInit {
     this.fetchMovieDetails(this.movieDetails?.movie_id as number);
   }
 
-  openToaster(event: string | void): void {
-    if (event === 'put') this.showUpdateToaster = true;
-    if (event === 'delete') this.showDeleteToaster = true;
-    if (event === 'post') this.showReviewToaster = true;
-    this.closeToaster(event);
+  openToaster(type: string): void {
+    if (type === 'put') this.showUpdateToaster = true;
+    if (type === 'delete') this.showDeleteToaster = true;
+    if (type === 'post') this.showReviewToaster = true;
+    this.closeToaster(type);
   }
 
-  closeToaster(event: string | void, delay: number = 2500): void {
+  closeToaster(type: string, delay: number = 2500): void {
     setTimeout(() => {
-      if (event === 'put') this.showUpdateToaster = false;
-      if (event === 'delete') this.showDeleteToaster = false;
-      if (event === 'post') this.showReviewToaster = false;
+      if (type === 'put') this.showUpdateToaster = false;
+      if (type === 'delete') this.showDeleteToaster = false;
+      if (type === 'post') this.showReviewToaster = false;
     }, delay);
   }
 
