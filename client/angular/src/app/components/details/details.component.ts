@@ -9,7 +9,6 @@ import {
 } from "@angular/forms";
 import { DeleteComponent } from "./modals/deleteModal/delete.component";
 import { EditComponent } from './modals/reviewModal/editModal/edit.component';
-import { MUFormComponent } from "src/app/pages/edit-movie/edit-movie.component";
 import { ToastersComponent } from "./toasters/toasters.component";
 import { Movie, MovieDetails } from "src/app/interfaces/movie";
 import { User } from "src/app/interfaces/user";
@@ -26,8 +25,7 @@ import { GlobalStateService } from "src/app/services/globalServices/global-state
     ReactiveFormsModule,
     DeleteComponent,
     EditComponent,
-    ToastersComponent,
-    MUFormComponent
+    ToastersComponent
   ],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css']
