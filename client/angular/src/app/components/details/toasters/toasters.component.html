@@ -1,17 +1,16 @@
 <div class="toast toast-top toast-center">
     <!-- Notification for update confirmation -->
-    <div *ngIf="showUFC" class="alert alert-warning">
+    <div *ngIf="showUpdateToaster" class="alert alert-warning">
         <span>Updated!</span>
     </div>
 
     <!-- Notification for deletion -->
-    <div *ngIf="showModal3"
-        class="alert alert-error text-white">
+    <div *ngIf="showDeleteToaster" class="alert alert-error text-white">
         <span>Deleted!</span>
     </div>
 
     <!-- Notification for posting a rating and review -->
-    <div *ngIf="showModal1" class="alert alert-warning">
-        <span>Rating and review posted!</span>
+    <div *ngIf="showReviewToaster" class="alert alert-warning">
+        <span>Review Submitted!</span>
     </div>
 </div>

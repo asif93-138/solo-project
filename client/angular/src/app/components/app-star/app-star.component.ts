@@ -5,7 +5,7 @@ import { Component } from "@angular/core";
   templateUrl: "./app-star.component.html",
   styleUrls: ["./app-star.component.css"],
 })
-export class AppStarComponent {}
+export class AppStarComponent { }
 
 // import { CommonModule } from "@angular/common";
 // import { Component, EventEmitter, Input, Output } from "@angular/core";

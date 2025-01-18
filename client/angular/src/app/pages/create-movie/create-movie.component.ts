@@ -1,11 +1,11 @@
-import { CommonModule } from "@angular/common";
+import { Router } from "@angular/router";
 import { Component } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
 import { GenreService } from "src/app/services/genreServices/genre.service";
-import { GlobalStateService } from "src/app/services/globalServices/global-state.service";
 import { MovieService } from "src/app/services/movieServices/movie.service";
+import { GlobalStateService } from "src/app/services/globalServices/global-state.service";
 
 @Component({
   selector: "app-create-movie",
@@ -108,7 +108,8 @@ export class CreateMovieComponent {
       };
 
       this.movieService.createMovie(movieData).subscribe((movie) => {
-        if (movie.movie_id) {
+        console.log("Create: ", movie);
+        if (movie) {
           this.router.navigate(["/"]);
         } else if (movie.error === "title must be unique") {
           this.uniqueTitleError = true;

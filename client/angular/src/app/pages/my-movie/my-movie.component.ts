@@ -18,7 +18,7 @@ export class MyMovieComponent {
   constructor(
     private movieService: MovieService,
     private stateService: GlobalStateService
-  ) {}
+  ) { }
 
   // ngOnInit(): void {
   //   this.userService.getUser().subscribe(user => {
@@ -32,6 +32,8 @@ export class MyMovieComponent {
     this.user_id = this.stateService.getUser()?.user_id;
     this.fetchMyMovies(this.user_id);
   }
+
+
 
   fetchMyMovies(user_id: any): void {
     this.movieService.getMyList(user_id).subscribe(
