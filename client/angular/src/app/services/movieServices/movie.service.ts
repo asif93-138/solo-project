@@ -8,15 +8,6 @@ import { Movie } from "interfaces/movie";
 })
 export class MovieService {
   constructor(private http: HttpClient) {}
-
-  // getAllMovies() {
-  //   const url = "http://localhost:3000/api/movie";
-  //   const $obs = this.http.get(url).subscribe({
-  //     next: (val) => {
-  //       console.log(val, "data get from movies api");
-  //     },
-  //   });
-  // }
   private movieUrl = "http://localhost:3000/api/movie/";
   getAllMovies(): Observable<Movie[]> {
     const res = this.http.get<Movie[]>(this.movieUrl);
@@ -26,28 +17,9 @@ export class MovieService {
   private myMovieUrl = "http://localhost:3000/api/movie/user/";
   getMyList(user_id: Number): Observable<Movie[]> {
     const res = this.http.get<Movie[]>(this.myMovieUrl + user_id);
-    // `${this.myMovieUrl}${user_id}`
-    // console.log("My2: ", res);
     return res;
   }
 
-  // async searchMovies(title: any, genre: any) {
-  //   if (title != "" && genre != "") {
-  //     return await fetch(
-  //       `http://localhost:3000/api/movie/?title=${title}&genre=${genre}`
-  //     )
-  //       .then((res) => res.json())
-  //       .then((data) => data);
-  //   } else if (title != "") {
-  //     return await fetch(`http://localhost:3000/api/movie/?title=${title}`)
-  //       .then((res) => res.json())
-  //       .then((data) => data);
-  //   } else if (genre != "") {
-  //     return await fetch(`http://localhost:3000/api/movie/?genre=${genre}`)
-  //       .then((res) => res.json())
-  //       .then((data) => data);
-  //   }
-  // }
 
   searchMovies(title: string, genre: string): Observable<Movie[]> {
     let queryParams = "";
@@ -62,17 +34,6 @@ export class MovieService {
 
     return this.http.get<Movie[]>(`${this.movieUrl}${queryParams}`);
   }
-
-  // async createMovie(data: any) {
-  //   const response = await fetch("http://localhost:3000/api/movie/", {
-  //     method: "POST",
-  //     headers: {
-  //       "content-type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   });
-  //   return await response.json();
-  // }
 
   createMovie(movieData: any): Observable<any> {
     console.log("movieData : ", movieData);
@@ -96,18 +57,10 @@ export class MovieService {
     return await response.json();
   }
 
-  // async updateMovie(id: any, data: any) {
-  //   const response = await fetch("http://localhost:3000/api/movie/" + id, {
-  //     method: "PUT",
-  //     headers: {
-  //       "content-type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   });
-  //   return await response.json();
-  // }
-
-  updateMovie(movie_id: number, data: Partial<Movie>): Observable<any> {
+  updateMovie(
+    movie_id: number | undefined,
+    data: Partial<Movie>
+  ): Observable<any> {
     return this.http.put<any>(`${this.movieUrl}${movie_id}`, data);
   }
 }
