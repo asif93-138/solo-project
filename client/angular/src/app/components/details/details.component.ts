@@ -11,19 +11,27 @@ import { Movie, MovieDetails } from "src/app/interfaces/movie";
 import { MovieService } from "src/app/services/movieServices/movie.service";
 import { ReviewService } from "src/app/services/reviewServices/review.service";
 import { DeleteComponent } from "./modals/deleteModal/delete.component";
-import { ToastersComponent } from "./modals/toasters/toasters.component";
+import { EditComponent } from './modals/reviewModal/editModal/edit.component';
 import { MUFormComponent } from "src/app/pages/edit-movie/edit-movie.component";
 import { User } from "src/app/interfaces/user";
 import { GlobalStateService } from "src/app/services/globalServices/global-state.service";
-import { EditComponent } from './modals/reviewModal/editModal/edit.component';
+
 
 @Component({
   selector: "app-details",
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, DeleteComponent, EditComponent, ToastersComponent, MUFormComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DeleteComponent,
+    EditComponent,
+    MUFormComponent
+  ],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css']
 })
+
 export class DetailsComponent implements OnInit {
   reviewTxt: string = '';
   hasReviewed: boolean = false;
@@ -36,10 +44,11 @@ export class DetailsComponent implements OnInit {
   movie: boolean | null = null;
 
   // States for the toaster notifications
-  showUFC = false;
-  showModal1 = false;
-  showModal3 = false;
+  showUpdateToaster = false;
+  showDeleteToaster = false;
+  showReviewToaster = false;
 
+  //Movie Edit Page
   showEditForm: boolean = false; // New flag for showing the edit form
   selectedMovieId: number | undefined;
 
@@ -95,7 +104,7 @@ export class DetailsComponent implements OnInit {
   }
 
   editMovie(): void {
-    this.showEditForm = true; // Show the form
+    this.showEditForm = true;
   }
 
   onFormSubmit(updatedMovie: Partial<Movie>): void {
@@ -118,6 +127,21 @@ export class DetailsComponent implements OnInit {
     this.showEditForm = false; // Hide the form if canceled
   }
 
+  openToaster(type: string): void {
+    if (type === 'put') this.showUpdateToaster = true;
+    if (type === 'delete') this.showDeleteToaster = true;
+    if (type === 'post') this.showReviewToaster = true;
+    this.closeToaster(type);
+  }
+
+  closeToaster(type: string, delay: number = 2000): void {
+    setTimeout(() => {
+      if (type === 'put') this.showUpdateToaster = false;
+      if (type === 'delete') this.showDeleteToaster = false;
+      if (type === 'post') this.showReviewToaster = false;
+    }, delay);
+  }
+
   openDeleteModal(id: any, movie: boolean) {
     this.showDeleteModal = true;
     if (movie) {
@@ -127,6 +151,12 @@ export class DetailsComponent implements OnInit {
       this.reviewIdToDelete = id;
       this.movie = false;
     }
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+    this.movieIdToDelete = null;
+    this.reviewIdToDelete = null;
   }
 
   async handleDelete() {
@@ -139,17 +169,13 @@ export class DetailsComponent implements OnInit {
 
   async deleteMovie() {
     if (this.movieIdToDelete) {
-      const response = await this.movieService.deleteMovie(
-        this.movieIdToDelete
-      );
+      const response = await this.movieService.deleteMovie(this.movieIdToDelete);
       if (response.deleted) {
-        this.showDeleteModal = false;
-        this.showModal3 = true;
-        this.router.navigate([""]); // Redirect after deletion to homepage
+        this.closeDeleteModal();
+        this.openToaster('delete');
         setTimeout(() => {
-          this.showModal3 = false;
-        }, 5000);
-        this.router.navigate([""]);
+          this.router.navigate(['/mymovie']);
+        }, 3500);
       }
     }
   }
@@ -160,18 +186,11 @@ export class DetailsComponent implements OnInit {
     this.clearRating();
     this.reviewForm.reset();
     this.showDeleteModal = false;
-    alert("Review deleted successfully");
+    this.openToaster('delete');
   }
 
-  closeDeleteModal() {
-    this.showDeleteModal = false;
-    this.movieIdToDelete = null;
-    this.reviewIdToDelete = null;
-  }
 
   async handleSubmit(): Promise<void> {
-    //const reviewText = this.reviewForm.get("review")?.value;
-
     const reviewText = this.reviewForm.get("review")?.value;
     if (!this.movieDetails || !reviewText) return;
     this.resetPage();
@@ -194,7 +213,7 @@ export class DetailsComponent implements OnInit {
       this.resetPage();
       this.clearRating;
       this.reviewForm.reset();
-      alert("Review submitted successfully!");
+      this.openToaster('post');
     } catch (error) {
       console.error("Error submitting review:", error);
       alert("An error occurred while submitting your review.");
@@ -224,15 +243,13 @@ export class DetailsComponent implements OnInit {
       review: event.reviewTxt,
     };
 
-    console.log("Submitting edited review:", updatedReviewData);
-
     try {
       await this.reviewService.updateRatingAndReview(this.rr_id, updatedReviewData); // Call a service method to update the review
       this.showEditModal = false;
       this.resetPage();
       this.clearRating();
       this.reviewForm.reset();
-      alert('Review updated successfully!');
+      this.openToaster('put');
     } catch (error) {
       console.error('Error updating review:', error);
       alert('An error occurred while updating your review.');
