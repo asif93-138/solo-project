@@ -1,12 +1,12 @@
-// const dbConfig = {
-//   DB: "movieReviewDB",
-//   USER: "postgres",
-//   PASSWORD: "12345678",
-//   HOST: "127.0.0.1",
-//   dialect: "postgres"
-// }
+const dbConfig = {
+  DB: "movieReviewDB",
+  USER: "postgres",
+  PASSWORD: "12345678",
+  HOST: "127.0.0.1",
+  dialect: "postgres"
+}
 
-// export default dbConfig;
+export default dbConfig;
 
 // Jafor Iqbal
 // const dbConfig = {
@@ -19,12 +19,12 @@
 
 // export default dbConfig;
 
-const dbConfig = {
-  DB: "movieReviewDB",
-  USER: "postgres",
-  PASSWORD: "alina",
-  HOST: "127.0.0.1",
-  dialect: "postgres",
-};
+// const dbConfig = {
+//   DB: "movieReviewDB",
+//   USER: "postgres",
+//   PASSWORD: "alina",
+//   HOST: "127.0.0.1",
+//   dialect: "postgres",
+// };
 
-export default dbConfig;
+// export default dbConfig;
