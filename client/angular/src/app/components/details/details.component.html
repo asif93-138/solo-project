@@ -1,6 +1,21 @@
 <section class="bg-black text-white py-10">
     <!-- Main Section Container -->
 
+    <!-- Toasters  -->
+    <app-toasters
+        [showUpdateToaster]="showUpdateToaster"
+        [showDeleteToaster]="showDeleteToaster"
+        [showReviewToaster]="showReviewToaster"
+        (openToaster)="openToaster($event)">
+    </app-toasters>
+
+    <!-- Delete Prompt/Modal-->
+    <app-delete
+        [showModal]="showDeleteModal"
+        (confirm)="handleDelete()"
+        (cancel)="closeDeleteModal()">
+    </app-delete>
+
     <!-- Movie Details Section -->
     <div class="flex justify-around items-center">
         <!-- Left Column: Movie Information -->
@@ -77,21 +92,6 @@
                 </button>
             </div>
         </div>
-
-        <!-- Delete Movie Prompt/Modal-->
-        <app-delete
-            [showModal]="showDeleteModal"
-            message="Are you sure you want to delete this movie?"
-            (confirm)="handleDelete()"
-            (cancel)="closeDeleteModal()">
-        </app-delete>
-
-        <!-- Toasters  -->
-        <app-toasters
-            [showUFC]="showUFC"
-            [showModal1]="showModal1"
-            [showModal3]="showModal3">
-        </app-toasters>
 
         <!-- Movie Poster -->
         <img
