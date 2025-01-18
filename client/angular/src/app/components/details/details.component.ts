@@ -251,7 +251,6 @@ export class DetailsComponent implements OnInit {
     this.showEditModal = false;
   }
 
-<<<<<<< HEAD
   ratingOpacity = "star-opacity mask mask-star-2 bg-orange-400";
 
   ratingHandler(id: any) {
@@ -261,10 +260,7 @@ export class DetailsComponent implements OnInit {
     this.ratingOpacity = "mask mask-star-2 bg-orange-400";
   }
 
-}
-=======
   clearRating(): void {
     this.rating = 0;
   }
 }
->>>>>>> 3e91e32c615527eb35f2359cbc64358b58f80278
