@@ -2,22 +2,19 @@
     <!-- Main Section Container -->
 
     <!-- Toasters  -->
-    <div class="toast toast-top toast-center">
-        <!-- Notification for update confirmation -->
-        <div *ngIf="showUpdateToaster" class="alert alert-warning">
-            <span>Updated!</span>
-        </div>
+    <app-toasters
+        [showUpdateToaster]="showUpdateToaster"
+        [showDeleteToaster]="showDeleteToaster"
+        [showReviewToaster]="showReviewToaster"
+        (openToaster)="openToaster($event)">
+    </app-toasters>
 
-        <!-- Notification for deletion -->
-        <div *ngIf="showDeleteToaster" class="alert alert-error text-white">
-            <span>Deleted!</span>
-        </div>
-
-        <!-- Notification for posting a rating and review -->
-        <div *ngIf="showReviewToaster" class="alert alert-warning">
-            <span>Review submitted!</span>
-        </div>
-    </div>
+    <!-- Delete Prompt/Modal-->
+    <app-delete
+        [showModal]="showDeleteModal"
+        (confirm)="handleDelete()"
+        (cancel)="closeDeleteModal()">
+    </app-delete>
 
     <!-- Movie Details Section -->
     <div class="flex justify-around items-center">
@@ -95,13 +92,6 @@
                 </button>
             </div>
         </div>
-
-        <!-- Delete Movie Prompt/Modal-->
-        <app-delete
-            [showModal]="showDeleteModal"
-            (confirm)="handleDelete()"
-            (cancel)="closeDeleteModal()">
-        </app-delete>
 
         <!-- Movie Poster -->
         <img
