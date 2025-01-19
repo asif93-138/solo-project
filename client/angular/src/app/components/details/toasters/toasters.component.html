@@ -9,6 +9,10 @@
         <span>Deleted!</span>
     </div>
 
+    <div *ngIf="showCreateToster" class="alert alert-error text-white">
+        <span>Movie Created!</span>
+    </div>
+
     <!-- Notification for posting a rating and review -->
     <div *ngIf="showReviewToaster" class="alert alert-warning">
         <span>Review Submitted!</span>

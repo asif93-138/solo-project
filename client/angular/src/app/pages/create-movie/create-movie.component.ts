@@ -6,11 +6,12 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { GenreService } from "src/app/services/genreServices/genre.service";
 import { MovieService } from "src/app/services/movieServices/movie.service";
 import { GlobalStateService } from "src/app/services/globalServices/global-state.service";
+import { ToastersComponent } from "src/app/components/details/toasters/toasters.component";
 
 @Component({
   selector: "app-create-movie",
   standalone: true,
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, ToastersComponent],
   templateUrl: "./create-movie.component.html",
   styleUrls: ["./create-movie.component.css"],
 })
@@ -23,6 +24,7 @@ export class CreateMovieComponent {
   imagePreview: string | null = null;
   uniqueTitleError: boolean = false;
   submitAttempted: boolean = false;
+  showCreateToster: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -56,6 +58,17 @@ export class CreateMovieComponent {
     if (!this.selectedGenres.includes(value) && value !== "Select a genre") {
       this.selectedGenres.push(value);
     }
+  }
+
+  openToaster(type: string): void {
+    if (type === "post") this.showCreateToster = true;
+    this.closeToaster(type);
+  }
+
+  closeToaster(type: string, delay: number = 2500): void {
+    setTimeout(() => {
+      if (type === "post") this.showCreateToster = false;
+    }, delay);
   }
 
   handleRemoveGenre(genre: string): void {
@@ -113,9 +126,12 @@ export class CreateMovieComponent {
       };
 
       this.movieService.createMovie(movieData).subscribe((movie) => {
-        console.log("Create: ", movie);
+        //console.log("Create: ", movie);
         if (movie) {
-          this.router.navigate(["/"]);
+          this.openToaster("post");
+          setTimeout(() => {
+            this.router.navigate(["/"]);
+          }, 2000);
         } else if (movie.error === "title must be unique") {
           this.uniqueTitleError = true;
         }
