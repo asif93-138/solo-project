@@ -1,16 +1,20 @@
-<div class="p-6 px-8 mx-auto max-w-4xl">
+
+ <div class="p-6 px-8 mx-auto max-w-4xl">
   <h1 class="text-2xl font-bold mb-5">Create New Movie Entry</h1>
   <form [formGroup]="movieForm" (ngSubmit)="handleSubmit()" class="space-y-4">
     <p *ngIf="uniqueTitleError" class="text-red-600 text-center">This title already exists!</p>
     
-    <!-- Title and Description now at half width -->
     <div class="flex gap-4">
       <input
         formControlName="title"
         placeholder="Movie Title"
         class="input input-bordered h-full py-1 flex-1"
+        [class.is-invalid]="submitAttempted && movieForm.controls['title'].invalid"
         required
       />
+      <div *ngIf="submitAttempted && movieForm.controls['title'].invalid" class="text-red-500 text-center mt-2">
+        <b>Title is required!</b>
+      </div>
       <textarea
         formControlName="desc"
         placeholder="Description"
@@ -18,14 +22,12 @@
       ></textarea>
     </div>
     
-    <!-- Release Year and Length -->
     <div class="flex gap-4">
       <input
         type="number"
         formControlName="release_yr"
         placeholder="Release Year"
         class="input input-bordered h-full py-1 flex-1"
-        required
         max="9999"
       />
       <input
@@ -33,11 +35,9 @@
         formControlName="length"
         placeholder="Length (minutes)"
         class="input input-bordered h-full py-1 flex-1"
-        required
       />
     </div>
     
-    <!-- Director and Producer -->
     <div class="flex gap-4">
       <input
         formControlName="director"
@@ -51,8 +51,8 @@
       />
     </div>
     
-    <div class="flex gap-4">
-      <div class="flex-1">
+    <div class="flex gap-2">
+      <div class="flex-2">
         <select 
           (change)="handleGenreChange($event)" 
           class="select select-bordered w-full h-full min-h-0"
@@ -60,22 +60,12 @@
           <option>Select a genre</option>
           <option *ngFor="let genre of genres" [value]="genre.genre">{{ genre.genre }}</option>
         </select>
-        <p *ngIf="selectedGenres.length === 0" class="text-red-500 text-center mt-2">
+        <div *ngIf="submitAttempted && selectedGenres.length === 0" class="text-red-500 text-center mt-2">
           <b>Genre must be added!</b>
-        </p>
+        </div>
       </div>
-      
-      <div class="flex gap-2 flex-1">
-        <input
-          [(ngModel)]="newGenre"
-          placeholder="Add new genre"
-          class="input input-bordered flex-1 h-full py-1"
-        />
-        <button type="button" (click)="handleAddNewGenre()" class="btn h-full py-2 min-h-0">Add</button>
-      </div>
-    </div>
+    </div> 
 
-    <!-- Selected genres display -->
     <div class="flex flex-wrap gap-2">
       <div *ngFor="let genre of selectedGenres" class="badge badge-ghost gap-1">
         {{ genre }}
@@ -83,7 +73,6 @@
       </div>
     </div>
     
-    <!-- Image upload section - centered and half width -->
     <div class="flex justify-center">
       <label *ngIf="!imageFile" class="btn w-1/2">
         Select Image
@@ -91,9 +80,9 @@
       </label>
     </div>
     
-    <p *ngIf="!imageFile" class="text-red-500 text-center">
+    <div *ngIf="submitAttempted && !imageFile" class="text-red-500 text-center">
       <b>Image is required!!</b>
-    </p>
+    </div>
     
     <div *ngIf="imagePreview" class="card w-96 bg-base-100 shadow-xl mx-auto">
       <figure>
@@ -107,11 +96,9 @@
       </div>
     </div>
     
-    <!-- Submit and Cancel buttons -->
     <div class="flex gap-4">
       <button type="submit" class="btn flex-1">Submit</button>
       <button type="button" class="btn flex-1" (click)="router.navigate(['/'])">Cancel</button>
     </div>
   </form>
 </div>
-

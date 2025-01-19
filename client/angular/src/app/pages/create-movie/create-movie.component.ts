@@ -22,6 +22,7 @@ export class CreateMovieComponent {
   imageFile: File | null = null;
   imagePreview: string | null = null;
   uniqueTitleError: boolean = false;
+  submitAttempted: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -62,10 +63,12 @@ export class CreateMovieComponent {
   }
 
   handleAddNewGenre(): void {
+    console.log("New Genre: ", this.newGenre);
     if (
       this.newGenre.trim() &&
       !this.genres.some((g) => g.genre === this.newGenre)
     ) {
+      console.log("Genre: ", this.newGenre);
       this.genreService
         .createNewGenre({ genre: this.newGenre })
         .subscribe(() => {
@@ -89,6 +92,8 @@ export class CreateMovieComponent {
   }
 
   handleSubmit(): void {
+    this.submitAttempted = true;
+
     if (
       this.movieForm.invalid ||
       !this.imageFile ||
