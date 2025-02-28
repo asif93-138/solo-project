@@ -21,5 +21,6 @@ export async function userRegistration(data: any) {
     body: JSON.stringify(data),
   });
   const result = await response.json();
+  console.log(result);
   return result;
 }

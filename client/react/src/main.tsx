@@ -9,6 +9,7 @@ import Registration from "./pages/Registration.tsx";
 import Details from "./pages/Details.tsx";
 import "@smastrom/react-rating/style.css";
 import Mylist from "./pages/MyList.tsx";
+import ImgUT from "./pages/ImgUT.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <ContextProvider>
@@ -20,6 +21,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Registration />} />
           <Route path="user" element={<Mylist />} />
+          <Route path="imgUT" element={<ImgUT />} />
         </Route>
       </Routes>
     </BrowserRouter>
