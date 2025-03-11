@@ -41,8 +41,8 @@ coverage/
 # Configuration files
 src/config/dbConfig.ts
 
-# Uploads directory
-uploads/*
+# # Uploads directory
+# uploads/*
 
 # Personal files
 src/old_index.ts
