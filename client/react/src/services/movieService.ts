@@ -51,21 +51,25 @@ export async function createMovie(data: any) {
   return movieData;
 }
 
-export async function deleteMovie(id: any) {
+export async function deleteMovie(id: any, fileName: any) {
   const response = await fetch("http://localhost:3000/api/movie/" + id, {
     method: "DELETE",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({fileName}),
   });
   const result = await response.json();
   return result;
 }
 
-export async function updateMovie(id: any, data: any) {
+export async function updateMovie(id: any, data: any, file: any) {
   const response = await fetch("http://localhost:3000/api/movie/" + id, {
     method: "PUT",
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: file ? JSON.stringify({...data, file}) : JSON.stringify(data),
   });
   const result = await response.json();
   return result;

@@ -47,7 +47,6 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
       }
       return acc;
     }, {} as Partial<MovieData>);
-    // console.log(filteredData);
     if (imageFile) {
       // Upload image first
       const formDataImage = new FormData();
@@ -59,8 +58,9 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
 
       const imageData = await imageResponse.json();
       if (imageData.filePath) {
+        const deleteFile = filteredData.img;
         filteredData.img = imageData.filePath;
-        const response = await updateMovie(dataObj.movie_id, filteredData);
+        const response = await updateMovie(dataObj.movie_id, filteredData, deleteFile);
         if (response.movie_id) {
           setFormData({}); // Clear form fields
           setShowModal_4A1(false);
@@ -76,7 +76,7 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
         }
       }
     } else {
-        const response = await updateMovie(dataObj.movie_id, filteredData);
+        const response = await updateMovie(dataObj.movie_id, filteredData, false);
         if (response.movie_id) {
           setFormData({}); // Clear form fields
           setShowModal_4A1(false);

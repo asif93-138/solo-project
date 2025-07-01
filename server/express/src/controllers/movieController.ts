@@ -3,11 +3,7 @@ import { RequestHandler } from "express";
 import { Request, Response } from "express";
 import sequelize from "../models/sequelize";
 import User from "../models/Users";
-// import Movie from "../models/Movies";
-// import Genre from "../models/Genre";
-// import MovieGenre from "../models/MovieGenre";
-// import MG from "../models/MovieGenre";
-// import RR from "../models/Ratings&Reviews";
+import fs from 'fs';
 import db from "../models";
 import { Op, Sequelize } from "sequelize";
 
@@ -64,11 +60,11 @@ export const createMovie: RequestHandler = async (
       throw error;
     }
   } catch (error) {
-    if (error.errors[0].message == 'title must be unique') {
-      console.error("Error during movie creation:", error);
+    if (error.name == 'SequelizeUniqueConstraintError') {
+      console.error(error);
       res.status(500).json({ error: "title must be unique" });
     } else {
-      console.error("Error during movie creation:", error);
+      console.error(error);
       res.status(500).json({ error: "Failed to create movie" });
     }
   }
@@ -177,6 +173,7 @@ export const editMovie: RequestHandler = async (
   try {
     const { id } = req.params;
     const updatedData = req.body;
+    console.log(updatedData.file);
 
     const movie = await Movie.findByPk(id);
 
@@ -184,6 +181,8 @@ export const editMovie: RequestHandler = async (
       res.status(404).json({ error: "Movie not found" });
       return;
     }
+
+    if (updatedData.file) fs.unlinkSync("C:\\Users\\WIN 10\\solo-project\\server\\express\\uploads" + "\\" + updatedData.file.substring(9));
 
     await movie.update(updatedData);
 
@@ -205,7 +204,10 @@ export const deleteMovie: RequestHandler = async (
 ) => {
   try {
     const { id } = req.params;
-
+    // console.log("dsvsav");
+    // console.log(req.body.fileName);
+    // Delete previous file from local storage
+    fs.unlinkSync("C:\\Users\\WIN 10\\solo-project\\server\\express\\uploads" + "\\" + req.body.fileName);
     const movie = await Movie.destroy({
       where: {
         movie_id: id,

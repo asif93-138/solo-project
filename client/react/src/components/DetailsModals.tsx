@@ -12,7 +12,7 @@ export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rati
   const navigate = useNavigate();
   async function handleDelete() {
     setShowModal_5(false);
-    const response = await deleteMovie(dataObj?.movie_id);
+    const response = await deleteMovie(dataObj?.movie_id, dataObj?.img.substring(9));
     if (response.deleted) {
       setShowModal_3(true);
       setTimeout(() => {
