@@ -173,7 +173,6 @@ export const editMovie: RequestHandler = async (
   try {
     const { id } = req.params;
     const updatedData = req.body;
-    console.log(updatedData.file);
 
     const movie = await Movie.findByPk(id);
 
@@ -188,7 +187,7 @@ export const editMovie: RequestHandler = async (
 
     res.status(200).json(movie);
   } catch (error) {
-    if (error.errors[0].message == 'title must be unique') {
+    if (error.name == 'SequelizeUniqueConstraintError') {
       console.error("Error updating movie:", error.errors[0].message);
       res.status(500).json({ error: "title must be unique" });
     } else {
