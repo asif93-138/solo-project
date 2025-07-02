@@ -280,6 +280,7 @@ export const getAllMovies: RequestHandler = async (
 
     const movies = await Movie.findAll(queryOptions);
 
+
     if (movies.length === 0) {
       res.status(200).json({ message: "No movies found" });
     } else {
@@ -290,3 +291,14 @@ export const getAllMovies: RequestHandler = async (
     res.status(500).json({ error: "Failed to search for movies" });
   }
 };
+
+
+export async function checkTitle(req, res) {
+  const result = await Movie.findOne({
+    where: {
+      title: req.query.title,
+    },
+  });
+  if (result) res.status(412).send("title already exists!");
+  else res.status(200).send("OK");
+}

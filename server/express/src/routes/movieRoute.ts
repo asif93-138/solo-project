@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  checkTitle,
   createMovie,
   deleteMovie,
   editMovie,
@@ -11,6 +12,7 @@ import {
 const router = Router();
 
 router.get("/", getAllMovies);
+router.get("/title", checkTitle);
 router.post("/", createMovie);
 router.get("/:id", getMovieById);
 router.get("/user/:id", getMovieByUserId);

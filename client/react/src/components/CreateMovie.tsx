@@ -93,7 +93,10 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
         // Upload image first
         const formDataImage = new FormData();
         formDataImage.append("image", imageFile);
-
+        
+        const checkTitle = await fetch("http://localhost:3000/api/movie/title?title=" + formData.title)
+        .then(res => res.status);
+        if (checkTitle != 200) {setUniqueTitleError(true); return;} 
         try {
           const imageResponse = await fetch("http://localhost:3000/upload", {
             method: "POST",
@@ -165,7 +168,6 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
     <div className="p-6 mx-auto">
       <h1 className="text-2xl font-bold mb-5">Create New Movie Entry</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {uniqueTitleError && <p className="text-red-600 text-center">This title already exists!</p>}
         <input
           type="text"
           name="title"
@@ -175,7 +177,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           className="input input-bordered w-full h-full py-1" style={{marginTop: uniqueTitleError? '10px' : 'auto'}}
           required
         />
-
+        {uniqueTitleError && <p className="text-red-600 text-center">This title already exists!</p>}
         <textarea
           name="desc"
           value={formData.desc}
@@ -203,6 +205,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           placeholder="Length (minutes)"
           className="input input-bordered h-full py-1"
           required style={{width: '49%'}}
+          max="32767"
         />
         </div>
 
