@@ -6,6 +6,7 @@ import User from "../models/Users";
 import fs from 'fs';
 import db from "../models";
 import { Op, Sequelize } from "sequelize";
+import { title } from "process";
 
 const Movie = db.Movie;
 const Genre = db.Genre;
@@ -131,8 +132,9 @@ export const getMovieByUserId: RequestHandler = async (
   res: Response
 ) => {
   try {
-    const movies = await Movie.findAll({
-      where: { user_id: req.params.id },
+    const { title, genre } = req.query;
+    const queryOptions = {
+      where: {user_id: req.params.id},
       attributes: {
         include: [
           [
@@ -156,7 +158,20 @@ export const getMovieByUserId: RequestHandler = async (
       ],
       group: ["Movie.movie_id", "genres.genre_id"],
       order: [["movie_id", "DESC"]],
-    });
+    };
+   if (title) {
+      queryOptions.where = {
+        ...queryOptions.where,
+        title: {
+          [Op.iLike]: `%${title}%`,
+        },
+      };
+    }
+
+    if (genre) {
+      queryOptions.include[1].where = { genre };
+    }
+    const movies = await Movie.findAll(queryOptions);
     res.status(200).json(movies);
   } catch (error) {
     console.error("Error fetching movies with genres and ratings:", error);

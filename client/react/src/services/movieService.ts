@@ -1,3 +1,5 @@
+import { data } from "react-router";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function getAllMovies() {
   const movies = await fetch("http://localhost:3000/api/movie")
@@ -27,10 +29,12 @@ export async function searchMovies(title: any, genre: any) {
   }
 }
 
-export function getMyList(user_id: any, setData: any) {
+export function getMyList(user_id: any, setData: any, setInitialResults: any) {
   fetch("http://localhost:3000/api/movie/user/" + user_id)
     .then((res) => res.json())
-    .then((data) => setData(data));
+    .then((data) => {
+      setData(data); setInitialResults(data);
+    });
 }
 
 export function getMovieDetails(movie_id: any, setDataObj: any) {

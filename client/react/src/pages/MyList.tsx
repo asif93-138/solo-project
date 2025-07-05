@@ -1,18 +1,58 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, FormEvent } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link } from "react-router";
-import { Movie } from "../interfaces/home";
+import { Movie, Genre } from "../interfaces/home";
 import { getMyList } from "../services/movieService";
+import { getAllGenres } from "../services/genreService";
 
 const Mylist = () => {
   const context = useContext(UserContext);
-  const [data, setData] = useState<Movie[]>([]);
+  const [data, setData] = useState<Movie[]>([]); 
+  const [initialResults, setInitialResults] = useState<Movie[]>([]);
+  const [genres, setGenres] = useState<Genre[]>([]); 
+  const [searchTitle, setSearchTitle] = useState("");
+  const [searchGenre, setSearchGenre] = useState("");
+  const [showNRF, setShowNRF] = useState(false);
+  const [showSH, setShowSH] = useState(false);
+  const [showSCB, setShowSCB] = useState(false);
+  async function fetchingGenres() {
+    const results = await getAllGenres();
+    setGenres(results);
+  }
   useEffect(() => {
     if (context?.user) {
-      getMyList(context?.user?.user_id, setData);
+      getMyList(context?.user?.user_id, setData, setInitialResults);
+      fetchingGenres();
     }
   }, [context?.listRefresh, context?.user]);
-
+  const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // console.log(searchTitle.trim(), searchGenre);
+    let searchAPI = "http://localhost:3000/api/movie/user/" + context?.user?.user_id;
+    if (searchTitle.trim() && searchGenre) {
+      searchAPI += "?title=" + searchTitle.trim() + "&genre=" + searchGenre;
+    }
+    else if (searchTitle.trim()) {
+      searchAPI += "?title=" + searchTitle.trim();
+    }
+    else if (searchGenre) {
+      searchAPI += "?genre=" + searchGenre;
+    }
+    else {return;}
+      fetch(searchAPI)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+        setData(data);
+        setShowNRF(false);
+      } else {
+        setData([]);
+        setShowNRF(true);
+      }
+      setShowSH(true);
+      setShowSCB(true);
+      });
+  };
   return (
     <div className="bg-black text-white py-4 min-h-screen">
       {context?.user ? 
@@ -22,7 +62,83 @@ const Mylist = () => {
           Please login/register to see Your Movies!
         </h4>
       }
-      
+            <div className="mb-10 flex w-3/5 mx-auto justify-start gap-6 items-end">
+        <form
+          onSubmit={handleSearch}
+          className="flex gap-6 items-end rounded-lg w-9-10"
+        >
+          <div className="w-1/2">
+            <label htmlFor="title" className="label">
+              <span className="label-text text-white">Movie Title</span>
+            </label>
+            <input
+              type="text"
+              id="title"
+              placeholder="Search by title..."
+              className="input input-bordered w-full text-black"
+              value={searchTitle}
+              onChange={(e) => setSearchTitle(e.target.value)}
+            />
+          </div>
+          <div className="w-1/2">
+            <label htmlFor="genre" className="label">
+              <span className="label-text text-white">Genre</span>
+            </label>
+            <select
+              id="genre"
+              className="select select-bordered w-full text-black"
+              value={searchGenre}
+              onChange={(e) => setSearchGenre(e.target.value)}
+            >
+              <option value="" disabled>
+                All Genres
+              </option>
+              {genres.map((g) => (
+                <option key={g.genre_id} value={g.genre} className="text-gray-700">
+                  {g.genre}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type="submit" className="btn">
+            Search
+          </button>
+        </form>
+        <button
+          id="scb"
+          type="button"
+          className={showSCB ? "btn" : "btn hidden"}
+          onClick={() => {
+            setSearchTitle("");
+            setSearchGenre("");
+            setData(initialResults);
+            setShowSH(false);
+            setShowNRF(false);
+            setShowSCB(false);
+          }}
+        >
+          Return
+        </button>
+      </div>
+
+      <h4
+        id="sh"
+        className={
+          showSH
+            ? "text-white text-2xl text-center mb-6"
+            : "text-white text-2xl text-center mb-6 hidden"
+        }
+      >
+        Search Results!
+      </h4>
+      <p
+        id="nrf"
+        className={
+          showNRF ? "text-white text-center" : "text-white text-center hidden"
+        }
+      >
+        No results found..
+      </p>
       <div className="grid grid-cols-4 gap-12 w-9-10 mx-auto">
         {data.map((x) => (
           <Link to={`/details/${x.movie_id}`} key={x.movie_id}>

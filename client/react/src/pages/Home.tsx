@@ -33,6 +33,7 @@ function App() {
   const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // console.log(searchTitle.trim(), searchGenre);
+    if (!searchTitle.trim() && !searchGenre) {return;}
     try {
       const searchData: Movie[] = await searchMovies(
         searchTitle.trim(),
