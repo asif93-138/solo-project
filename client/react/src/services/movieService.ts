@@ -1,5 +1,3 @@
-import { data } from "react-router";
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function getAllMovies() {
   const movies = await fetch("http://localhost:3000/api/movie")
