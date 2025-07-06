@@ -9,7 +9,7 @@ export interface Movie {
   length: number;
   producer: string;
   averageRating: number;
-  genres: { genre: string }[];
+  genres: string[];
 }
 
 export interface Genre {

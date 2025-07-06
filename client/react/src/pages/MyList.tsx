@@ -178,10 +178,10 @@ const Mylist = () => {
                   Genre :{" "}
                   {x.genres.map((y) => (
                     <span
-                      key={y.genre}
+                      key={y}
                       className="mx-1 border px-2 p-1 text-blue-400 border-blue-400 rounded-3xl"
                     >
-                      {y.genre}
+                      {y}
                     </span>
                   ))}
                 </small>
