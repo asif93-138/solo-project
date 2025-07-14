@@ -85,7 +85,7 @@ function App() {
               onChange={(e) => setSearchGenre(e.target.value)}
             >
               <option value="" disabled>
-                All Genres
+                Select genre
               </option>
               {genres.map((g) => (
                 <option key={g.genre_id} value={g.genre}>

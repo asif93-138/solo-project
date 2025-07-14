@@ -16,7 +16,7 @@ Movie.init(
       allowNull: false,
     },
     title: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(100),
       unique: true,
       allowNull: false,
     },
