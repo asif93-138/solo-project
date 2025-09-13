@@ -9,7 +9,7 @@ export class UserService {
   constructor() { }
 
   async userLogin(email: any, pass: any) {
-    return await fetch("http://localhost:3000/api/user/", {
+    return await fetch("https://solo-project-llin.onrender.com/api/user/", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -21,7 +21,7 @@ export class UserService {
   }
 
   async userRegistration(data: any) {
-    const response = await fetch("http://localhost:3000/api/user/signup", {
+    const response = await fetch("https://solo-project-llin.onrender.com/api/user/signup", {
       method: "POST",
       headers: {
         "content-type": "application/json",

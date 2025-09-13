@@ -8,7 +8,7 @@ export class ReviewService {
   constructor() { }
 
   async createRatingAndReview(data: any) {
-    const response = await fetch("http://localhost:3000/api/review/", {
+    const response = await fetch("https://solo-project-llin.onrender.com/api/review/", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -19,7 +19,7 @@ export class ReviewService {
   }
 
   async updateRatingAndReview(id: any, data: any) {
-    const response = await fetch("http://localhost:3000/api/review/" + id, {
+    const response = await fetch("https://solo-project-llin.onrender.com/api/review/" + id, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
@@ -30,7 +30,7 @@ export class ReviewService {
   }
 
   async deleteRatingAndReview(id: any) {
-    const response = await fetch("http://localhost:3000/api/review/" + id, {
+    const response = await fetch("https://solo-project-llin.onrender.com/api/review/" + id, {
       method: "DELETE",
     });
     return await response.json();

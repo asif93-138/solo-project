@@ -28,7 +28,7 @@ const Mylist = () => {
   const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // console.log(searchTitle.trim(), searchGenre);
-    let searchAPI = "http://localhost:3000/api/movie/user/" + context?.user?.user_id;
+    let searchAPI = "https://solo-project-llin.onrender.com/api/movie/user/" + context?.user?.user_id;
     if (searchTitle.trim() && searchGenre) {
       searchAPI += "?title=" + searchTitle.trim() + "&genre=" + searchGenre;
     }
@@ -145,7 +145,7 @@ const Mylist = () => {
             <div className="card shadow-xl">
             <img
                   className="poster-img rounded-3xl"
-                  src={"http://localhost:3000" + x.img}
+                  src={"https://solo-project-llin.onrender.com" + x.img}
                   alt="poster"
                 />
               {/* <figure>

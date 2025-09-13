@@ -9,7 +9,7 @@ const MovieCards: React.FC<MovieCardsProps> = ({ dataObj }) => {
       {dataObj.map((x) => (
         <Link to={`/details/${x.movie_id}`} key={x.movie_id}>
           <div className="card shadow-xl relative">
-          <img className='poster-img rounded-3xl' src={'http://localhost:3000' + x.img} alt="poster" />
+          <img className='poster-img rounded-3xl' src={'https://solo-project-llin.onrender.com' + x.img} alt="poster" />
             {/* <figure className=''>
               
             </figure> */}

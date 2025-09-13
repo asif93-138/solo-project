@@ -66,7 +66,7 @@ Users can browse movies, read and post reviews, and rate films. The goal is to c
    npm run dev
    ```
 
-   The backend will run on `http://localhost:3000`
+   The backend will run on `https://solo-project-llin.onrender.com`
 
 ---
 

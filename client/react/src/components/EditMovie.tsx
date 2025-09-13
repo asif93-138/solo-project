@@ -51,7 +51,7 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
       // Upload image first
       const formDataImage = new FormData();
       formDataImage.append("image", imageFile);
-      const imageResponse = await fetch("http://localhost:3000/upload", {
+      const imageResponse = await fetch("https://solo-project-llin.onrender.com/upload", {
         method: "POST",
         body: formDataImage,
       });
