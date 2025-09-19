@@ -146,7 +146,7 @@ const Details = () => {
 
         {/* Right Column: Movie Poster */}
         <img
-          src={"https://solo-project-llin.onrender.com" + dataObj?.img}
+          src={"http://localhost:3000" + dataObj?.img}
           alt="poster"
           className="poster-img-1 rounded-xl"
         />
@@ -300,7 +300,7 @@ export default Details;
 
 
 //       </div>
-//       <img src={'https://solo-project-llin.onrender.com' + dataObj?.img} alt="poster" className="poster-img-1 rounded-xl" />
+//       <img src={'http://localhost:3000' + dataObj?.img} alt="poster" className="poster-img-1 rounded-xl" />
 //     </div>
 //     <div className="bg-slate-900 mt-20 px-4 py-10 rounded-3xl mx-28">
 //       <h3 className="text-3xl text-center">Reviews</h3>

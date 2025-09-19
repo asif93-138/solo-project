@@ -94,11 +94,11 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
         const formDataImage = new FormData();
         formDataImage.append("image", imageFile);
         
-        const checkTitle = await fetch("https://solo-project-llin.onrender.com/api/movie/title?title=" + formData.title)
+        const checkTitle = await fetch("http://localhost:3000/api/movie/title?title=" + formData.title)
         .then(res => res.status);
         if (checkTitle != 200) {setUniqueTitleError(true); return;} 
         try {
-          const imageResponse = await fetch("https://solo-project-llin.onrender.com/upload", {
+          const imageResponse = await fetch("http://localhost:3000/upload", {
             method: "POST",
             body: formDataImage,
           });

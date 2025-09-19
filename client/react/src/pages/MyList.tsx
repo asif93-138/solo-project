@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, FormEvent } from "react";
+import { useContext, useEffect, useState, FormEvent, useCallback } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link } from "react-router";
 import { Movie, Genre } from "../interfaces/home";
@@ -15,6 +15,37 @@ const Mylist = () => {
   const [showNRF, setShowNRF] = useState(false);
   const [showSH, setShowSH] = useState(false);
   const [showSCB, setShowSCB] = useState(false);
+  const [stopLoading, setStopLoading] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [isLoading, setIsLoading] = useState(false)
+
+    // Load more data function
+    const loadMoreData = useCallback(() => {
+      if (isLoading || stopLoading || showSH) return
+      setPageNumber(pageNumber + 1);
+    }, [isLoading, stopLoading, showSH]) // currentPage, allCards, 
+  
+      // Scroll event handler
+    const handleScroll = useCallback(() => {
+      if (isLoading) return
+  
+      // Check if user scrolled to bottom
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+  
+      // Trigger load more when user is 100px from bottom
+      if (scrollTop + windowHeight >= documentHeight - 100) {
+        loadMoreData();
+      }
+    }, [loadMoreData, isLoading])
+  
+    // Set up scroll listener
+    useEffect(() => {
+      window.addEventListener("scroll", handleScroll)
+      return () => window.removeEventListener("scroll", handleScroll)
+    }, [handleScroll])
+
   async function fetchingGenres() {
     const results = await getAllGenres();
     setGenres(results);
@@ -28,7 +59,7 @@ const Mylist = () => {
   const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // console.log(searchTitle.trim(), searchGenre);
-    let searchAPI = "https://solo-project-llin.onrender.com/api/movie/user/" + context?.user?.user_id;
+    let searchAPI = "http://localhost:3000/api/movie/user/" + context?.user?.user_id;
     if (searchTitle.trim() && searchGenre) {
       searchAPI += "?title=" + searchTitle.trim() + "&genre=" + searchGenre;
     }
@@ -145,7 +176,7 @@ const Mylist = () => {
             <div className="card shadow-xl">
             <img
                   className="poster-img rounded-3xl"
-                  src={"https://solo-project-llin.onrender.com" + x.img}
+                  src={"http://localhost:3000" + x.img}
                   alt="poster"
                 />
               {/* <figure>

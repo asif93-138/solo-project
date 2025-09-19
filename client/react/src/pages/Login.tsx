@@ -41,7 +41,7 @@ const Login = () => {
   }
   return (
     <div className="p-8">
-      <form className="border-2 p-6 rounded-lg w-2/5 mx-auto mt-4" onSubmit={handleSubmit}>
+      <form className="border-2 p-6 rounded-lg md:w-2/5 mx-auto mt-4" onSubmit={handleSubmit}>
         <p className="text-2xl mb-4 font-medium text-center">Log In</p>
         <label htmlFor="email" className="font-medium">Email</label><br />
         <input type="email" id="email" name="email" className="border border-gray-400 rounded text-sm p-1 w-full" required /><br />

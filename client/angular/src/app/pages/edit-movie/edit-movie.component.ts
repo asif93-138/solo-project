@@ -72,7 +72,7 @@ export class MUFormComponent implements OnInit {
       formDataImage.append("image", this.imageFile);
 
       try {
-        const imageResponse = await fetch("https://solo-project-llin.onrender.com/upload", {
+        const imageResponse = await fetch("http://localhost:3000/upload", {
           method: "POST",
           body: formDataImage,
         });

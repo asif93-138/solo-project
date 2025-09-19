@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function createRatingAndReview(data: any) {
-    const response = await fetch("https://solo-project-llin.onrender.com/api/review/", {
+    const response = await fetch("http://localhost:3000/api/review/", {
         method: "POST",
         headers: {
             "content-type": "application/json",
@@ -12,7 +12,7 @@ export async function createRatingAndReview(data: any) {
 }
 
 export async function updateRatingAndReview(id: any, data: any) {
-    const response = await fetch("https://solo-project-llin.onrender.com/api/review/" + id, {
+    const response = await fetch("http://localhost:3000/api/review/" + id, {
         method: "PUT",
         headers: {
             "content-type": "application/json",
@@ -24,7 +24,7 @@ export async function updateRatingAndReview(id: any, data: any) {
 }
 
 export async function deleteRatingAndReview(id: any) {
-    const response = await fetch("https://solo-project-llin.onrender.com/api/review/" + id, {
+    const response = await fetch("http://localhost:3000/api/review/" + id, {
         method: "DELETE",
     });
     const result = await response.json();

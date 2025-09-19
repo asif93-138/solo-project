@@ -17,9 +17,9 @@ const Layout = () => {
             {
                 !(location.pathname == '/login' || location.pathname == '/register')
                     ?
-                    <nav className="navbar bg-slate-900 text-neutral-content px-8">
+                    <nav className="navbar bg-slate-900 text-neutral-content md:px-8">
                         <div className="flex-1">
-                            <Link to="/" className="m-2">      <div className="text-2xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
+                            <Link to="/">      <div className="text-2xl font-bold text-primary hover:text-primary-focus transition-colors duration-300">
                                 <span className="bg-yellow-500 text-black px-2 py-1 rounded">FILM</span>
                                 <span className="text-white">Critic</span>
                             </div></Link>
@@ -27,7 +27,7 @@ const Layout = () => {
                         <div className="flex-none gap-2">
                             {context?.user ?
                                 <>
-                                    <button onClick={showModal} type="button" className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full"><i className="fa-solid fa-plus"></i> New Movie</button>
+                                    <button onClick={showModal} type="button" className="md:flex hidden btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full"><i className="fa-solid fa-plus"></i> New Movie</button>
                                     {/* <Link to='/user'></Link> */}
                                     <details className="dropdown dropdown-end">
                                         <summary tabIndex={0} className="btn p-0 btn-ghost tool-tip">
@@ -41,6 +41,7 @@ const Layout = () => {
                                         <ul tabIndex={0} style={{ right: '-15px' }} className="menu mt-1 dropdown-content bg-base-100 rounded-box z-[1] w-32 shadow">
                                             {location.pathname != '/' && <li className="text-black"><Link className="mb-1" to='/' onClick={() => document.getElementsByTagName("details")[0].removeAttribute("open")}>Home</Link></li>}
                                             {location.pathname != '/user' && <li className="text-black"><Link className="mb-1" to='/user' onClick={() => document.getElementsByTagName("details")[0].removeAttribute("open")}>My List</Link></li>}
+                                            <li><button onClick={showModal} type="button" className="md:hidden flex flex-nowrap p-0 my-2 mb-3 btn bg-transparent btn-nav-l min-h-0 h-auto border-0 rounded-full"><i className="fa-solid fa-plus"></i><span className="font-normal">New Movie</span></button></li>
                                             <li className="text-black"><button type="button" className="" onClick={() => {
                                                 context?.setUser(null);
                                                 localStorage.clear();
@@ -77,7 +78,7 @@ const Layout = () => {
                     <span>Successfully inserted a new movie!</span>
                 </div>
             </div>
-            <Outlet />
+            {/* <Outlet /> */}
         </>
     )
 };

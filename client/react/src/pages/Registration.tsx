@@ -46,7 +46,7 @@ const Registration = () => {
   }
   return (
     <div className="p-8">
-      <form className="border-2 p-6 rounded-lg w-2/5 mx-auto mt-4" onSubmit={handleSubmit}>
+      <form className="border-2 p-6 rounded-lg md:w-2/5 mx-auto mt-4" onSubmit={handleSubmit}>
         <p className="text-2xl mb-4 font-medium">Register</p>
         <label htmlFor="name" className="font-medium">Name</label><br />
         <input type="text" id="name" name="name" className="border border-gray-400 rounded text-sm p-1 w-full" required /><br />

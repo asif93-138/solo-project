@@ -180,7 +180,7 @@ export const getMovieByUserId: RequestHandler = async (
   //     .json({ error: "Failed to fetch movies with genres and ratings" });
   // }
     try {
-    const { title, genre } = req.query;
+    const { title, genre, start, end } = req.query;
 
     // Build up the WHERE clause (we’ll add an EXISTS filter if needed)
     const where: any = {user_id: req.params.id};
@@ -199,6 +199,16 @@ export const getMovieByUserId: RequestHandler = async (
              AND g.genre = '${genre}'
         )
       `);
+    }
+
+        let paginationOpt: any = {};
+
+    // Pagination
+    const startNum = parseInt(start as string, 10) || 1;
+    const endNum = parseInt(end as string, 10) || 50;
+    if (!title && !genre) {
+      paginationOpt.limit = endNum - startNum + 1;
+      paginationOpt.offset = startNum - 1;
     }
 
     // We’ll select the raw Movie fields, avg rating, and a JSON array of all genres
@@ -254,6 +264,8 @@ export const getMovieByUserId: RequestHandler = async (
         'Movie.producer',
       ],
       order: [['movie_id', 'DESC']],
+      ...paginationOpt,
+      subQuery: false, // ✅ prevents Sequelize from wrapping in subquery
     });
 
     if (!movies.length) {

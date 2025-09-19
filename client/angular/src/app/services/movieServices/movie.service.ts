@@ -8,13 +8,13 @@ import { Movie } from "interfaces/movie";
 })
 export class MovieService {
   constructor(private http: HttpClient) {}
-  private movieUrl = "https://solo-project-llin.onrender.com/api/movie/";
+  private movieUrl = "http://localhost:3000/api/movie/";
   getAllMovies(): Observable<Movie[]> {
     const res = this.http.get<Movie[]>(this.movieUrl);
     return res;
   }
 
-  private myMovieUrl = "https://solo-project-llin.onrender.com/api/movie/user/";
+  private myMovieUrl = "http://localhost:3000/api/movie/user/";
   getMyList(user_id: Number): Observable<Movie[]> {
     const res = this.http.get<Movie[]>(this.myMovieUrl + user_id);
     return res;
@@ -37,21 +37,21 @@ export class MovieService {
 
   createMovie(movieData: any): Observable<any> {
     console.log("movieData : ", movieData);
-    return this.http.post("https://solo-project-llin.onrender.com/api/movie/", movieData);
+    return this.http.post("http://localhost:3000/api/movie/", movieData);
   }
 
   uploadImage(imageData: FormData): Observable<any> {
-    return this.http.post("https://solo-project-llin.onrender.com/upload", imageData);
+    return this.http.post("http://localhost:3000/upload", imageData);
   }
 
   getMovieDetails(movie_id: any) {
-    return fetch("https://solo-project-llin.onrender.com/api/movie/" + movie_id).then((res) =>
+    return fetch("http://localhost:3000/api/movie/" + movie_id).then((res) =>
       res.json()
     );
   }
 
   async deleteMovie(id: any) {
-    const response = await fetch("https://solo-project-llin.onrender.com/api/movie/" + id, {
+    const response = await fetch("http://localhost:3000/api/movie/" + id, {
       method: "DELETE",
     });
     return await response.json();
