@@ -49,9 +49,9 @@ const Registration = () => {
       <form className="border-2 p-6 rounded-lg md:w-2/5 mx-auto mt-4" onSubmit={handleSubmit}>
         <p className="text-2xl mb-4 font-medium">Register</p>
         <label htmlFor="name" className="font-medium">Name</label><br />
-        <input type="text" id="name" name="name" className="border border-gray-400 rounded text-sm p-1 w-full" required /><br />
+        <input type="text" id="name" name="name" className="border border-gray-400 rounded text-sm p-1 w-full mb-2" required /><br />
         <label htmlFor="email" className="font-medium">Email</label><br />
-        <input type="email" id="email" name="email" className="border border-gray-400 rounded text-sm p-1 w-full" required /><br />
+        <input type="email" id="email" name="email" className="border border-gray-400 rounded text-sm p-1 w-full mb-2" required /><br />
         {showUniqueEmailWarn && <p className="text-red-600">This email is already used!</p>}
         <label htmlFor="pass" className="font-medium">Password</label><br />
         <input type="password" id="pass" name="pass" className="border border-gray-400 rounded text-sm p-1 w-full" required /><br />

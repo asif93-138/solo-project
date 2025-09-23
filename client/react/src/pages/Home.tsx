@@ -1,5 +1,5 @@
 import "../index.css";
-import { useEffect, useState, useContext, FormEvent, useCallback } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Movie, Genre } from "../interfaces/home";
 import MovieCards from "../components/MovieCards";
@@ -22,6 +22,16 @@ function App() {
   // Loading state
   const [isLoading, setIsLoading] = useState(false)
 
+    // debounce
+  const debounce = (func: (...args: any[]) => void, delay: number) => {
+    let timer: NodeJS.Timeout
+    return (...args: any[]) => {
+      if (timer) clearTimeout(timer)
+      timer = setTimeout(() => func(...args), delay)
+    }
+  }
+  
+
   async function fetchingMovies(start: number, end: number) {
     const results = await getAllMovies(start, end);
     setInitialResults(results);
@@ -42,6 +52,7 @@ function App() {
   async function scrollLoading() {
     setIsLoading(true);
     const results = await getAllMovies((pageNumber * 50 - 49), (pageNumber * 50));
+    if (!Array.isArray(results)) {setStopLoading(true); return;}
     if (results.length < 50) setStopLoading(true);
     setInitialResults([...initialResults, ...results]);
     setData([...initialResults, ...results]);
@@ -84,10 +95,9 @@ function App() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [handleScroll])
 
-  const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSearch = async (searchTitle: string, searchGenre: string) => {
     // console.log(searchTitle.trim(), searchGenre);
-    if (!searchTitle.trim() && !searchGenre) {return;}
+    if (!searchTitle.trim() && !searchGenre) return;
     try {
       setData([]); setIsLoading(true);
       const searchData: Movie[] = await searchMovies(
@@ -109,15 +119,21 @@ function App() {
       setData([]); setIsLoading(false);
     }
   };
-  
+    // memoized debounced function
+  const debouncedFetch = useCallback(debounce(handleSearch, 1000), [])
+  useEffect(() => {
+    handleSearch(searchTitle, searchGenre);
+  }, [searchGenre]);
+
+    useEffect(() => {
+    debouncedFetch(searchTitle, searchGenre);
+  }, [searchTitle, debouncedFetch]);
   return (
     <section className="bg-black pt-5 pb-10 min-h-screen">
-      <div className="mb-10 flex w-3/5 mx-auto justify-start gap-6 items-end">
-        <form
-          onSubmit={handleSearch}
-          className="flex gap-6 items-end rounded-lg w-9-10"
+        <form onSubmit={(e) => {e.preventDefault(); handleSearch(searchTitle, searchGenre);}}
+          className="mb-6 md:mb-10 md:flex gap-6 items-end rounded-lg  md:w-3/5 w-[90%] mx-auto text-center"
         >
-          <div className="w-1/2">
+          <div className="md:w-1/2">
             <label htmlFor="title" className="label">
               <span className="label-text text-white">Movie Title</span>
             </label>
@@ -130,7 +146,7 @@ function App() {
               onChange={(e) => setSearchTitle(e.target.value)}
             />
           </div>
-          <div className="w-1/2">
+          <div className="md:w-1/2">
             <label htmlFor="genre" className="label">
               <span className="label-text text-white">Genre</span>
             </label>
@@ -150,14 +166,10 @@ function App() {
               ))}
             </select>
           </div>
-          <button type="submit" className="btn">
-            Search
-          </button>
-        </form>
         <button
           id="scb"
           type="button"
-          className={showSCB ? "btn" : "btn hidden"}
+          className={showSCB ? "btn mt-8 md:mt-0" : "btn hidden mt-8 md:mt-0"}
           onClick={() => {
             setSearchTitle("");
             setSearchGenre("");
@@ -169,7 +181,7 @@ function App() {
         >
           Return
         </button>
-      </div>
+        </form>
 
       <h4
         id="sh"

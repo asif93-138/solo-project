@@ -100,7 +100,7 @@ const MUForm: React.FC<MUFormProps> = ({ setRefresh, dataObj, setShowModal_4A1, 
   };
 
   return (
-    <div className="p-6 mx-auto">
+    <div className="md:p-6">
       <h1 className="text-2xl font-bold mb-4">Edit this entry</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
       {uniqueTitleError && <p className="text-red-600 text-center">This title already exists!</p>}

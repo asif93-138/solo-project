@@ -27,12 +27,10 @@ export async function searchMovies(title: any, genre: any) {
   }
 }
 
-export function getMyList(user_id: any, setData: any, setInitialResults: any) {
-  fetch("http://localhost:3000/api/movie/user/" + user_id)
+export async function getMyList(user_id: any, start: number, end: number) {
+  return await fetch("http://localhost:3000/api/movie/user/" + user_id + "?start=" + start + "&end=" + end)
     .then((res) => res.json())
-    .then((data) => {
-      setData(data); setInitialResults(data);
-    });
+    .then((data) => data);
 }
 
 export function getMovieDetails(movie_id: any, setDataObj: any) {

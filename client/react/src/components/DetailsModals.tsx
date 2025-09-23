@@ -41,7 +41,7 @@ export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rati
                 className="textarea textarea-bordered textarea-md w-full max-w-xs text-black my-2"></textarea><br />
               {/* Submit and Cancel buttons */}
               <button type="submit" className="btn">Submit</button>
-              <button type="button" onClick={() => setShowModal_2(false)} className="btn">Cancel</button>
+              <button type="button" onClick={() => setShowModal_2(false)} className="btn ms-3">Cancel</button>
             </section>
           </form>
         </div>
@@ -69,13 +69,13 @@ export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rati
           <h4 className="text-black text-2xl mb-4">Delete this item?</h4>
           {/* Confirm and Cancel buttons */}
           <button type="button" className="btn text-red-500" onClick={handleDelete}>Confirm</button>
-          <button type="button" className="btn" onClick={() => setShowModal_5(false)}>Cancel</button>
+          <button type="button" className="btn ms-3" onClick={() => setShowModal_5(false)}>Cancel</button>
         </div>
       </dialog>
 
       {/* Modal for editing movie details */}
       <dialog id="my_modal_4" className={showModal_4 ? "modal modal-open" : "modal"}>
-        <div className="modal-box text-black max-w-full w-1/2">
+        <div className="modal-box text-black max-w-full md:w-1/2">
           {/* Section for the movie edit form */}
           <article id="my_modal_4A1" className={showModal_4A1 ? "" : "hidden"}>
             {dataObj && <MUForm setRefresh={setRefresh} dataObj={dataObj} setShowModal_4A1={setShowModal_4A1} setShowModal_4A2={setShowModal_4A2} setShowModal_4={setShowModal_4} />}
@@ -99,7 +99,7 @@ export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rati
                   }, 1500);
                 }
               }}>Confirm</button>
-              <button type="button" className="btn" onClick={() => setShowModal(false)}>Cancel</button>
+              <button type="button" className="btn ms-3" onClick={() => setShowModal(false)}>Cancel</button>
             </>}
         </div>
       </dialog>

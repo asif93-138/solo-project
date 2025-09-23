@@ -165,7 +165,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
   };
 
   return (
-    <div className="p-6 mx-auto">
+    <div className="md:p-6 mx-auto">
       <h1 className="text-2xl font-bold mb-5">Create New Movie Entry</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -192,8 +192,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           value={formData.release_yr}
           onChange={handleInputChange}
           placeholder="Release Year"
-          className="input input-bordered h-full py-1"
-          required style={{width: '49%'}}
+          className="input input-bordered h-full py-1 w-[49%]"
+          required
           max="9999"
         />
 
@@ -203,8 +203,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           value={formData.length}
           onChange={handleInputChange}
           placeholder="Length (minutes)"
-          className="input input-bordered h-full py-1"
-          required style={{width: '49%'}}
+          className="input input-bordered h-full py-1 w-[49%]"
+          required
           max="32767"
         />
         </div>
@@ -215,8 +215,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           value={formData.director}
           onChange={handleInputChange}
           placeholder="Director"
-          className="input input-bordered me-2 h-full py-1"
-          style={{width: '49%'}}
+          className="input input-bordered me-2 h-full py-1 md:w-[49%] w-full"
         />
 
         <input
@@ -225,12 +224,11 @@ const MovieForm: React.FC<MovieFormProps> = ({ setHomeRefresh, setListRefresh, s
           value={formData.producer}
           onChange={handleInputChange}
           placeholder="Producer"
-          className="input input-bordered h-full py-1"
-          style={{width: '49%'}}
+          className="input input-bordered h-full py-1 md:w-[49%] w-full"
         />
 
-        <section className="flex justify-between items-start">
-        <div className="space-y-2" style={{width: '49%'}}>
+        <section className="md:flex justify-between items-start">
+        <div className="space-y-2 md:w-[49%] w-full">
           {genres.length > 0 && (
             <select
               onChange={handleGenreChange}

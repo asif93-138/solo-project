@@ -38,10 +38,10 @@ const Layout = () => {
                                             />
                                             <small className="tooltiptext">{context.user.name}<br />{context.user.email}</small>
                                         </summary>
-                                        <ul tabIndex={0} style={{ right: '-15px' }} className="menu mt-1 dropdown-content bg-base-100 rounded-box z-[1] w-32 shadow">
+                                        <ul tabIndex={0} style={{ right: '-10px' }} className="menu mt-1 dropdown-content bg-base-100 rounded-box z-[1] w-32 shadow">
                                             {location.pathname != '/' && <li className="text-black"><Link className="mb-1" to='/' onClick={() => document.getElementsByTagName("details")[0].removeAttribute("open")}>Home</Link></li>}
                                             {location.pathname != '/user' && <li className="text-black"><Link className="mb-1" to='/user' onClick={() => document.getElementsByTagName("details")[0].removeAttribute("open")}>My List</Link></li>}
-                                            <li><button onClick={showModal} type="button" className="md:hidden flex flex-nowrap p-0 my-2 mb-3 btn bg-transparent btn-nav-l min-h-0 h-auto border-0 rounded-full"><i className="fa-solid fa-plus"></i><span className="font-normal">New Movie</span></button></li>
+                                            <li><button onClick={() => {document.getElementsByTagName("details")[0].removeAttribute("open"); showModal();}} type="button" className="md:hidden flex flex-nowrap p-0 my-2 mb-3 btn bg-transparent btn-nav-l min-h-0 h-auto border-0 rounded-full"><i className="fa-solid fa-plus"></i><span className="font-normal">New Movie</span></button></li>
                                             <li className="text-black"><button type="button" className="" onClick={() => {
                                                 context?.setUser(null);
                                                 localStorage.clear();
@@ -69,7 +69,7 @@ const Layout = () => {
                     </nav>
             }
             <dialog id="my_modal_nav" className={(showNavModal === 1) ? "modal text-black modal-open" : "modal text-black"}>
-                <div className="modal-box max-w-full w-1/2">
+                <div className="modal-box max-w-full md:w-1/2">
                     {context && <MovieForm setHomeRefresh={context.setHomeRefresh} setListRefresh={context.setListRefresh} setShowFirstModal={setShowFirstModal} setShowNavModal={setShowNavModal} />}
                 </div>
             </dialog>
@@ -78,7 +78,7 @@ const Layout = () => {
                     <span>Successfully inserted a new movie!</span>
                 </div>
             </div>
-            {/* <Outlet /> */}
+            <Outlet />
         </>
     )
 };

@@ -66,11 +66,11 @@ const Details = () => {
       {/* Main Section Container */}
 
       {/* Movie Details Section */}
-      <div className="flex justify-around items-center">
+      <div className="flex md:justify-around md:items-center flex-col-reverse md:flex-row">
         {/* Left Column: Movie Information */}
-        <div className="w-2/5">
+        <div className="md:w-2/5 m-4 md:m-0">
           {/* Movie Title */}
-          <h2 className="text-5xl mb-4">{dataObj?.title}</h2>
+          <h2 className="text-4xl md:text-5xl mb-4">{dataObj?.title}</h2>
 
           {/* Movie Genres */}
           {dataObj?.genres.map((y) => (
@@ -127,7 +127,7 @@ const Details = () => {
             <span>
               <button
                 onClick={handleUpdate}
-                className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full"
+                className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full me-1"
                 type="button"
               >
                 <i className="fa-regular fa-pen-to-square"></i> Edit
@@ -152,30 +152,30 @@ const Details = () => {
         />
       </div>
 
-      {/* Reviews Section */}
-      <div className="bg-slate-900 mt-20 px-4 py-10 rounded-3xl mx-28">
+   
+      <div className="bg-slate-900 mt-20 px-4 py-10 rounded-3xl md:mx-28 mx-3">
         <h3 className="text-3xl text-center">Reviews</h3>
 
-        {/* Add Review Section */}
+       
         {context?.user &&
           !dataObj?.rr.find((x) => x.user_id == context?.user?.user_id) && (
             <>
-              <h4 className="text-2xl my-3 ml-32">Rate and Review</h4>
-              <form name="rr" className="mb-10" onSubmit={handleSubmit}>
+              <h4 className="text-2xl my-3 md:ml-32 ml-6">Rate and Review</h4>
+              <form name="rr" className="md:mb-10" onSubmit={handleSubmit}>
                 <Rating
-                  style={{ maxWidth: 180, marginLeft: "120px" }}
+                  className="max-w-[180px] md:ml-32 ml-6"
                   value={rating}
                   onChange={setRating}
                 />
                 <textarea
                   placeholder="Write your review"
                   name="review"
-                  className="textarea textarea-bordered textarea-md w-4/5 ml-32 bg-slate-700 text-white mt-4 my-2"
+                  className="textarea textarea-bordered textarea-md w-4/5 md:ml-32 ml-6 bg-slate-700 text-white mt-4 my-2"
                 ></textarea>
                 <br />
                 <button
                   type="submit"
-                  className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full ml-32"
+                  className="btn bg-transparent btn-nav-l text-white min-h-0 h-auto py-3 rounded-full md:ml-32 ml-6"
                 >
                   Submit
                 </button>
@@ -183,11 +183,11 @@ const Details = () => {
             </>
           )}
 
-        {/* Display Reviews */}
+        
         {dataObj?.rr.map((x) => (
           <article
             key={x.rr_id}
-            className="w-3/4 mx-auto justify-between bg-slate-700 text-white my-6 p-8 rounded-md"
+            className="md:w-3/4 mx-auto justify-between bg-slate-700 text-white my-6 p-8 rounded-md"
           >
             <div className="flex justify-between mb-1">
               <p>
@@ -210,7 +210,7 @@ const Details = () => {
             </div>
             <p className="text-justify mb-3">{x.review}</p>
 
-            {/* Edit/Delete Review Buttons */}
+            
             {x.user_id == context?.user?.user_id && (
               <div className="flex justify-end">
                 <button

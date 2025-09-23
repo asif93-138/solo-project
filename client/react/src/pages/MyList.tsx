@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, FormEvent, useCallback } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link } from "react-router";
 import { Movie, Genre } from "../interfaces/home";
@@ -19,9 +19,18 @@ const Mylist = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [isLoading, setIsLoading] = useState(false)
 
+      // debounce
+  const debounce = (func: (...args: any[]) => void, delay: number) => {
+    let timer: NodeJS.Timeout
+    return (...args: any[]) => {
+      if (timer) clearTimeout(timer)
+      timer = setTimeout(() => func(...args), delay)
+    }
+  }
+
     // Load more data function
     const loadMoreData = useCallback(() => {
-      if (isLoading || stopLoading || showSH) return
+      if (isLoading || stopLoading || showSH || !context?.user) return
       setPageNumber(pageNumber + 1);
     }, [isLoading, stopLoading, showSH]) // currentPage, allCards, 
   
@@ -50,16 +59,35 @@ const Mylist = () => {
     const results = await getAllGenres();
     setGenres(results);
   }
+    async function fetchingMovies() {
+      setIsLoading(true);
+      const data = await getMyList(context?.user?.user_id, (pageNumber * 50 - 49), (pageNumber * 50));
+      setInitialResults(data); setData(data);
+      setIsLoading(false);
+  }
+
+    async function scrollLoading() {
+      setIsLoading(true);
+      const results = await getMyList(context?.user?.user_id, (pageNumber * 50 - 49), (pageNumber * 50));
+      if (!Array.isArray(results)) {setStopLoading(true); return;}
+      if (results.length < 50) setStopLoading(true);
+      setInitialResults([...initialResults, ...results]);
+      setData([...initialResults, ...results]);
+      setIsLoading(false);
+    }  
+  useEffect(() => {
+    if (context?.user) scrollLoading();
+  }, [pageNumber]);
   useEffect(() => {
     if (context?.user) {
-      getMyList(context?.user?.user_id, setData, setInitialResults);
+      fetchingMovies();
       fetchingGenres();
+      setPageNumber(1);
     }
   }, [context?.listRefresh, context?.user]);
-  const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSearch = async (searchTitle: string, searchGenre: string, user_id: number | undefined) => {
     // console.log(searchTitle.trim(), searchGenre);
-    let searchAPI = "http://localhost:3000/api/movie/user/" + context?.user?.user_id;
+    let searchAPI = "http://localhost:3000/api/movie/user/" + user_id;
     if (searchTitle.trim() && searchGenre) {
       searchAPI += "?title=" + searchTitle.trim() + "&genre=" + searchGenre;
     }
@@ -84,6 +112,15 @@ const Mylist = () => {
       setShowSCB(true);
       });
   };
+      // memoized debounced function
+  const debouncedFetch = useCallback(debounce(handleSearch, 1000), [])
+  useEffect(() => {
+    handleSearch(searchTitle, searchGenre, context?.user?.user_id);
+  }, [searchGenre]);
+
+    useEffect(() => {
+    debouncedFetch(searchTitle, searchGenre, context?.user?.user_id);
+  }, [searchTitle, debouncedFetch]);
   return (
     <div className="bg-black text-white py-4 min-h-screen">
       {context?.user ? 
@@ -93,12 +130,12 @@ const Mylist = () => {
           Please login/register to see Your Movies!
         </h4>
       }
-            <div className="mb-10 flex w-3/5 mx-auto justify-start gap-6 items-end">
-        <form
-          onSubmit={handleSearch}
-          className="flex gap-6 items-end rounded-lg w-9-10"
+
+      {context?.user && <form
+          onSubmit={(e) => {e.preventDefault(); handleSearch(searchTitle, searchGenre, context.user?.user_id);}}
+          className="mb-6 md:mb-10 md:flex gap-6 items-end rounded-lg  md:w-3/5 w-[90%] mx-auto text-center"
         >
-          <div className="w-1/2">
+          <div className="md:w-1/2">
             <label htmlFor="title" className="label">
               <span className="label-text text-white">Movie Title</span>
             </label>
@@ -111,7 +148,7 @@ const Mylist = () => {
               onChange={(e) => setSearchTitle(e.target.value)}
             />
           </div>
-          <div className="w-1/2">
+          <div className="md:w-1/2">
             <label htmlFor="genre" className="label">
               <span className="label-text text-white">Genre</span>
             </label>
@@ -131,14 +168,10 @@ const Mylist = () => {
               ))}
             </select>
           </div>
-          <button type="submit" className="btn">
-            Search
-          </button>
-        </form>
         <button
           id="scb"
           type="button"
-          className={showSCB ? "btn" : "btn hidden"}
+          className={showSCB ? "btn mt-8 md:mt-0" : "btn hidden mt-8 md:mt-0"}
           onClick={() => {
             setSearchTitle("");
             setSearchGenre("");
@@ -150,7 +183,7 @@ const Mylist = () => {
         >
           Return
         </button>
-      </div>
+        </form>}
 
       <h4
         id="sh"
@@ -170,10 +203,10 @@ const Mylist = () => {
       >
         No results found..
       </p>
-      <div className="grid grid-cols-4 gap-12 w-9-10 mx-auto">
+      <div className="md:grid grid-cols-4 gap-12 w-4/5 md:w-[90%] mx-auto">
         {data.map((x) => (
           <Link to={`/details/${x.movie_id}`} key={x.movie_id}>
-            <div className="card shadow-xl">
+            <div className="card shadow-xl my-10 md:my-0">
             <img
                   className="poster-img rounded-3xl"
                   src={"http://localhost:3000" + x.img}
@@ -222,6 +255,7 @@ const Mylist = () => {
           </Link>
         ))}
       </div>
+      {context?.user && isLoading && <p className="text-center mt-20"><span className="loading loading-spinner text-white w-20"></span></p>}
     </div>
   );
 };

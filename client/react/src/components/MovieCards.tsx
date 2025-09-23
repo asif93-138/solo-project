@@ -5,10 +5,10 @@ import { MovieCardsProps } from "../interfaces/home";
 const MovieCards: React.FC<MovieCardsProps> = ({ dataObj }) => {
   // console.log(typeof dataObj[0].averageRating);
   return (
-    <div className='grid grid-cols-4 gap-12 w-9-10 mx-auto'>
+    <div className='md:grid grid-cols-4 gap-12 w-4/5 md:w-[90%] mx-auto'>
       {dataObj.map((x) => (
         <Link to={`/details/${x.movie_id}`} key={x.movie_id}>
-          <div className="card shadow-xl relative">
+          <div className="card shadow-xl relative my-10 md:my-0">
           <img className='poster-img rounded-3xl' src={'http://localhost:3000' + x.img} alt="poster" />
             {/* <figure className=''>
               

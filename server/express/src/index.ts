@@ -9,7 +9,7 @@ import uploadRoute from "./routes/uploadRoute";
 import express, { Express } from "express";
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
+const port = Number(process.env.PORT) || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -21,7 +21,7 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/upload", uploadRoute)
 
 sequelize.sync({ alter: true }).then(() => {
-  app.listen(port, () => {
+  app.listen(port, "0.0.0.0", () => {
     console.log(`Server is running on http://localhost:${port}`);
   });
 });
