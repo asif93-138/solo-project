@@ -1,4 +1,9 @@
-// import { createMovie } from "./controllers/movieController";
+import sequelize from "./models/sequelize";
+import db from "./models"
+
+const Movie = db.Movie;
+const Genre = db.Genre;
+const MG = db.MG;
 
 const arr = [
     {
@@ -88,18 +93,85 @@ const arr = [
     }
 ];
 
-for (let i = 1; i < 11; i++) {
-    arr.forEach(x => {
-    //     createMovie({body: {
-    //     title: x.title + "-" + i,
-    //     img: x.img,
-    //     genre: x.genre,
-    //     user_id: i % 2 == 0 ? 2 : 1,
-    //     desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-    //     release_yr: 2005,
-    //     director: "Christopher Nolan",
-    //     length: 150,
-    //     producer: "Dhaka Studio"
-    // }});
+async function seedMovies() {
+  await sequelize.sync({ force: false });
+
+  // 🔹 Pre-create genres once
+  const genres:any = {};
+  for (const template of arr) {
+    for (const g of template.genre) {
+      if (!genres[g]) {
+        const [genreInstance] = await Genre.findOrCreate({ where: { genre: g } });
+        genres[g] = genreInstance.genre_id;
+      }
+    }
+  }
+
+  const BATCH_SIZE = 1000; // insert 1000 at a time
+  let buffer: any[] = [];
+  let associations: any[] = [];
+
+  for (let i = 531; i < 10001; i++) {
+    for (const template of arr) {
+      const movieData = {
+        user_id: i % 2 === 0 ? 2 : 1,
+        title: template.title + "-" + i,
+        img: template.img,
+        desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+        release_yr: 2005,
+        director: "Christopher Nolan",
+        length: 150,
+        producer: "Dhaka Studio",
+      };
+
+      buffer.push(movieData);
+
+      // collect associations later (need movie_id after insert)
+      associations.push({ movieData, genre: template.genre });
+    }
+
+    // 🔹 Flush buffer every BATCH_SIZE
+    if (buffer.length >= BATCH_SIZE) {
+      const movies = await Movie.bulkCreate(buffer, { returning: true });
+      const movieAssociations:any = [];
+
+      movies.forEach((movie: { movie_id: number; }, idx: number) => {
+        const genresForMovie = associations[idx].genre;
+        for (const g of genresForMovie) {
+          movieAssociations.push({
+            movie_id: movie.movie_id,
+            genre_id: genres[g],
+          });
+        }
+      });
+
+      await MG.bulkCreate(movieAssociations);
+
+      buffer = [];
+      associations = [];
+      console.log(`Inserted batch up to movie #${i}`);
+    }
+  }
+
+  // flush last batch
+  if (buffer.length > 0) {
+    const movies = await Movie.bulkCreate(buffer, { returning: true });
+    const movieAssociations:any = [];
+
+    movies.forEach((movie: { movie_id: number; }, idx: number) => {
+      const genresForMovie = associations[idx].genre;
+      for (const g of genresForMovie) {
+        movieAssociations.push({
+          movie_id: movie.movie_id,
+          genre_id: genres[g],
+        });
+      }
     });
+
+    await MG.bulkCreate(movieAssociations);
+  }
+
+  console.log("✅ Seeding completed");
 }
+
+seedMovies().then(() => process.exit()).catch(console.error);

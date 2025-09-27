@@ -16,8 +16,10 @@ const Mylist = () => {
   const [showSH, setShowSH] = useState(false);
   const [showSCB, setShowSCB] = useState(false);
   const [stopLoading, setStopLoading] = useState(false);
+  const [stopSearchLoading, setStopSearchLoading] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
-  const [isLoading, setIsLoading] = useState(false)
+  const [searchPageNumber, setSearchPageNumber] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
       // debounce
   const debounce = (func: (...args: any[]) => void, delay: number) => {
@@ -33,6 +35,11 @@ const Mylist = () => {
       if (isLoading || stopLoading || showSH || !context?.user) return
       setPageNumber(pageNumber + 1);
     }, [isLoading, stopLoading, showSH]) // currentPage, allCards, 
+
+  function loadMoreSearchData() {
+    if (isLoading || stopSearchLoading || !showSH) return;
+    setSearchPageNumber(searchPageNumber + 1);
+  }
   
       // Scroll event handler
     const handleScroll = useCallback(() => {
@@ -45,7 +52,7 @@ const Mylist = () => {
   
       // Trigger load more when user is 100px from bottom
       if (scrollTop + windowHeight >= documentHeight - 100) {
-        loadMoreData();
+        loadMoreData(); loadMoreSearchData();
       }
     }, [loadMoreData, isLoading])
   
@@ -75,9 +82,25 @@ const Mylist = () => {
       setData([...initialResults, ...results]);
       setIsLoading(false);
     }  
+
+  async function searchScroll() {
+    setIsLoading(true);
+    const searchAPI = "http://localhost:3000/api/movie/user/" + context?.user?.user_id
+        + "?title=" + searchTitle.trim() + "&genre=" + searchGenre 
+        + "&start=" + (searchPageNumber * 50 - 49) + "&end=" + (searchPageNumber * 50);
+    const results = await fetch(searchAPI).then(res => res.json()).then(data => data);
+    if (!Array.isArray(results)) { setStopSearchLoading(true); return; }
+    if (results.length < 50) setStopSearchLoading(true);
+    setData([...data, ...results]);
+    setIsLoading(false);
+  }
+
   useEffect(() => {
     if (context?.user) scrollLoading();
   }, [pageNumber]);
+  useEffect(() => {
+    if (context?.user && showSH) searchScroll();
+  }, [searchPageNumber]);
   useEffect(() => {
     if (context?.user) {
       fetchingMovies();
@@ -179,6 +202,7 @@ const Mylist = () => {
             setShowSH(false);
             setShowNRF(false);
             setShowSCB(false);
+            setSearchPageNumber(1);
           }}
         >
           Return

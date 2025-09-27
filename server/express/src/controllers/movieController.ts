@@ -206,10 +206,10 @@ export const getMovieByUserId: RequestHandler = async (
     // Pagination
     const startNum = parseInt(start as string, 10) || 1;
     const endNum = parseInt(end as string, 10) || 50;
-    if (!title && !genre) {
+   
       paginationOpt.limit = endNum - startNum + 1;
       paginationOpt.offset = startNum - 1;
-    }
+    
 
     // We’ll select the raw Movie fields, avg rating, and a JSON array of all genres
     const movies = await Movie.findAll({
@@ -442,7 +442,7 @@ export const getAllMovies: RequestHandler = async (
 ) => {
   try {
     const { title, genre, start, end } = req.query;
-
+    
     // WHERE clause
     const where: any = {};
     if (title) {
@@ -466,10 +466,10 @@ export const getAllMovies: RequestHandler = async (
     // Pagination
     const startNum = parseInt(start as string, 10) || 1;
     const endNum = parseInt(end as string, 10) || 50;
-    if (!title && !genre) {
+  
       paginationOpt.limit = endNum - startNum + 1;
       paginationOpt.offset = startNum - 1;
-    }
+    
 
     const movies = await Movie.findAll({
       attributes: [

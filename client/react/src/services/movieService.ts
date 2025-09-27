@@ -6,21 +6,21 @@ export async function getAllMovies(start: number, end: number) {
   return movies;
 }
 
-export async function searchMovies(title: any, genre: any) {
+export async function searchMovies(title: any, genre: any, start?: number, end?: number) {
   if (title != '' && genre != '') {
-    const results = await fetch(`http://localhost:3000/api/movie/?title=${title}&genre=${genre}`)
+    const results = await fetch(`http://localhost:3000/api/movie/?title=${title}&genre=${genre}&start=${start}&end=${end}`)
     .then((res) => res.json())
     .then((data) => data);
     return results;
   }
   else if (title != '') {
-    const results = await fetch(`http://localhost:3000/api/movie/?title=${title}`)
+    const results = await fetch(`http://localhost:3000/api/movie/?title=${title}&start=${start}&end=${end}`)
     .then((res) => res.json())
     .then((data) => data);
     return results;
   }
   else if (genre != '') {
-    const results = await fetch(`http://localhost:3000/api/movie/?genre=${genre}`)
+    const results = await fetch(`http://localhost:3000/api/movie/?genre=${genre}&start=${start}&end=${end}`)
     .then((res) => res.json())
     .then((data) => data);
     return results;

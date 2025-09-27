@@ -16,8 +16,10 @@ function App() {
   const [showSH, setShowSH] = useState(false);
   const [showSCB, setShowSCB] = useState(false);
   const [stopLoading, setStopLoading] = useState(false);
+  const [stopSearchLoading, setStopSearchLoading] = useState(false);
   const context = useContext(UserContext);
   const [pageNumber, setPageNumber] = useState(1);
+  const [searchPageNumber, setSearchPageNumber] = useState(1);
 
   // Loading state
   const [isLoading, setIsLoading] = useState(false)
@@ -59,6 +61,15 @@ function App() {
     setIsLoading(false);
   }
 
+  async function searchScroll() {
+    setIsLoading(true);
+    const results = await searchMovies(searchTitle.trim(), searchGenre, (searchPageNumber * 50 - 49), (searchPageNumber * 50));
+    if (!Array.isArray(results)) { setStopSearchLoading(true); return; }
+    if (results.length < 50) setStopSearchLoading(true);
+    setData([...data, ...results]);
+    setIsLoading(false);
+  }
+
   useEffect(() => {
     initialDataLoader();
     setPageNumber(1);
@@ -68,11 +79,20 @@ function App() {
     scrollLoading();
   }, [pageNumber]);
 
+  useEffect(() => {
+    if (showSH) searchScroll();
+  }, [searchPageNumber]);
+  
   // Load more data function
   const loadMoreData = useCallback(() => {
-    if (isLoading || stopLoading || showSH) return
+    if (isLoading || stopLoading || showSH) return;
     setPageNumber(pageNumber + 1);
   }, [isLoading, stopLoading, showSH]) // currentPage, allCards, 
+
+  function loadMoreSearchData() {
+    if (isLoading || stopSearchLoading || !showSH) return;
+      setSearchPageNumber(searchPageNumber + 1);
+  }
 
     // Scroll event handler
   const handleScroll = useCallback(() => {
@@ -85,7 +105,7 @@ function App() {
 
     // Trigger load more when user is 100px from bottom
     if (scrollTop + windowHeight >= documentHeight - 100) {
-      loadMoreData();
+      loadMoreData(); loadMoreSearchData();
     }
   }, [loadMoreData, isLoading])
 
@@ -177,6 +197,7 @@ function App() {
             setShowSH(false);
             setShowNRF(false);
             setShowSCB(false);
+            setSearchPageNumber(1);
           }}
         >
           Return
