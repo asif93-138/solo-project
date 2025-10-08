@@ -111,7 +111,7 @@ async function seedMovies() {
   let buffer: any[] = [];
   let associations: any[] = [];
 
-  for (let i = 531; i < 10001; i++) {
+  for (let i = 50001; i < 59001; i++) {
     for (const template of arr) {
       const movieData = {
         user_id: i % 2 === 0 ? 2 : 1,
