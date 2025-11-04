@@ -20,8 +20,18 @@ app.use("/api/genre", genreRoute);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/upload", uploadRoute)
 
-sequelize.sync({ alter: true }).then(() => {
-  app.listen(port, "0.0.0.0", () => {
-    console.log(`Server is running on http://localhost:${port}`);
+// Don't use `sync({ alter: true })` in production or when using migrations/triggers.
+// Altering columns at runtime can fail when DB objects (triggers/functions) depend on them.
+// Instead, just authenticate the connection and start the server. Schema changes
+// should be applied via migrations (you're already using `src/migrations`).
+sequelize
+  .authenticate()
+  .then(() => {
+    app.listen(port, "0.0.0.0", () => {
+      console.log(`Server is running on http://localhost:${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error('Failed to start server - DB connection error:', err);
+    process.exit(1);
   });
-});

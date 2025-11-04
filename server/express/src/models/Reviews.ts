@@ -30,6 +30,14 @@ RR.init(
     sequelize,
     tableName: "ratings_reviews",
     timestamps: false,
+    indexes: [
+      {
+        fields: ['movie_id']
+      },
+      {
+        fields: ['user_id']
+      }
+    ]
   }
 );
 

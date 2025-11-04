@@ -107,11 +107,11 @@ async function seedMovies() {
     }
   }
 
-  const BATCH_SIZE = 1000; // insert 1000 at a time
+  const BATCH_SIZE = 100; // insert 100 at a time
   let buffer: any[] = [];
   let associations: any[] = [];
 
-  for (let i = 50001; i < 59001; i++) {
+  for (let i = 1; i < 81; i++) {
     for (const template of arr) {
       const movieData = {
         user_id: i % 2 === 0 ? 2 : 1,

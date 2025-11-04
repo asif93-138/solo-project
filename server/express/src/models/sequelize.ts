@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import dbConfig from "../config/dbConfig";
 
+
 export const sequelize = new Sequelize(
   dbConfig.DB,
   dbConfig.USER,
@@ -22,6 +23,7 @@ sequelize
   });
 
 export default sequelize;
+
 
 // export const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 //   host: dbConfig.HOST,

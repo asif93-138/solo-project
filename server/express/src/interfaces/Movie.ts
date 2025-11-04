@@ -10,6 +10,7 @@ export interface MovieAttributes {
     director?: string;
     length?: number;
     producer?: string;
+    title_vector?: any; // tsvector type
 }
 
 export interface MovieCreationAttributes extends Optional<MovieAttributes, "movie_id"> { }

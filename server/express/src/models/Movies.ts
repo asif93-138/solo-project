@@ -20,6 +20,10 @@ Movie.init(
       unique: true,
       allowNull: false,
     },
+    title_vector: {
+      type: DataTypes.TSVECTOR,
+      allowNull: true,
+    },
     img: {
       type: DataTypes.TEXT,
     },
@@ -44,6 +48,15 @@ Movie.init(
     sequelize,
     tableName: "movies",
     timestamps: false,
+    indexes: [
+      {
+        fields: ['movie_id'],
+        unique: true
+      },
+      {
+        fields: ['user_id']
+      }
+    ]
   }
 );
 

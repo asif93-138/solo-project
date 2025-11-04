@@ -7,7 +7,9 @@
     "build": "tsc",
     "dev": "nodemon src/index.ts",
     "seed": "nodemon src/seed.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "create-index": "ts-node src/scripts/create_title_index.ts",
+    "run-title-migration": "ts-node src/scripts/run_title_migration.ts"
   },
   "keywords": [],
   "author": "",

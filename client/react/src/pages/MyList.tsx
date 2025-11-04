@@ -69,6 +69,7 @@ const Mylist = () => {
     async function fetchingMovies() {
       setIsLoading(true);
       const data = await getMyList(context?.user?.user_id, (pageNumber * 50 - 49), (pageNumber * 50));
+      if (!Array.isArray(data)) {setStopLoading(true); setIsLoading(false); return;}
       setInitialResults(data); setData(data);
       setIsLoading(false);
   }
@@ -76,7 +77,7 @@ const Mylist = () => {
     async function scrollLoading() {
       setIsLoading(true);
       const results = await getMyList(context?.user?.user_id, (pageNumber * 50 - 49), (pageNumber * 50));
-      if (!Array.isArray(results)) {setStopLoading(true); return;}
+      if (!Array.isArray(results)) {setStopLoading(true); setIsLoading(false); return;}
       if (results.length < 50) setStopLoading(true);
       setInitialResults([...initialResults, ...results]);
       setData([...initialResults, ...results]);

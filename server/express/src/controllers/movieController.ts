@@ -13,6 +13,21 @@ const Genre = db.Genre;
 const MG = db.MG;
 const RR = db.RR;
 
+// Build a tsquery string for prefix matching. Returns null if tokens are all stop/too-short.
+function buildPrefixTsQuery(raw: any): string | null {
+  if (!raw) return null;
+  const s = String(raw).trim();
+  if (!s) return null;
+
+  // Split on whitespace, remove empty tokens
+  const tokens = s.split(/\s+/).map(t => t.replace(/[^a-zA-Z0-9]/g, "")).filter(Boolean);
+  // For prefix matching, require token length >= 3 to avoid meaningless matches
+  const terms = tokens.map(t => t.toLowerCase()).filter(t => t.length >= 3).map(t => `${t}:*`);
+  if (terms.length === 0) return null;
+  // Combine with AND so all tokens must match (you can change to ' | ' for OR)
+  return terms.join(' & ');
+}
+
 export const createMovie: RequestHandler = async (
   req: Request,
   res: Response
@@ -131,65 +146,25 @@ export const getMovieByUserId: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  // try {
-  //   const { title, genre } = req.query;
-  //   const queryOptions = {
-  //     where: {user_id: req.params.id},
-  //     attributes: {
-  //       include: [
-  //         [
-  //           Sequelize.fn("AVG", Sequelize.col("ratingsReviews.rating")),
-  //           "averageRating",
-  //         ],
-  //       ],
-  //     },
-  //     include: [
-  //       {
-  //         model: RR,
-  //         as: "ratingsReviews",
-  //         attributes: [],
-  //       },
-  //       {
-  //         model: Genre,
-  //         as: "genres",
-  //         attributes: ["genre"],
-  //         through: { attributes: [] },
-  //       },
-  //     ],
-  //     group: ["Movie.movie_id", "genres.genre_id"],
-  //     order: [["movie_id", "DESC"]],
-  //   };
-  //  if (title) {
-  //     queryOptions.where = {
-  //       ...queryOptions.where,
-  //       title: {
-  //         [Op.iLike]: `%${title}%`,
-  //       },
-  //     };
-  //   }
-
-  //   if (genre) {
-  //     queryOptions.include[1].where = { genre };
-  //   }
-  //   const movies = await Movie.findAll(queryOptions);
-  //   res.status(200).json(movies);
-  // } catch (error) {
-  //   console.error("Error fetching movies with genres and ratings:", error);
-  //   res
-  //     .status(500)
-  //     .json({ error: "Failed to fetch movies with genres and ratings" });
-  // }
     try {
     const { title, genre, start, end } = req.query;
-
-    // Build up the WHERE clause (we’ll add an EXISTS filter if needed)
-    const where: any = {user_id: req.params.id};
+    
+    // Build up the WHERE clause (collect conditions)
+    const where: any = { user_id: Number(req.params.id) };
+    const andLiterals: any[] = [];
     if (title) {
-      where.title = { [Op.iLike]: `%${title}%` };
+      const tsq = buildPrefixTsQuery(title);
+      if (tsq) {
+        // If title_vector is NULL in the DB, fall back to computing the tsvector from title
+        // so searches still work until DB migration/trigger has been applied.
+        andLiterals.push(Sequelize.literal(`coalesce(title_vector, to_tsvector('english', title)) @@ to_tsquery('english', ${sequelize.escape(tsq)})`));
+      } else {
+        // Fallback to ILIKE for very short/stop-word queries (e.g. 'the')
+        andLiterals.push({ title: { [Op.iLike]: `%${title}%` } });
+      }
     }
     if (genre) {
-      // filter to only movies that have at least one matching genre row...
-      where[Op.and] = Sequelize.literal(`
+      andLiterals.push(Sequelize.literal(`
         EXISTS (
           SELECT 1
             FROM "movie_genre" AS mg
@@ -198,23 +173,31 @@ export const getMovieByUserId: RequestHandler = async (
            WHERE mg.movie_id = "Movie".movie_id
              AND g.genre = '${genre}'
         )
-      `);
+      `));
     }
+    if (andLiterals.length) where[Op.and] = andLiterals;
 
-        let paginationOpt: any = {};
-
-    // Pagination
+    let paginationOpt: any = {};
     const startNum = parseInt(start as string, 10) || 1;
     const endNum = parseInt(end as string, 10) || 50;
-   
-      paginationOpt.limit = endNum - startNum + 1;
-      paginationOpt.offset = startNum - 1;
-    
+    paginationOpt.limit = endNum - startNum + 1;
+    paginationOpt.offset = startNum - 1;
 
-    // We’ll select the raw Movie fields, avg rating, and a JSON array of all genres
+    // Optimization: fetch only matching movie IDs first
+    const idRows = await Movie.findAll({
+      attributes: ['movie_id'],
+      where,
+      order: [['movie_id', 'DESC']],
+      limit: paginationOpt.limit,
+      offset: paginationOpt.offset,
+      raw: true,
+    });
+
+    const movieIds = idRows.map((r: any) => r.movie_id);
+    if (!movieIds.length) return res.status(200).json({ message: 'No movies found' });
+
     const movies = await Movie.findAll({
       attributes: [
-        // all the plain Movie columns:
         'movie_id',
         'user_id',
         'title',
@@ -224,34 +207,20 @@ export const getMovieByUserId: RequestHandler = async (
         'director',
         'length',
         'producer',
-        // the average rating
+        [Sequelize.fn('AVG', Sequelize.col('ratingsReviews.rating')), 'averageRating'],
         [
-          Sequelize.fn('AVG', Sequelize.col('ratingsReviews.rating')),
-          'averageRating',
-        ],
-        // JSON‑array subquery for all genres this movie has
-        [
-          Sequelize.literal(`
-            (
-              SELECT json_agg(g.genre)
-                FROM "movie_genre" AS mg
-                JOIN "genre"      AS g
-                  ON g.genre_id = mg.genre_id
-               WHERE mg.movie_id = "Movie".movie_id
-            )
-          `),
+          Sequelize.literal(`(
+            SELECT json_agg(g.genre)
+              FROM "movie_genre" AS mg
+              JOIN "genre"      AS g
+                ON g.genre_id = mg.genre_id
+             WHERE mg.movie_id = "Movie".movie_id
+          )`),
           'genres',
         ],
       ],
-      include: [
-        {
-          model: RR,
-          as: 'ratingsReviews',
-          attributes: [],
-        },
-      ],
-      where,
-      // group by all non-aggregated fields
+      include: [ { model: RR, as: 'ratingsReviews', attributes: [] } ],
+      where: { movie_id: movieIds },
       group: [
         'Movie.movie_id',
         'Movie.user_id',
@@ -264,8 +233,7 @@ export const getMovieByUserId: RequestHandler = async (
         'Movie.producer',
       ],
       order: [['movie_id', 'DESC']],
-      ...paginationOpt,
-      subQuery: false, // ✅ prevents Sequelize from wrapping in subquery
+      subQuery: false,
     });
 
     if (!movies.length) {
@@ -344,98 +312,6 @@ export const deleteMovie: RequestHandler = async (
   }
 };
 
-
-// export const getAllMovies: RequestHandler = async (
-//   req: Request,
-//   res: Response
-// ) => {
-//   try {
-//     const { title, genre } = req.query;
-
-//     // Build up the WHERE clause (we’ll add an EXISTS filter if needed)
-//     const where: any = {};
-//     if (title) {
-//       where.title = { [Op.iLike]: `%${title}%` };
-//     }
-//     if (genre) {
-//       // filter to only movies that have at least one matching genre row...
-//       where[Op.and] = Sequelize.literal(`
-//         EXISTS (
-//           SELECT 1
-//             FROM "movie_genre" AS mg
-//             JOIN "genre"      AS g
-//               ON g.genre_id = mg.genre_id
-//            WHERE mg.movie_id = "Movie".movie_id
-//              AND g.genre = '${genre}'
-//         )
-//       `);
-//     }
-
-//     // We’ll select the raw Movie fields, avg rating, and a JSON array of all genres
-//     const movies = await Movie.findAll({
-//       attributes: [
-//         // all the plain Movie columns:
-//         'movie_id',
-//         'user_id',
-//         'title',
-//         'img',
-//         'desc',
-//         'release_yr',
-//         'director',
-//         'length',
-//         'producer',
-//         // the average rating
-//         [
-//           Sequelize.fn('AVG', Sequelize.col('ratingsReviews.rating')),
-//           'averageRating',
-//         ],
-//         // JSON‑array subquery for all genres this movie has
-//         [
-//           Sequelize.literal(`
-//             (
-//               SELECT json_agg(g.genre)
-//                 FROM "movie_genre" AS mg
-//                 JOIN "genre"      AS g
-//                   ON g.genre_id = mg.genre_id
-//                WHERE mg.movie_id = "Movie".movie_id
-//             )
-//           `),
-//           'genres',
-//         ],
-//       ],
-//       include: [
-//         {
-//           model: RR,
-//           as: 'ratingsReviews',
-//           attributes: [],
-//         },
-//       ],
-//       where,
-//       // group by all non-aggregated fields
-//       group: [
-//         'Movie.movie_id',
-//         'Movie.user_id',
-//         'Movie.title',
-//         'Movie.img',
-//         'Movie.desc',
-//         'Movie.release_yr',
-//         'Movie.director',
-//         'Movie.length',
-//         'Movie.producer',
-//       ],
-//       order: [['movie_id', 'DESC']],
-//     });
-
-//     if (!movies.length) {
-//       return res.status(200).json({ message: 'No movies found' });
-//     }
-//     return res.json(movies);
-//   } catch (error) {
-//     console.error('Error searching for movies:', error);
-//     return res.status(500).json({ error: 'Failed to search for movies' });
-//   }
-// };
-
 export const getAllMovies: RequestHandler = async (
   req: Request,
   res: Response
@@ -443,13 +319,20 @@ export const getAllMovies: RequestHandler = async (
   try {
     const { title, genre, start, end } = req.query;
     
-    // WHERE clause
+    // WHERE clause - collect conditions and combine with Op.and
     const where: any = {};
+    const andLiterals: any[] = [];
     if (title) {
-      where.title = { [Op.iLike]: `%${title}%` };
+      const tsq = buildPrefixTsQuery(title);
+      if (tsq) {
+        // Use coalesce to handle NULL title_vector values (compute on the fly)
+        andLiterals.push(Sequelize.literal(`coalesce(title_vector, to_tsvector('english', title)) @@ to_tsquery('english', ${sequelize.escape(tsq)})`));
+      } else {
+        andLiterals.push({ title: { [Op.iLike]: `%${title}%` } });
+      }
     }
     if (genre) {
-      where[Op.and] = Sequelize.literal(`
+      andLiterals.push(Sequelize.literal(`
         EXISTS (
           SELECT 1
             FROM "movie_genre" AS mg
@@ -458,32 +341,43 @@ export const getAllMovies: RequestHandler = async (
            WHERE mg.movie_id = "Movie".movie_id
              AND g.genre = '${genre}'
         )
-      `);
+      `));
     }
+    if (andLiterals.length) where[Op.and] = andLiterals;
 
     let paginationOpt: any = {};
 
     // Pagination
     const startNum = parseInt(start as string, 10) || 1;
     const endNum = parseInt(end as string, 10) || 50;
-  
-      paginationOpt.limit = endNum - startNum + 1;
-      paginationOpt.offset = startNum - 1;
-    
+    paginationOpt.limit = endNum - startNum + 1;
+    paginationOpt.offset = startNum - 1;
+
+    // Optimization: fetch only movie IDs first (fast when using indexes / GIN) then aggregate for those IDs.
+    const idRows = await Movie.findAll({
+      attributes: ['movie_id'],
+      where,
+      order: [['movie_id', 'DESC']],
+      limit: paginationOpt.limit,
+      offset: paginationOpt.offset,
+      raw: true,
+    });
+
+    const movieIds = idRows.map((r: any) => r.movie_id);
+    if (!movieIds.length) return res.status(200).json({ message: 'No movies found' });
 
     const movies = await Movie.findAll({
       attributes: [
-        "movie_id",
-        "user_id",
-        "title",
-        "img",
-        "desc",
-        "release_yr",
-        "director",
-        "length",
-        "producer",
-        // ✅ Use sequelize.fn with include alias
-        [Sequelize.fn("AVG", Sequelize.col('"ratingsReviews"."rating"')), "averageRating"],
+        'movie_id',
+        'user_id',
+        'title',
+        'img',
+        'desc',
+        'release_yr',
+        'director',
+        'length',
+        'producer',
+        [Sequelize.fn('AVG', Sequelize.col('ratingsReviews.rating')), 'averageRating'],
         [
           Sequelize.literal(`(
             SELECT json_agg(g.genre)
@@ -492,31 +386,26 @@ export const getAllMovies: RequestHandler = async (
                 ON g.genre_id = mg.genre_id
              WHERE mg.movie_id = "Movie".movie_id
           )`),
-          "genres",
+          'genres',
         ],
       ],
       include: [
-        {
-          model: RR,
-          as: "ratingsReviews",
-          attributes: [], // no extra columns
-        },
+        { model: RR, as: 'ratingsReviews', attributes: [] },
       ],
-      where,
+      where: { movie_id: movieIds },
       group: [
-        "Movie.movie_id",
-        "Movie.user_id",
-        "Movie.title",
-        "Movie.img",
-        "Movie.desc",
-        "Movie.release_yr",
-        "Movie.director",
-        "Movie.length",
-        "Movie.producer",
+        'Movie.movie_id',
+        'Movie.user_id',
+        'Movie.title',
+        'Movie.img',
+        'Movie.desc',
+        'Movie.release_yr',
+        'Movie.director',
+        'Movie.length',
+        'Movie.producer',
       ],
-      order: [["movie_id", "DESC"]],
-      ...paginationOpt,
-      subQuery: false, // ✅ prevents Sequelize from wrapping in subquery
+      order: [['movie_id', 'DESC']],
+      subQuery: false,
     });
 
     if (!movies.length) {

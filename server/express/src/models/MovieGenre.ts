@@ -26,6 +26,14 @@ MG.init(
     sequelize,
     tableName: "movie_genre",
     timestamps: false,
+    indexes: [
+      {
+        fields: ['movie_id']
+      },
+      {
+        fields: ['genre_id']
+      }
+    ]
   }
 );
 
