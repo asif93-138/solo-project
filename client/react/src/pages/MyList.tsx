@@ -234,7 +234,7 @@ const Mylist = () => {
             <div className="card shadow-xl my-10 md:my-0">
             <img
                   className="poster-img rounded-3xl"
-                  src={"http://localhost:3000" + x.img}
+                  src={"https://solo-project-llin.onrender.com" + x.img}
                   alt="poster"
                 />
               {/* <figure>
