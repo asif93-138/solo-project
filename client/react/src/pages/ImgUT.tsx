@@ -22,7 +22,7 @@ const ImgUT = () => {
             formDataImage.append("image", imageFile);
             try {
                 console.log(formDataImage);
-                const imageResponse = await fetch("http://localhost:3000/upload", {
+                const imageResponse = await fetch("https://solo-project-llin.onrender.com/upload", {
                     method: "POST",
                     body: formDataImage,
                 });

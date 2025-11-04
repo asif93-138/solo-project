@@ -86,7 +86,7 @@ const Mylist = () => {
 
   async function searchScroll() {
     setIsLoading(true);
-    const searchAPI = "http://localhost:3000/api/movie/user/" + context?.user?.user_id
+    const searchAPI = "https://solo-project-llin.onrender.com/api/movie/user/" + context?.user?.user_id
         + "?title=" + searchTitle.trim() + "&genre=" + searchGenre 
         + "&start=" + (searchPageNumber * 50 - 49) + "&end=" + (searchPageNumber * 50);
     const results = await fetch(searchAPI).then(res => res.json()).then(data => data);
@@ -111,7 +111,7 @@ const Mylist = () => {
   }, [context?.listRefresh, context?.user]);
   const handleSearch = async (searchTitle: string, searchGenre: string, user_id: number | undefined) => {
     // console.log(searchTitle.trim(), searchGenre);
-    let searchAPI = "http://localhost:3000/api/movie/user/" + user_id;
+    let searchAPI = "https://solo-project-llin.onrender.com/api/movie/user/" + user_id;
     if (searchTitle.trim() && searchGenre) {
       searchAPI += "?title=" + searchTitle.trim() + "&genre=" + searchGenre;
     }
