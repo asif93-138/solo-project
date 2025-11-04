@@ -261,7 +261,7 @@ export const editMovie: RequestHandler = async (
       return;
     }
 
-    if (updatedData.file) fs.unlinkSync("C:\\Users\\WIN 10\\solo-project\\server\\express\\uploads" + "\\" + updatedData.file.substring(9));
+    if (updatedData.file) fs.unlinkSync("/opt/render/project/src/server/express/uploads/" + updatedData.file.substring(9)); // fs.unlinkSync("C:\\Users\\WIN 10\\solo-project\\server\\express\\uploads" + "\\" + updatedData.file.substring(9));
 
     await movie.update(updatedData);
 
@@ -286,7 +286,8 @@ export const deleteMovie: RequestHandler = async (
     // console.log("dsvsav");
     // console.log(req.body.fileName);
     // Delete previous file from local storage
-    fs.unlinkSync("C:\\Users\\WIN 10\\solo-project\\server\\express\\uploads" + "\\" + req.body.fileName);
+    // fs.unlinkSync("C:\\Users\\WIN 10\\solo-project\\server\\express\\uploads" + "\\" + req.body.fileName);
+    fs.unlinkSync("/opt/render/project/src/server/express/uploads/" + req.body.fileName);
     const movie = await Movie.destroy({
       where: {
         movie_id: id,

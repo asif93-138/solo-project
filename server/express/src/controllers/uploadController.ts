@@ -9,7 +9,6 @@ export const uploadImage = (req: Request, res: Response) => {
         if (!req.file) {
             return res.status(400).send("No file uploaded.");
         }
-        console.log(req.file);
         res.status(200).json({
             message: "File uploaded successfully!",
             filePath: `/uploads/${req.file.filename}`,
