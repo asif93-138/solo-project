@@ -6,7 +6,8 @@ const router = Router();
 
 router.post("/", uploadImage);
 router.delete("/", (req, res) => {
-    fs.unlinkSync("C:\\Users\\WIN 10\\solo-project\\server\\express\\uploads" + "\\" + req.body.fileName);
+    // fs.unlinkSync("C:\\Users\\WIN 10\\solo-project\\server\\express\\uploads" + "\\" + req.body.fileName);
+    fs.unlinkSync("/opt/render/project/src/server/express/uploads/" + req.body.fileName);
     res.send("deleted!");
 });
 
