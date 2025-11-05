@@ -33,10 +33,13 @@ export async function getMyList(user_id: any, start: number, end: number) {
     .then((data) => data);
 }
 
-export function getMovieDetails(movie_id: any, setDataObj: any) {
+export function getMovieDetails(movie_id: any, setDataObj: any, setIsLoading: any) {
   fetch("https://solo-project-llin.onrender.com/api/movie/" + movie_id)
     .then((res) => res.json())
-    .then((data) => setDataObj(data));
+    .then((data) => {
+      if (data.movie_id) setDataObj(data);
+      setIsLoading(false);
+    });
 }
 
 export async function createMovie(data: any) {

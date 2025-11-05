@@ -24,9 +24,11 @@ const Details = () => {
   const [showUFC, setShowUFC] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [reviewTxt, setReviewTxt] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    getMovieDetails(location.pathname.slice(9), setDataObj);
+    setIsLoading(true);
+    getMovieDetails(location.pathname.slice(9), setDataObj, setIsLoading);
   }, [refresh])
 
   async function handleSubmit(event: {
@@ -59,6 +61,21 @@ const Details = () => {
   }
   function handleUpdate() {
     setShowModal_4(true);
+  }
+
+  if (isLoading) {
+    return (
+    <div className="bg-black text-white min-h-screen text-center">
+      <span className="loading loading-spinner loading-xl mt-32 w-20"></span>
+    </div>
+    );
+  }
+
+  if (!dataObj) {
+    return (<div className="bg-black text-white py-10 min-h-screen text-center txt-outline-c">
+      <h2 className="text-5xl mb-5">404</h2>
+      <h4 className="text-2xl">No data found!</h4>
+    </div>);
   }
 
   return (
@@ -145,11 +162,12 @@ const Details = () => {
         </div>
 
         {/* Right Column: Movie Poster */}
-        <img
+        {dataObj && <img
           src={"https://solo-project-llin.onrender.com" + dataObj?.img}
           alt="poster"
           className="poster-img-1 rounded-xl"
-        />
+        />}
+
       </div>
 
    
@@ -267,8 +285,6 @@ const Details = () => {
       />
     </section>
   );
-
-
 
 };
 

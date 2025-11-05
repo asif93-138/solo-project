@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import { UserContext } from "../contexts/UserContext";
 import { useContext, useState } from "react";
 import { userLogin } from "../services/userServices";
@@ -39,6 +39,11 @@ const Login = () => {
         setShowAlert_3(true);
       }
   }
+
+  if (context?.user) {
+    return (<Navigate to="/" />);
+  }
+
   return (
     <div className="p-8">
       <form className="border-2 p-6 rounded-lg md:w-2/5 mx-auto mt-4" onSubmit={handleSubmit}>

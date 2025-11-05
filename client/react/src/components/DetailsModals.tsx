@@ -19,6 +19,8 @@ export const DetailsModals: React.FC<DetailsModalsProps> = ({ handleSubmit, rati
         setShowModal_3(false);
         navigate('/user');
       }, 1500);
+    } else {
+      alert("something went wrong!!");
     }
   }
 

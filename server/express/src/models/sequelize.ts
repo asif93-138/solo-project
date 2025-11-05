@@ -9,17 +9,6 @@ export const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASS
   logging: false, // optional: turn off SQL logging
 });
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Database connected successfully");
-  })
-  .catch((err) => {
-    console.error("Unable to connect to the database:", err);
-  });
-
-export default sequelize;
-
 // export const sequelize = new Sequelize(
 //   dbConfig.DB,
 //   dbConfig.USER,
@@ -30,3 +19,14 @@ export default sequelize;
 //     logging: false,
 //   }
 // );
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Database connected successfully");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
+
+export default sequelize;

@@ -10,6 +10,7 @@ import Details from "./pages/Details.tsx";
 import "@smastrom/react-rating/style.css";
 import Mylist from "./pages/MyList.tsx";
 import ImgUT from "./pages/ImgUT.tsx";
+import PageNotFound from "./pages/PageNotFound.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <ContextProvider>
@@ -23,6 +24,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="user" element={<Mylist />} />
           <Route path="imgUT" element={<ImgUT />} />
         </Route>
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   </ContextProvider>

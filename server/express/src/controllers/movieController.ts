@@ -294,22 +294,22 @@ export const deleteMovie: RequestHandler = async (
       },
     });
 
-    const rr = await RR.destroy({
-      where: {
-        movie_id: id,
-      },
-    });
+    // const rr = await RR.destroy({
+    //   where: {
+    //     movie_id: id,
+    //   },
+    // });
 
-    const mg = await MG.destroy({
-      where: {
-        movie_id: id,
-      },
-    });
+    // const mg = await MG.destroy({
+    //   where: {
+    //     movie_id: id,
+    //   },
+    // });
 
     res.status(200).json({ deleted: true });
   } catch (error) {
     console.error("Error deleting movie:", error);
-    res.status(500).json({ error: "Failed to delete movie" });
+    res.status(501).json({ error: "Failed to delete movie" });
   }
 };
 
